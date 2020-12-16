@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "inspyre-toolbox"
+version = "1.0-alpha2"
+description = "A toolbox containing some useful tools for Inspyre Softworks packages. Generally useful to some programmers too."
+authors = ["tayjaybabee <tayjaybabee@gmail.com>"]
+license = "WTFPL"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
