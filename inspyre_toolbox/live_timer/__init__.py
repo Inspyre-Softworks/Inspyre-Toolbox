@@ -1,23 +1,53 @@
-from threading import Thread
-from time import time, sleep
+# from threading import Thread
+from os import makedirs
+from pathlib import Path
+from time import time
 
-WIN_TITLE = 'Duel Tracker'
 
+class TimerHistory(object):
 
-class TimerHistory(Thread):
-
-    def __init__(self):
-        Thread.__init__(self)
+    def __init__(self, elapsed_method):
+        self.get_elapsed = elapsed_method
         self.ledger = []
+        self.actions = [
+            "START",
+            "STOP",
+            "PAUSE",
+            "UNPAUSE",
+            "RESET",
+            "CREATE"
+        ]
+        self.add("CREATE")
 
-    def add(self, run_time):
-        pass
+    def add(self, action: str = "START"):
+        action = action.upper()
+        entry = {
+            "time": time(),
+            "elapsed_since_last": "",
+            "action": action,
+            "rt_at_create": ""
+        }
+        if action == "CREATE":
+            entry['elapsed_since_last'] = 0.00
+        else:
+            entry['elapsed_since_last'] = self.get_elapsed(self.ledger[-1]['time'])
+            entry['rt_at_create'] = self.get_elapsed(self.ledger[0]['time'])
+
+        self.ledger.append(entry)
 
     def write(self):
-        pass
+        data_path = Path("~/Inspyre-Softworks/Inspyre-Toolbox/data").expanduser()
 
-    def run(self):
-        pass
+        filename = "ledger_" + str(time()).split('.')[0]
+        filepath = str(str(data_path) + "/" + filename + ".txt")
+
+        filepath = str(Path(filepath).resolve())
+
+        if not data_path.exists():
+            makedirs(data_path)
+
+        with open(filepath, "w") as fp:
+            fp.write(str(self.ledger))
 
 
 def format_seconds_to_hhmmss(seconds):
@@ -28,10 +58,14 @@ def format_seconds_to_hhmmss(seconds):
     return "%02i:%02i:%02i" % (hours, minutes, seconds)
 
 
-class Timer(Thread):
+class Timer(object):
 
     def __init__(self):
-        Thread.__init__(self)
+        # Thread.__init__(self)
+
+        # Define some default attribute values
+        # ToDo:
+        #     Assess if in-fact all of these are needed for a comprehensive/informative experience
         self.start_time = None
         self.is_running = False
         self.pause_start = time()
@@ -42,19 +76,31 @@ class Timer(Thread):
         self.was_paused = False
         self.mark_2 = None
 
-    def get_elapsed(self, sans_pause: bool = False):
+        # Start a Timer history object to track times for resets
+        self.history = TimerHistory(self.get_elapsed)
+
+    def get_elapsed(self, ts=None, sans_pause: bool = False):
+        if ts is None:
+            diff_time = self.start_time
+        else:
+            diff_time = ts
 
         self.mark_2 = time()
         # print(self.mark_2)
         # print(self.start_time)
 
-        diff = self.mark_2 - self.start_time
+        diff = self.mark_2 - diff_time
         # print(format_seconds_to_hhmmss(diff))
         if sans_pause:
             return format_seconds_to_hhmmss(diff)
 
+        tpt = 0
         # print(self.total_pause_time)
-        diff = diff - self.total_pause_time
+        if self.paused:
+            tpt += time() - self.pause_start
+
+        tpt += self.total_pause_time
+        diff = diff - tpt
         return format_seconds_to_hhmmss(diff)
 
     def reset(self):
@@ -63,9 +109,10 @@ class Timer(Thread):
         Reset the 'self.start_time' attribute to this moment, effectively resetting the timer to '00:00:00'
 
         """
-        self.start_time = time()
+        self.history.add(action="RESET")
+        self.start()
 
-    def run(self):
+    def start(self):
         """
 
         Store the time the thread was started and assign the attribute 'self.started' to 'True' to indicate this.
@@ -73,6 +120,7 @@ class Timer(Thread):
         """
         self.start_time = time()
         self.started = True
+        self.history.add()
 
     def pause(self):
         """
@@ -90,6 +138,7 @@ class Timer(Thread):
         if not self.paused:
             self.pause_start = time()
             self.paused = True
+            self.history.add("PAUSE")
         else:
             return False
 
@@ -113,5 +162,6 @@ class Timer(Thread):
             diff = self.pause_end - self.pause_start
             self.total_pause_time += diff
             self.paused = False
+            self.history.add("UNPAUSE")
         else:
             return False
