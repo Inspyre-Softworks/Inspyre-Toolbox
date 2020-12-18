@@ -17,5 +17,16 @@ def run_window():
         event, vals = window.read(timeout=100)
         window['TIMER'].update(timer.get_elapsed())
 
+        if event is None:
+            print(f"Exiting program. Final elapsed time: {timer.get_elapsed()}")
+            window.close()
+            exit(0)
+
+        if event == "QUIT_BUTTON":
+            print("User pressed the quit button!")
+            print(f"Exiting program. Final elapsed time: {timer.get_elapsed()}")
+            window.close()
+            exit(0)
+
 
 run_window()
