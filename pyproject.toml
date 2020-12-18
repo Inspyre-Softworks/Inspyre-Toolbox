@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "inspyre-toolbox"
-version = "1.0-alpha2"
+version = "1.0-alpha3"
 description = "A toolbox containing some useful tools for Inspyre Softworks packages. Generally useful to some programmers too."
 authors = ["tayjaybabee <tayjaybabee@gmail.com>"]
 license = "WTFPL"
