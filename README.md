@@ -114,3 +114,4 @@ You can see an example of the above test running here:
 [![asciicast](https://asciinema.org/a/smnPlsJCI4UBw3ZHVnxxMoRQr.svg)](https://asciinema.org/a/smnPlsJCI4UBw3ZHVnxxMoRQr)
 
 Or; here's a shorter gif:
+[![The thing](https://raw.githubusercontent.com/tayjaybabee/Inspyre-Toolbox/v1.0-a4-dev/repo_assets/live_timer.gif)](https://raw.githubusercontent.com/tayjaybabee/Inspyre-Toolbox/v1.0-a4-dev/repo_assets/live_timer.gif)
