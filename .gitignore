@@ -2,3 +2,4 @@
 
 __pycache__
 dist/
+*cpython-37.pyc
