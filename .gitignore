@@ -1,1 +1,5 @@
 /poetry.lock
+
+__pycache__
+dist/
+*.cpython-37.pyc
