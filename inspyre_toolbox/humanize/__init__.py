@@ -68,6 +68,20 @@ class Numerical:
         """
         return str(self.number)
 
+    def commify(self):
+        """
+
+        Return a string containing your number as a string with commas added
+
+        Returns:
+            str: self.number converted to a string and with appropriately placed commas.
+
+        """
+        num = self.number
+        res = "{:,}".format(num)
+
+        return res
+
     def to_words(self):
         if self.number == 0:
             return 'Zero'

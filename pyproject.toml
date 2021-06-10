@@ -1,15 +1,19 @@
 [tool.poetry]
 name = "inspyre-toolbox"
-version = "1.0-alpha3"
+version = "1.0-alpha5"
 description = "A toolbox containing some useful tools for Inspyre Softworks packages. Generally useful to some programmers too."
-authors = ["tayjaybabee <tayjaybabee@gmail.com>"]
+authors = ["T Blackstone <t.blackstone@inspyre.tech>"]
 license = "WTFPL"
 
 [tool.poetry.dependencies]
 python = "^3.7"
 insPyred-print = "^1.0"
+inflect = "^5.3.0"
 
 [tool.poetry.dev-dependencies]
+pyls-spyder = "^0.4.0"
+jedi = "^0.18.0"
+parso = "^0.8.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
