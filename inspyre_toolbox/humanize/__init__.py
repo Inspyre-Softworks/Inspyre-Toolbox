@@ -33,7 +33,7 @@ class Numerical:
     def __init__(self, number):
         self.number = number
 
-    def count_noun(self, noun:str, count:int=None):
+    def count_noun(self, noun:str, count:int=self.number):
         """
 
         An alias for inflect.engine().plural_noun
@@ -43,19 +43,17 @@ class Numerical:
         Parameters:
             noun: Returns a string with the appropriate string for annotating counts of various nouns.
 
+        Raises:
+            ValueError: Raised when a value is provided for 'noun' that is not a string.
+
         """
 
-        # Populate 'count' with self.number if no value for 'count' was provided on calling.
-        if count is None:
-            count = int(self.number)
-        else:
-            count = int(count)
-
+        # Make sure our noun is a string or raise ValueError
         if not isinstance(noun, str):
             raise ValueError('Noun must be of type: str')
 
+        # Return the appropriate pluaralized (or not) noun based off the number provided
         return INF.plural_noun(noun, count)
-
 
     def to_str(self):
         """
@@ -68,10 +66,13 @@ class Numerical:
         """
         return str(self.number)
 
-    def commify(self):
+    def commify(self, target_number:int=self.number):
         """
 
         Return a string containing your number as a string with commas added
+
+        Parameters:
+            target_number (int): (Optional) The number you'd like returned as a commified string. (Default: self.number)'
 
         Returns:
             str: self.number converted to a string and with appropriately placed commas.
@@ -82,25 +83,24 @@ class Numerical:
 
         return res
 
-    def to_words(self):
-        if self.number == 0:
-            return 'Zero'
-        num = self.number
-        ans = ""
-        i = 0
-        while num > 0:
-            if num % 1000 != 0:
-                ans = self.helper(num %  1000) + NumericalStrings.thousands[i] + " " + ans
-                i += 1
-                num //= 1000
-            return ans.strip()
+    def to_words(self, target_num=self.number):
+        """
 
-    def helper(self, n):
-        if n == 0:
-            return ""
-        elif n < 20:
-            return NumericalStrings.less_than_20[n] + " "
-        elif n < 100:
-            return NumericalStrings.tens[n//10] + " " + self.helper(n % 10)
-        else:
-            return NumericalStrings.less_than_20[n // 100]  + " " + "Hundred " + self.helper(n % 100)
+        An alias to inflect.engine().number_to_words()
+
+        Literally just passes 'target_num' to INF.number_to_words and returns the result of that
+
+        Parameters:
+            target_num (int): (Optional, Default: self.number) The number you'd like returned in word-form'
+
+        Returns:
+            string: A string representing your target number in words.
+
+        Raises:
+            ValueError: Raised if 'target_num' isn't an integer or a float.
+
+        """
+        if not isinstance(target_num, str) and not isinstance(target_num, float):
+            raise ValueError("The parameter 'target_num' needs to be an integer or a float")
+
+        return INF.number_to_words(target_num)
