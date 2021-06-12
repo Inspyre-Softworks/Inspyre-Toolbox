@@ -79,7 +79,7 @@ class Timer(object):
         # Start a Timer history object to track times for resets
         self.history = TimerHistory(self.get_elapsed)
 
-    def get_elapsed(self, ts=None, sans_pause: bool = False):
+    def get_elapsed(self, ts=None, sans_pause: bool = False, seconds=False):
         if ts is None:
             diff_time = self.start_time
         else:
@@ -101,7 +101,11 @@ class Timer(object):
 
         tpt += self.total_pause_time
         diff = diff - tpt
-        return format_seconds_to_hhmmss(diff)
+
+        if seconds:
+            return diff
+        else:
+            return format_seconds_to_hhmmss(diff)
 
     def reset(self):
         """
