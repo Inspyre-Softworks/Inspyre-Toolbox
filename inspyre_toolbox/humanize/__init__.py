@@ -46,11 +46,7 @@ class Numerical:
         """
 
         # Populate 'count' with self.number if no value for 'count' was provided on calling.
-        if count is None:
-            count = int(self.number)
-        else:
-            count = int(count)
-
+        count = int(self.number) if count is None else int(count)
         if not isinstance(noun, str):
             raise ValueError('Noun must be of type: str')
 
@@ -78,9 +74,7 @@ class Numerical:
 
         """
         num = self.number
-        res = "{:,}".format(num)
-
-        return res
+        return "{:,}".format(num)
 
     def to_words(self):
         if self.number == 0:

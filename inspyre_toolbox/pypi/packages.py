@@ -15,8 +15,5 @@ def up_to_date(name):
     current_version = current_version[:current_version.find(
         '\\n')].replace(' ', '')
 
-    if latest_version == current_version:
-        return True
-    else:
-        return False
+    return latest_version == current_version
 

@@ -17,7 +17,7 @@ class TimerTest(unittest.TestCase):
             t_elapsed = elapsed(sans_pause=sp)
             if i == 10:
                 timer.pause()
-            if i == 25:
+            elif i == 25:
                 timer.unpause()
             if i in list(range(11)):
                 print(i)
