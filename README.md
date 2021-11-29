@@ -13,7 +13,15 @@ This toolkit was developed by me in an effort to cut down on having to write the
 
 ### The Goodies
 *(...a word which here means 'the modules and packages'....)*
+Added in v1.0.0a7:
+* spanners:
+  Spanners are kinda like extensions or plugins to standard libraries. The first one (which is
+  included from this version on) is an extension to the 'argparse' library:
+  * **SubparserActionAliases**:
+        An extension of argparse that allows you to alias sub-commands.
+    (See the example [included](./examples/spanners/subcommand_aliases_demo.py))       
 
+#### Older Changes
 * .live_timer:
   * `Timer`: A class-object that allows you to keep a stopwatch-like timer with ease!
     * `.start()`: The timer doesn't start when you initialize the class, it waits for you!
