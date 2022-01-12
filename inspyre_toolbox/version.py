@@ -1,5 +1,5 @@
-from pkgutil import get_data
 from configparser import ConfigParser
+from pkgutil import get_data
 
 from inspyred_print import Color, Format
 
@@ -14,6 +14,9 @@ __ver_parser = ConfigParser()
 __ver = get_data('inspyre_toolbox', 'VERSION').decode('UTF8')
 __ver_parser.read_string(__ver)
 
+print(__ver_parser.sections())
+
+
 class Version(object):
 
     def _check_most_current(self):
@@ -24,9 +27,10 @@ class Version(object):
         return res
 
     def __init__(self, version_info):
+        print(dir(version_info))
         self.info = version_info['VERSION']
         self.number = self.info['number']
-        self.pre_release = self.info.get_boolean('pre-release')
+        self.pre_release = version_info.getboolean('VERSION', 'pre-release')
 
         if self.pre_release:
             self.pr_info = version_info['PRE-RELEASE']
@@ -47,5 +51,6 @@ class Version(object):
         self.is_latest = None
         self._check_most_current()
 
-VERSION = Version(__ver)
+
+VERSION = Version(__ver_parser)
 UPDATE_PENDING = not VERSION.is_latest

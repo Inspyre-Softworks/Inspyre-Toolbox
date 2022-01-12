@@ -8,12 +8,46 @@
 This toolkit was developed by me in an effort to cut down on having to write the same things over and over again for the various applications I've made. I don't expect that many will find it super useful, but hey, who knows.
 
 ----
-## Getting Started
+Getting Started
 ----
-
-### The Goodies
+----
+## The Goodies
 *(...a word which here means 'the modules and packages'....)*
 
+
+### New in v1.0.0a9
+
+* #### proc_man:
+  A new insert to the toolbox that provides easy-access to ways to manage your system processes!
+  <br></br>
+  **Included in this release**:
+  
+  * ***Two* new functions**
+    * **find_all_by_name**:
+    
+      Find all currently running processes with names that include your query string.
+  
+      ```python
+      
+      ```
+      
+
+    <br></br>
+    * **kill_all_by_name**:
+  
+      Find all currently running processes with names that include your query string _and kill them_.
+  * 
+
+#### Older Changes
+
+Added in v1.0.0a7:
+* spanners:
+  Spanners are kinda like extensions or plugins to standard libraries. The first one (which is
+  included from this version on) is an extension to the 'argparse' library:
+  * **SubparserActionAliases**:
+        An extension of argparse that allows you to alias sub-commands.
+    (See the example [included](./examples/spanners/subcommand_aliases_demo.py))       
+  
 * .live_timer:
   * `Timer`: A class-object that allows you to keep a stopwatch-like timer with ease!
     * `.start()`: The timer doesn't start when you initialize the class, it waits for you!
