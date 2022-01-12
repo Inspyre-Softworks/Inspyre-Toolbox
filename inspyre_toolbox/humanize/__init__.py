@@ -79,12 +79,9 @@ class Numerical:
             try:
                 num = int(num)
                 if num != self.number:
-                    if not 'save_number' in kwargs:
-                        pass
-                    else:
-                        if kwargs['save_number'] == False:
-                            changed = True
-                            previous = self.number
+                    if 'save_number' in kwargs and kwargs['save_number'] == False:
+                        changed = True
+                        previous = self.number
 
                     self.number = num
             except:
@@ -95,14 +92,13 @@ class Numerical:
 
         if self.noun is None:
             raise ValueError('No information provided for noun.')
-        else:
-            ret = self.__count_noun(noun=self.noun, **kwargs)
-            if changed:
-                self.number = previous
-                previous = None
-                changed = False
+        ret = self.__count_noun(noun=self.noun, **kwargs)
+        if changed:
+            self.number = previous
+            previous = None
+            changed = False
 
-            return ret
+        return ret
 
     def __count_noun(self,
                      noun: str,
@@ -195,21 +191,10 @@ class Numerical:
 
             # If we did not receive a bool(True) value for the 'skip_commify' parameter we'll
             # send our number off to be commified by self.commify before concatenation
-            if not skip_commify:
-                c_count = self.commify(target_number=count)
-            else:
-                # If we're here 'skip_commify' resolves to 'True', skip commifying.
-                c_count = count
-
+            c_count = self.commify(target_number=count) if not skip_commify else count
         # If the parameter 'only_noun' evaluates to bool(True) the request should not contain
         # the root number in any form.
-        if only_noun:
-            statement = n_noun
-        else:
-            # If we're here 'only_noun' evaluates as bool(False) so we include the root number
-            # in whatever form the process has provided.
-            statement = f"{c_count} {n_noun}"
-
+        statement = n_noun if only_noun else f"{c_count} {n_noun}"
         # If the 'capitalize' parameter evaluates to bool(True) we capitalize the final statement, as
         # one capitalizes a sentence.8h
         if capitalize:
@@ -247,13 +232,8 @@ class Numerical:
             str: self.number converted to a string and with appropriately placed commas.
 
         """
-        if target_number is None:
-            num = self.number
-        else:
-            num = target_number
-        res = "{:,}".format(num)
-
-        return res
+        num = self.number if target_number is None else target_number
+        return "{:,}".format(num)
 
     def to_words(self, target_num=None):
         """

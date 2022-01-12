@@ -96,11 +96,7 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
 
     isl_dev = inspy_logger_device
 
-    if on_the_dl:
-        prefix = ''
-    else:
-        prefix = 'InspyreToolbox.'
-
+    prefix = '' if on_the_dl else 'InspyreToolbox.'
     log_name = prefix + 'proc_man.find_by_name'
 
     log = add_isl_child(log_name, isl_dev)
@@ -176,11 +172,7 @@ def kill_all_in_list(kill_list, inspy_logger_device=None, on_the_dl=False, color
 
     """
 
-    if on_the_dl:
-        prefix = ''
-    else:
-        prefix = 'InspyreToolbox.'
-
+    prefix = '' if on_the_dl else 'InspyreToolbox.'
     log_name = prefix + 'ProcMan.kill_all_in_list'
 
     log = add_isl_child(log_name, ISL.device)
@@ -291,9 +283,9 @@ def kill_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
     # Find out if they are an administrator or not.
     is_admin = isAdmin()
 
-    started_by_user = []
-
     if not is_admin:
+        started_by_user = []
+
         for proc in procs:
             log.debug(proc['username'])
             if proc['username'].endswith(username):

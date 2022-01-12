@@ -14,10 +14,7 @@ class NoFoundProcessesError(Exception):
     """
 
     def __init__(self, *args):
-        if args:
-            self.message = args[0]
-        else:
-            self.message = None
+        self.message = args[0] if args else None
 
     def __str__(self):
         if self.message:
