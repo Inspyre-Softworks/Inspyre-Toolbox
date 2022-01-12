@@ -93,7 +93,7 @@ class Numerical :
                      period=False,
                      round_num=None,
                      noun_persistence=True
-                     ) :
+                     ):
         """
 
         An alias for inflect.engine().plural_noun
@@ -149,54 +149,43 @@ class Numerical :
         # Make sure our noun is a string or raise ValueError
         if not isinstance(noun, str) :
             raise ValueError('Noun must be of type: str')
-        
+
         # Make sure 'count' is not 'None' or we can't do anything with it.
         #
         # If 'count' is indeed 'None' we'll use the number that seeded this instance of the
         # 'Numerical' class.
         if count is None :
             count = self.number
-        
+
         # If we received the parameter to round the results, we'll do that.
         if round_num is not None and isinstance(round_num, int) :
             count = round(count, round_num)
-        
+
         # Pluralize the noun string
         n_noun = INF.plural_noun(noun, count)
-        
+
         # If the parameter 'to_words' is true, we need to convert the number to words (using the
         # 'to_words' function of this class before we finally concatenate our results.
-        if to_words :
+        if to_words:
             c_count = self.to_words(count)
-        else :
+        else:
             
             # If we did not receive a bool(True) value for the 'skip_commify' parameter we'll
             # send our number off to be commified by self.commify before concatenation
-            if not skip_commify :
-                c_count = self.commify(target_number=count)
-            else :
-                # If we're here 'skip_commify' resolves to 'True', skip commifying.
-                c_count = count
-        
+            c_count = self.commify(target_number=count) if not skip_commify else count
         # If the parameter 'only_noun' evaluates to bool(True) the request should not contain
         # the root number in any form.
-        if only_noun :
-            statement = n_noun
-        else :
-            # If we're here 'only_noun' evaluates as bool(False) so we include the root number
-            # in whatever form the process has provided.
-            statement = f"{c_count} {n_noun}"
-        
+        statement = n_noun if only_noun else f"{c_count} {n_noun}"
         # If the 'capitalize' parameter evaluates to bool(True) we capitalize the final statement, as
         # one capitalizes a sentence.
         if capitalize :
             statement = statement.capitalize()
-        
+
         # If the parameter 'full_stop' evaluates to bool(True) a full-stop (or; 'period' to most of my
         # fellow Americans.
         if full_stop :
             statement += '.'
-        
+
         # Return the appropriate pluaralized (or not) noun based off the number provided
         return statement
     
@@ -213,7 +202,7 @@ class Numerical :
         return str(self.number)
     
     
-    def commify(self, target_number: int = None) :
+    def commify(self, target_number: int = None):
         """
 
         Return a string containing your number as a string with commas added
@@ -226,13 +215,8 @@ class Numerical :
             str: self.number converted to a string and with appropriately placed commas.
 
         """
-        if target_number is None :
-            num = self.number
-        else :
-            num = target_number
-        res = "{:,}".format(num)
-        
-        return res
+        num = self.number if target_number is None else target_number
+        return "{:,}".format(num)
     
     
     def to_words(self, target_num=None) :

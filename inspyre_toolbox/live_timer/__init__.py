@@ -51,8 +51,8 @@ class TimerHistory(object):
 
 
 def format_seconds_to_hhmmss(seconds):
-    hours = seconds // (60 * 60)
-    seconds %= (60 * 60)
+    hours = seconds // 60**2
+    seconds %= 60**2
     minutes = seconds // 60
     seconds %= 60
     return "%02i:%02i:%02i" % (hours, minutes, seconds)
@@ -80,11 +80,7 @@ class Timer(object):
         self.history = TimerHistory(self.get_elapsed)
 
     def get_elapsed(self, ts=None, sans_pause: bool = False, seconds=False):
-        if ts is None:
-            diff_time = self.start_time
-        else:
-            diff_time = ts
-
+        diff_time = self.start_time if ts is None else ts
         self.mark_2 = time()
         # print(self.mark_2)
         # print(self.start_time)
@@ -102,10 +98,7 @@ class Timer(object):
         tpt += self.total_pause_time
         diff = diff - tpt
 
-        if seconds:
-            return diff
-        else:
-            return format_seconds_to_hhmmss(diff)
+        return diff if seconds else format_seconds_to_hhmmss(diff)
 
     def reset(self):
         """
@@ -139,12 +132,11 @@ class Timer(object):
 
         :return:
         """
-        if not self.paused:
-            self.pause_start = time()
-            self.paused = True
-            self.history.add("PAUSE")
-        else:
+        if self.paused:
             return False
+        self.pause_start = time()
+        self.paused = True
+        self.history.add("PAUSE")
 
     def unpause(self):
         """
