@@ -1,4 +1,18 @@
-# from threading import Thread
+"""
+File: inspyre_toolbox/live_timer/__init__.py
+Created: ??
+
+Description:
+    inspyre_toolbox.live_timer gives you access to a class and functions that make running a live
+    timer that's not only easily to initialize, but easy to query, reset, and pause your timers.
+    This module also contains a class named 'TimerHistory' that keeps a history of all timer actions.
+    
+    To find out more about usage please see:
+    
+    GIT_REPO_ROOT/examples/live_timer
+
+"""
+
 from os import makedirs
 from pathlib import Path
 from time import time
@@ -10,13 +24,14 @@ class TimerHistory(object):
         self.get_elapsed = elapsed_method
         self.ledger = []
         self.actions = [
-            "START",
-            "STOP",
-            "PAUSE",
-            "UNPAUSE",
-            "RESET",
-            "CREATE"
-        ]
+                "START",
+                "STOP",
+                "PAUSE",
+                "UNPAUSE",
+                "RESET",
+                "CREATE",
+                "QUERY"
+                ]
         self.add("CREATE")
 
     def add(self, action: str = "START"):
@@ -59,13 +74,19 @@ def format_seconds_to_hhmmss(seconds):
 
 
 class Timer(object):
+    
+    def __repr__(self):
+        statement = "Timer("\
+                    f"Started: {self.started} |"
+        if self.started:
+            runtime = time() - self.start_time
+            runtime = format_seconds_to_hhmmss(runtime)
+            statement += f" Started: {self.start_time} - Current Runtime: {runtime}"
 
     def __init__(self):
-        # Thread.__init__(self)
-
+        
         # Define some default attribute values
-        # ToDo:
-        #     Assess if in-fact all of these are needed for a comprehensive/informative experience
+        
         self.start_time = None
         self.is_running = False
         self.pause_start = time()
@@ -80,6 +101,16 @@ class Timer(object):
         self.history = TimerHistory(self.get_elapsed)
 
     def get_elapsed(self, ts=None, sans_pause: bool = False, seconds=False):
+        """
+        
+        Args:
+            ts:
+            sans_pause:
+            seconds:
+
+        Returns:
+
+        """
         if ts is None:
             diff_time = self.start_time
         else:
