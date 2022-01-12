@@ -18,6 +18,7 @@ pyls-spyder = "^0.4.0"
 jedi = "^0.18.0"
 parso = "^0.8.2"
 inspy-logger = "^2.1a14"
+releases = "^1.6.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

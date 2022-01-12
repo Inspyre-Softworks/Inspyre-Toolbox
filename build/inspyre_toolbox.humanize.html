@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>inspyre_toolbox.humanize package &#8212; Inspyre-Toolbox 1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="inspyre_toolbox.humanize.errors package" href="inspyre_toolbox.humanize.errors.html" />
+    <link rel="prev" title="Welcome to Inspyre-Toolbox’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="inspyre-toolbox-humanize-package">
+<h1>inspyre_toolbox.humanize package<a class="headerlink" href="#inspyre-toolbox-humanize-package" title="Permalink to this headline">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="inspyre_toolbox.humanize.errors.html">inspyre_toolbox.humanize.errors package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inspyre_toolbox.humanize.errors.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inspyre_toolbox.humanize.errors.html#module-inspyre_toolbox.humanize.errors.numerical">inspyre_toolbox.humanize.errors.numerical module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inspyre_toolbox.humanize.errors.html#module-inspyre_toolbox.humanize.errors">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-inspyre_toolbox.humanize">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-inspyre_toolbox.humanize" title="Permalink to this headline">¶</a></h2>
+<p>Created on Wed Jun  9 01:23:36 2021</p>
+<p>&#64;author: taylor</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="inspyre_toolbox.humanize.Numerical">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">inspyre_toolbox.humanize.</span></span><span class="sig-name descname"><span class="pre">Numerical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inspyre_toolbox.humanize.Numerical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that allows you to manipulate numbers with greater-flexibility.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="inspyre_toolbox.humanize.Numerical.commify">
+<span class="sig-name descname"><span class="pre">commify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_number</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inspyre_toolbox.humanize.Numerical.commify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string containing your number as a string with commas added</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_number</strong> (<em>int</em><em>, </em><em>optional</em>) – The number you’d like returned as a commified string. Defaults to</p></li>
+<li><p><strong>'Numerical.number'</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.number converted to a string and with appropriately placed commas.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inspyre_toolbox.humanize.Numerical.count_noun">
+<span class="sig-name descname"><span class="pre">count_noun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noun</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inspyre_toolbox.humanize.Numerical.count_noun" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inspyre_toolbox.humanize.Numerical.to_str">
+<span class="sig-name descname"><span class="pre">to_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inspyre_toolbox.humanize.Numerical.to_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return ‘self.number’ as a string type without modifying it at  all from it’s original form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The contents found at ‘self.number’ but in as a string type.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(int/float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inspyre_toolbox.humanize.Numerical.to_words">
+<span class="sig-name descname"><span class="pre">to_words</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inspyre_toolbox.humanize.Numerical.to_words" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alias to inflect.engine().number_to_words()</p>
+<p>Literally just passes ‘target_num’ to INF.number_to_words and returns the result of that</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target_num</strong> (<em>int</em><em>, </em><em>optional</em>) – The number you’d like returned in word-form. Defaults to ‘Numerical.number’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string representing your target number in words.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="inspyre_toolbox.humanize.errors.html#inspyre_toolbox.humanize.errors.numerical.NotANumberError" title="inspyre_toolbox.humanize.errors.numerical.NotANumberError"><strong>NotANumberError</strong></a> – Raised if ‘target_num’ isn’t an integer or a float.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="inspyre_toolbox.humanize.NumericalStrings">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">inspyre_toolbox.humanize.</span></span><span class="sig-name descname"><span class="pre">NumericalStrings</span></span><a class="headerlink" href="#inspyre_toolbox.humanize.NumericalStrings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Number statement string fragments</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inspyre_toolbox.humanize.NumericalStrings.less_than_20">
+<span class="sig-name descname"><span class="pre">less_than_20</span></span><a class="headerlink" href="#inspyre_toolbox.humanize.NumericalStrings.less_than_20" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of strings each representing a number from 0 (or “”) to 19 (or Nineteen).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inspyre_toolbox.humanize.NumericalStrings.tens">
+<span class="sig-name descname"><span class="pre">tens</span></span><a class="headerlink" href="#inspyre_toolbox.humanize.NumericalStrings.tens" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of strings each representing a ‘tens’ place with all strings below ten being represented</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">by</span> <span class="pre">&quot;&quot;</span> <span class="pre">and</span> <span class="pre">with</span> <span class="pre">the</span> <span class="pre">final</span> <span class="pre">element</span> <span class="pre">being</span> <span class="pre">&quot;Ninety&quot;</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inspyre_toolbox.humanize.NumericalStrings.thousands">
+<span class="sig-name descname"><span class="pre">thousands</span></span><a class="headerlink" href="#inspyre_toolbox.humanize.NumericalStrings.thousands" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of strings each representing a ‘thousands’ place with all strings below a thousand</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">being</span> <span class="pre">represented</span> <span class="pre">by</span> <span class="pre">&quot;&quot;</span> <span class="pre">and</span> <span class="pre">with</span> <span class="pre">the</span> <span class="pre">final</span> <span class="pre">element</span> <span class="pre">being</span> <span class="pre">&quot;Billion&quot;</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">less_than_20</span></span><em class="property"> <span class="pre">=</span> <span class="pre">['',</span> <span class="pre">'One',</span> <span class="pre">'Two',</span> <span class="pre">'Three',</span> <span class="pre">'Four',</span> <span class="pre">'Five',</span> <span class="pre">'Six',</span> <span class="pre">'Seven',</span> <span class="pre">'Eight',</span> <span class="pre">'Nine',</span> <span class="pre">'Ten',</span> <span class="pre">'Eleven',</span> <span class="pre">'Twelve',</span> <span class="pre">'Thirteen',</span> <span class="pre">'Fourteen',</span> <span class="pre">'Fifteen',</span> <span class="pre">'Sixteen',</span> <span class="pre">'Seventeen',</span> <span class="pre">'Eighteen',</span> <span class="pre">'Nineteen']</span></em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">tens</span></span><em class="property"> <span class="pre">=</span> <span class="pre">['',</span> <span class="pre">'Ten',</span> <span class="pre">'Twenty',</span> <span class="pre">'Thirty',</span> <span class="pre">'Forty',</span> <span class="pre">'Fifty',</span> <span class="pre">'Sixty',</span> <span class="pre">'Seventy',</span> <span class="pre">'Eighty',</span> <span class="pre">'Ninety']</span></em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">thousands</span></span><em class="property"> <span class="pre">=</span> <span class="pre">['',</span> <span class="pre">'Thousand',</span> <span class="pre">'Million',</span> <span class="pre">'Billion']</span></em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Inspyre-Toolbox</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">inspyre_toolbox.humanize package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inspyre_toolbox.humanize">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inspyre_toolbox.live_timer.html">inspyre_toolbox.live_timer package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inspyre_toolbox.proc_man.html">inspyre_toolbox.proc_man package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Inspyre-Toolbox’s documentation!</a></li>
+      <li>Next: <a href="inspyre_toolbox.humanize.errors.html" title="next chapter">inspyre_toolbox.humanize.errors package</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, T. Blackstone.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/inspyre_toolbox.humanize.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
