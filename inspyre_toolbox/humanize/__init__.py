@@ -75,74 +75,69 @@ class Numerical(object):
     
     def __add__(self, other_num, force_return_count=False, force_return_self=False):
         self.number = self.number + other_num
-        
+
         if force_return_count and self.noun is None:
             raise ValueError()
+        if force_return_count:
+            return self.count_noun()
+        elif force_return_self:
+            return self
         else:
-            if force_return_count:
-                return self.count_noun()
-            elif force_return_self:
-                return self
-            else:
-                return self.number
+            return self.number
         
     def __mul__(self, multiplied_by, force_return_count=False, force_return_self=False):
         self.number = self.number * float(multiplied_by)
-        
+
         if force_return_count and self.noun is None:
             raise ValueError()
+        if force_return_count:
+            return self.count_noun()
+        elif force_return_self:
+            return self
         else:
-            if force_return_count:
-                return self.count_noun()
-            elif force_return_self:
-                return self
-            else:
-                return self.number
+            return self.number
     
     def __rtruediv__(self, principle, force_return_count=False, force_return_self=False):
         if principle == 0 or self.number == 0 :
             raise ZeroDivisionError()
-    
+
         self.number = float(principle) / self.number
 
-        if force_return_count and self.noun is None :
+        if force_return_count and self.noun is None:
             raise ValueError()
+        if force_return_count :
+            return self.count_noun()
+        elif force_return_self :
+            return self
         else :
-            if force_return_count :
-                return self.count_noun()
-            elif force_return_self :
-                return self
-            else :
-                return self.number
+            return self.number
     
     def __truediv__(self, divide_by, force_return_count=False, force_return_self=False):
         if divide_by == 0 or self.number == 0:
             raise ZeroDivisionError()
-        
+
         self.number = self.number / float(divide_by)
-        
+
         if force_return_count and self.noun is None:
             raise ValueError()
+        if force_return_count:
+            return self.count_noun()
+        elif force_return_self:
+            return self
         else:
-            if force_return_count:
-                return self.count_noun()
-            elif force_return_self:
-                return self
-            else:
-                return self.number
+            return self.number
             
     def __sub__(self, other, force_return_count=False, force_return_self=False):
         self.number = self.number - float(other)
-        
+
         if force_return_count and self.noun is None:
             raise ValueError()
+        if force_return_count:
+            return self.count_noun()
+        elif force_return_self:
+            return self
         else:
-            if force_return_count:
-                return self.count_noun()
-            elif force_return_self:
-                return self
-            else:
-                return self.number
+            return self.number
     
     
     def __init__(self, number, noun=None, store_as_float=True):
@@ -182,7 +177,7 @@ class Numerical(object):
             noun: str = None,
             save_number: bool = True,
             save_noun: bool = True,
-            
+
             **kwargs):
         """
         
@@ -250,51 +245,50 @@ class Numerical(object):
         noun_changed = False
         number_previous = None
         noun_previous = None
-        
+
         if number is not None:
             try:
                 number = float(number)
             except ValueError:
-                
+
                 warning = "If passing a noun alone to 'count_noun' you need to include the parameter name\n"\
                       "For example:\n"\
                       "\n"\
                       "number.count_noun(noun='banana')\n"\
                       "NOT\n"\
                       "number.count_noun('banana')"
-                
+
                 print(warning)
-                
+
                 raise ValueError(warning)
-                
+
             if number != self.number:
                 if not save_number:
-                
+
                     number_changed = True
                     number_previous = self.number
 
                 self.number = number
-        
+
 
         if noun is not None:
-        
+
             noun = str(noun)
             try:
                 noun = str(noun)
-                if self.noun is not None:
-                    if noun != self.noun:
-                        if not save_noun:
-                            noun_changed = True
-                            noun_previous = self.noun
-                       
-                        self.noun = noun
+                if self.noun is not None and noun != self.noun:
+                    if not save_noun:
+                        noun_changed = True
+                        noun_previous = self.noun
+
+                    self.noun = noun
             except:
                 raise ValueError(f"'noun' should be {type(str())} not {type(noun)}")
-           
 
-    
+
+
         ret = self.__count_noun(noun=self.noun, **kwargs)
-        
+
         if number_changed:
             self.number = number_previous
             number_previous = None
@@ -396,21 +390,10 @@ class Numerical(object):
 
             # If we did not receive a bool(True) value for the 'skip_commify' parameter we'll
             # send our number off to be commified by self.commify before concatenation
-            if not skip_commify:
-                c_count = self.commify(target_number=count)
-            else:
-                # If we're here 'skip_commify' resolves to 'True', skip commifying.
-                c_count = count
-
+            c_count = self.commify(target_number=count) if not skip_commify else count
         # If the parameter 'only_noun' evaluates to bool(True) the request should not contain
         # the root number in any form.
-        if only_noun:
-            statement = n_noun
-        else:
-            # If we're here 'only_noun' evaluates as bool(False) so we include the root number
-            # in whatever form the process has provided.
-            statement = f"{c_count} {n_noun}"
-
+        statement = n_noun if only_noun else f"{c_count} {n_noun}"
         # If the 'capitalize' parameter evaluates to bool(True) we capitalize the final statement, as
         # one capitalizes a sentence.8h
         if capitalize:
@@ -448,13 +431,8 @@ class Numerical(object):
             str: self.number converted to a string and with appropriately placed commas.
 
         """
-        if target_number is None:
-            num = self.number
-        else:
-            num = target_number
-        res = "{:,}".format(num)
-
-        return res
+        num = self.number if target_number is None else target_number
+        return "{:,}".format(num)
 
     def to_words(self, target_num=None):
         """
