@@ -3,6 +3,10 @@
 ----
 *A collection of kinda useful tools*
 
+
+[![Python package](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/python-package.yml)
+
+
 ## ...But Why?
 
 ----
