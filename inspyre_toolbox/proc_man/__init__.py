@@ -96,11 +96,7 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
 
     isl_dev = inspy_logger_device
 
-    if on_the_dl:
-        prefix = ''
-    else:
-        prefix = 'InspyreToolbox.'
-
+    prefix = '' if on_the_dl else 'InspyreToolbox.'
     log_name = prefix + 'proc_man.find_by_name'
 
     log = add_isl_child(log_name, isl_dev)
@@ -176,11 +172,7 @@ def kill_all_in_list(kill_list, inspy_logger_device=None, on_the_dl=False, color
 
     """
 
-    if on_the_dl:
-        prefix = ''
-    else:
-        prefix = 'InspyreToolbox.'
-
+    prefix = '' if on_the_dl else 'InspyreToolbox.'
     log_name = prefix + 'ProcMan.kill_all_in_list'
 
     log = add_isl_child(log_name, ISL.device)
@@ -193,19 +185,19 @@ def kill_all_in_list(kill_list, inspy_logger_device=None, on_the_dl=False, color
 
     for proc in kill_list:
         log.debug(f'Killing {colors.yellow}{proc["pid"]}')
-        #os.kill(proc['pid'], 2)
-        try:
-            if os.name == 'nt':
-                subprocess.check_output("Taskkill /PID %d /F" % proc['pid'])
-            else:
-                os.kill(proc['pid'], 2)
-        except subprocess.CalledProcessError:
-            missing += 1
-            if missing >= 20:
-                kill_all_by_name(proc['name'])
-                break
-        log.debug(
-            f'{colors.green}Kill signal sent to {colors.yellow}{proc["pid"]}')
+        os.kill(proc['pid'], 2)
+        # try:
+        #         subprocess.check_output("Taskkill /PID %d /F" % proc['pid'])
+        #     if os.name == 'nt':
+        #     else:
+        #         os.kill(proc['pid'], 2)
+        # except subprocess.CalledProcessError:
+        #     missing += 1
+        #     if missing >= 20:
+        #         kill_all_by_name(proc['name'])
+        #         break
+        # log.debug(
+        #     f'{colors.green}Kill signal sent to {colors.yellow}{proc["pid"]}')
 
 
 def kill_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_the_dl=False, colorful_logging=False):
@@ -298,4 +290,7 @@ def kill_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
             log.debug(proc['username'])
             if proc['username'].endswith(username):
                 started_by_user.append(proc)
-                kill_all_in_list(started_by_user)
+        
+    started_by_user.reverse()
+    
+    kill_all_in_list(started_by_user)

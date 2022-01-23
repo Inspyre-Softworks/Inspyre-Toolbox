@@ -5,3 +5,9 @@ dist/
 *.cpython-37.pyc
 /venv/
 /.idea/
+/.pytest_cache/
+/.spyproject/
+/.vscode/
+/build/
+*.lock
+requirements.txt
