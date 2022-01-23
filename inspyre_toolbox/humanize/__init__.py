@@ -28,95 +28,296 @@ class NumericalStrings(object):
         thousands (list): A list of strings each representing a 'thousands' place with all strings below a thousand
         being represented by "" and with the final element being "Billion"
     """
-    less_than_20 = ["", "One", "Two", "Three", "Four", "Five", "Six",
-                    "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen",
-                    "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen",
-                    "Nineteen"]
-    tens = ["", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty",
-            "Seventy", "Eighty", "Ninety"]
+
+    less_than_20 = [
+        "",
+        "One",
+        "Two",
+        "Three",
+        "Four",
+        "Five",
+        "Six",
+        "Seven",
+        "Eight",
+        "Nine",
+        "Ten",
+        "Eleven",
+        "Twelve",
+        "Thirteen",
+        "Fourteen",
+        "Fifteen",
+        "Sixteen",
+        "Seventeen",
+        "Eighteen",
+        "Nineteen",
+    ]
+    tens = [
+        "",
+        "Ten",
+        "Twenty",
+        "Thirty",
+        "Forty",
+        "Fifty",
+        "Sixty",
+        "Seventy",
+        "Eighty",
+        "Ninety",
+    ]
     thousands = ["", "Thousand", "Million", "Billion"]
 
 
-class Numerical:
+class Numerical(object):
     """
 
     A class that allows you to manipulate numbers with greater-flexibility.
 
     """
+    
+    def __add__(self, other_num, force_return_count=False, force_return_self=False):
+        self.number = self.number + other_num
+        
+        if force_return_count and self.noun is None:
+            raise ValueError()
+        else:
+            if force_return_count:
+                return self.count_noun()
+            elif force_return_self:
+                return self
+            else:
+                return self.number
+        
+    def __mul__(self, multiplied_by, force_return_count=False, force_return_self=False):
+        self.number = self.number * float(multiplied_by)
+        
+        if force_return_count and self.noun is None:
+            raise ValueError()
+        else:
+            if force_return_count:
+                return self.count_noun()
+            elif force_return_self:
+                return self
+            else:
+                return self.number
+    
+    def __rtruediv__(self, principle, force_return_count=False, force_return_self=False):
+        if principle == 0 or self.number == 0 :
+            raise ZeroDivisionError()
+    
+        self.number = float(principle) / self.number
 
-    def __init__(self, number, noun=None):
+        if force_return_count and self.noun is None :
+            raise ValueError()
+        else :
+            if force_return_count :
+                return self.count_noun()
+            elif force_return_self :
+                return self
+            else :
+                return self.number
+    
+    def __truediv__(self, divide_by, force_return_count=False, force_return_self=False):
+        if divide_by == 0 or self.number == 0:
+            raise ZeroDivisionError()
+        
+        self.number = self.number / float(divide_by)
+        
+        if force_return_count and self.noun is None:
+            raise ValueError()
+        else:
+            if force_return_count:
+                return self.count_noun()
+            elif force_return_self:
+                return self
+            else:
+                return self.number
+            
+    def __sub__(self, other, force_return_count=False, force_return_self=False):
+        self.number = self.number - float(other)
+        
+        if force_return_count and self.noun is None:
+            raise ValueError()
+        else:
+            if force_return_count:
+                return self.count_noun()
+            elif force_return_self:
+                return self
+            else:
+                return self.number
+    
+    
+    def __init__(self, number, noun=None, store_as_float=True):
         """
 
         Create a new instance, with a new number to manipulate
 
         Args:
-            number (int|float):
-            noun:
+            number (int|float): The subject number.
+            noun: The noun to count.
         """
-
         # First, check whether 'number' is an integer or a float or not. If not; we raise an error
-        if not isinstance(number, int) and not isinstance(number, float):
+        
+        self.store_as_float = store_as_float
+        
+        if not isinstance(number, float) and store_as_float:
             try:
-                number = float(number)
+                number = int(number)
             except ValueError as e:
                 raise NUM_ERR.NotANumberError(
                     var=number,
-                    var_name='number',
-                    msg=f"Type {type(number)} is not valid. Must be {type(1)} or {type(1.1)}"
+                    var_name="number",
+                    msg=f"Type {type(number)} is not valid. Must be {type(1)} or {type(1.1)}",
                 )
+            
+            if store_as_float:
+                number = float(number)
 
         self.number = number
 
         self.num_commified = self.commify(self.number)
         self.noun = noun
 
-    def count_noun(self, num: typing.Union[str, int, float] = None, noun: str = None, **kwargs):
+    def count_noun(
+            self,
+            number = None,
+            noun: str = None,
+            save_number: bool = True,
+            save_noun: bool = True,
+            
+            **kwargs):
+        """
+        
+        Args:
+            number (Optional, (int|float)):
+                The number of nouns there are. Defaults to 'self.number'.
+            
+            noun (Optional, str):
+                The thing you want to describe the number of. Defaults to 'self.noun'.
+            
+            save_number (Optional, bool):
+                If you provided a value for the 'number' parameter this parameter's value will indicate whether the
+                value of 'number' should replace 'self.number'. Defaults to bool(True).
+            
+            save_noun (Optional, bool):
+                If you provided a value for the 'noun' parameter and self.noun isn't NoneType and differs from the
+                provided value 'save_noun' will indicate whether the new value for 'noun' should replace 'self.noun'. Defaults to bool(True).
+            
+            **kwargs:
+            
+                full_stop (bool):
+                 Include a full-stop punctuation mark at the end of the final statement. Users that
+                 are from America may know this punctuation mark better as 'period' (or; '.'. See
+                 below for the 'period' parameter alias)
+                 (Defaults to boo  l(False)
 
-        changed = False
-        previous = None
+                period (bool):
+                    Include a period mark at the end of the final statement. Users from some areas may
+                    know this mark better as 'full-stop'
+    
+                noun (str):
+                    Returns a string with the appropriate statement iy,.hy,i for annotating counts of various nouns.
+    
+                count (int/float, optional):
+                    The number of 'noun' that exists.
+                    (Defaults to 'Numerical.number')
+    
+                only_noun (bool, optional):
+                    Return only the properly pluralized noun.
+                    (Defaults to False)
+    
+                skip_commify (bool, optional):
+                    (Ignored if either 'only_noun' or 'count_to_words' are True) Return the number as
+                    part of the statement with commas added to the proper places.
+                    (Defaults to False)
+    
+                to_words (bool, optional):
+                    (Ignored if 'only_noun' is True) Modify the first part of the statement
+                    (which contains the count) to words instead of numbers.
+                    (Defaults to False.)
+    
+                capitalize (bool, optional):
+                    Return the words for the count with the first letter capitalized.
+                    (Defaults to False, ignored if 'count_to_words' is False.)
+    
+                round_num (int, optional):
+                    Round the number returned to a given precision in decimal digits.
+                    (Defaults to None(NoneType), ignored if 'only_noun' is True.)
 
-        if num is not None:
+        Returns:
+
+        """
+
+        number_changed = False
+        noun_changed = False
+        number_previous = None
+        noun_previous = None
+        
+        if number is not None:
             try:
-                num = int(num)
-                if num != self.number:
-                    if not 'save_number' in kwargs:
-                        pass
-                    else:
-                        if kwargs['save_number'] == False:
-                            changed = True
-                            previous = self.number
+                number = float(number)
+            except ValueError:
+                
+                warning = "If passing a noun alone to 'count_noun' you need to include the parameter name\n"\
+                      "For example:\n"\
+                      "\n"\
+                      "number.count_noun(noun='banana')\n"\
+                      "NOT\n"\
+                      "number.count_noun('banana')"
+                
+                print(warning)
+                
+                raise ValueError(warning)
+                
+            if number != self.number:
+                if not save_number:
+                
+                    number_changed = True
+                    number_previous = self.number
 
-                    self.number = num
-            except:
-                self.noun = num
+                self.number = number
+        
 
         if noun is not None:
-            self.noun = noun
+        
+            noun = str(noun)
+            try:
+                noun = str(noun)
+                if self.noun is not None:
+                    if noun != self.noun:
+                        if not save_noun:
+                            noun_changed = True
+                            noun_previous = self.noun
+                       
+                        self.noun = noun
+            except:
+                raise ValueError(f"'noun' should be {type(str())} not {type(noun)}")
+           
 
-        if self.noun is None:
-            raise ValueError('No information provided for noun.')
-        else:
-            ret = self.__count_noun(noun=self.noun, **kwargs)
-            if changed:
-                self.number = previous
-                previous = None
-                changed = False
+    
+        ret = self.__count_noun(noun=self.noun, **kwargs)
+        
+        if number_changed:
+            self.number = number_previous
+            number_previous = None
+            number_changed = False
+        if noun_changed:
+            self.noun = noun_previous
+            noun_previous = None
+            noun_changed = None
 
-            return ret
+        return ret
 
-    def __count_noun(self,
-                     noun: str,
-                     count: int = None,
-                     only_noun=False,
-                     skip_commify=False,
-                     to_words=False,
-                     capitalize=False,
-                     full_stop=False,
-                     period=False,
-                     round_num=None,
-                     noun_persistence=True,
-                     **kwargs
-                     ):
+    def __count_noun(
+        self,
+        noun: str,
+        count: int = None,
+        only_noun=False,
+        skip_commify=False,
+        to_words=False,
+        capitalize=False,
+        full_stop=False,
+        period=False,
+        round_num=None
+    ):
         """
 
         An alias for inflect.engine().plural_noun
@@ -171,7 +372,7 @@ class Numerical:
 
         # Make sure our noun is a string or raise ValueError
         if not isinstance(noun, str):
-            raise ValueError('Noun must be of type: str')
+            raise ValueError("Noun must be of type: str")
 
         # Make sure 'count' is not 'None' or we can't do anything with it.
         #
@@ -217,8 +418,8 @@ class Numerical:
 
         # If the parameter 'full_stop' evaluates to bool(True) a full-stop (or; 'period' to most of my
         # fellow Americans.
-        if full_stop:
-            statement += '.'
+        if full_stop or period:
+            statement += "."
 
         # Return the appropriate pluaralized (or not) noun based off the number provided
         return statement
@@ -278,9 +479,10 @@ class Numerical:
 
         if not isinstance(target_num, int) and not isinstance(target_num, float):
             raise ValueError(
-                "The parameter 'target_num' needs to be an integer or a float")
+                "The parameter 'target_num' needs to be an integer or a float"
+            )
 
         return INF.number_to_words(target_num)
 
     def __repr__(self):
-        return self.to_str()
+        return self.to_words()

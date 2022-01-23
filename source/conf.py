@@ -22,7 +22,7 @@ copyright = "2022, T. Blackstone"
 author = "T. Blackstone"
 
 # The full version, including alpha/beta/rc tags
-release = "1.1.1"
+release = "1.1.2"
 
 
 # -- General configuration ---------------------------------------------------
@@ -36,6 +36,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.autosectionlabel",
     "releases",
+    "sphinx_rtd_theme",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -52,7 +53,7 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "alabaster"
+html_theme = "sphinx_rtd_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

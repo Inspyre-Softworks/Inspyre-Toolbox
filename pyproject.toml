@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "inspyre-toolbox"
-version = "1.1.1"
+version = "1.1.4"
 description = "A toolbox containing some useful tools for Inspyre Softworks packages. Generally useful to some programmers too."
 authors = ["T Blackstone <t.blackstone@inspyre.tech>"]
 license = "MIT"
@@ -19,6 +19,7 @@ jedi = "^0.18.0"
 parso = "^0.8.2"
 inspy-logger = "^2.1a14"
 releases = "^1.6.3"
+ptipython = "^1.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
