@@ -5,7 +5,6 @@ dist/
 *.cpython-37.pyc
 /venv/
 /.idea/
-/build/
 /.pytest_cache/
 /.spyproject/
 /.vscode/
