@@ -4,8 +4,13 @@
 *A collection of kinda useful tools*
 
 
-[![Python package](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/python-package.yml)
 
+[![Python package](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/python-package.yml)
+![Lines of Code](https://badgen.net/codeclimate/loc/tayjaybabee/Inspyre-Toolbox)
+![Latest Github Release](https://badgen.net/github/release/tayjaybabee/Inspyre-Toolbox)
+![Latest Stable Release](https://badgen.net/github/release/tayjaybabee/Inspyre-Toolbox/stable)
+![PyPi Version](https://badgen.net/pypi/v/Inspyre-Toolbox)
+![PyPi Version](https://badgen.net/pypi/python/Inspyre-Toolbox)
 
 ## ...But Why?
 
