@@ -11,3 +11,5 @@ dist/
 /build/
 *.lock
 requirements.txt
+/.autosrc
+/kite-installer
