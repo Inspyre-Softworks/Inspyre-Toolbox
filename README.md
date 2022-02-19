@@ -3,8 +3,6 @@
 ----
 *A collection of kinda useful tools*
 
-
-
 [![Python package](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/python-package.yml)
 ![Lines of Code](https://badgen.net/codeclimate/loc/tayjaybabee/Inspyre-Toolbox)
 ![Latest Github Release](https://badgen.net/github/release/tayjaybabee/Inspyre-Toolbox)
