@@ -35,7 +35,7 @@ class Version(object):
         if self.pre_release:
             self.pr_info = version_info['PRE-RELEASE']
             self.pr_type = self.pr_info['type']
-            self.pr_num = self.pr_info['build_no']
+            self.pr_num = self.pr_info['build-no']
             if self.pr_type.lower() == 'alpha':
                 prt_tag = 'a'
             elif self.pr_type.lower() == 'beta':
