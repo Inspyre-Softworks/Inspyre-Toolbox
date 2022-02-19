@@ -146,6 +146,8 @@ class Timer(object):
         """
         self.history.add(action="RESET")
         self.start()
+        self.was_paused = False
+        self.paused = False
 
     def start(self):
         """
@@ -173,6 +175,7 @@ class Timer(object):
         if not self.paused:
             self.pause_start = time()
             self.paused = True
+            self.was_paused = True
             self.history.add("PAUSE")
         else:
             return False
