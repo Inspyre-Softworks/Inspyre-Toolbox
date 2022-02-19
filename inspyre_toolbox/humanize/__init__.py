@@ -294,31 +294,30 @@ class Numerical(object):
         noun_changed = False
         number_previous = None
         noun_previous = None
-        
+
         if number is not None:
             try:
                 number = float(number)
-                if number != self.__number:
-                    if not save_number:
-                        number_previous = self.__number
-                        number_changed = True
-                   
+                if number != self.__number and not save_number:
+                    number_previous = self.__number
+                    number_changed = True
+
                 self.__number = number
             except ValueError:
-                
+
                 warning = "If passing a noun alone to 'count_noun' you need to include the parameter name\n" \
                           "For example:\n" \
                           "\n" \
                           "number.count_noun(noun='banana')\n" \
                           "NOT\n" \
                           "number.count_noun('banana')"
-                
+
                 print(warning)
-                
+
                 raise ValueError(warning)
-        
+
         if noun is not None:
-            
+
             noun = str(noun)
             try:
                 noun = str(noun)
@@ -327,13 +326,13 @@ class Numerical(object):
                     if not save_noun:
                         noun_changed = True
                         noun_previous = self.__noun
-                    
+
                     self.__noun = noun
             except ValueError:
                 raise ValueError(f"'noun' should be {type(str())} not {type(noun)}")
-       
+
         ret = self.__count_noun(noun=self.__noun, count=self.__number, **kwargs)
-        
+
         if number_changed:
             self.__number = number_previous
             number_previous = None
@@ -342,7 +341,7 @@ class Numerical(object):
             self.__noun = noun_previous
             noun_previous = None
             noun_changed = None
-        
+
         return ret
     
     
