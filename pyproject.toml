@@ -12,12 +12,13 @@ inflect = "^5.3.0"
 psutil = "^5.8.0"
 DateTime = "^4.3"
 pypattyrn = "^1.2"
+jupyter = "^1.0.0"
+inspy-logger = "^2.1a14"
 
 [tool.poetry.dev-dependencies]
 pyls-spyder = "^0.4.0"
 jedi = "^0.18.0"
 parso = "^0.8.2"
-inspy-logger = "^2.1a14"
 releases = "^1.6.3"
 ptipython = "^1.0.1"
 
