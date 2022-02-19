@@ -1,7 +1,7 @@
 [VERSION]
-number: 1.2
-pre-release: false
+number: 1.2.1
+pre-release: true
 
 [PRE-RELEASE]
-type:
-build-no:
+type: alpha
+build-no: 2
