@@ -20,7 +20,7 @@ print(__ver_parser.sections())
 class Version(object):
 
     def _check_most_current(self):
-        res = up_to_date('inspy_logger')
+        res = up_to_date('inspyre_toolbox')
 
         self.is_latest = res
 

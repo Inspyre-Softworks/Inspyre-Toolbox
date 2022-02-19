@@ -1,4 +1,12 @@
-#  Copyright (c) 2021. Taylor-Jayde Blackstone <t.blackstone@inspyre.tech> https://inspyre.tech
+
+# ==============================================================================
+#  Copyright (c) Inspyre Softworks 2022.                                       =
+#                                                                              =
+#  Author:                 T. Blackstone                                       =
+#  Author Email:    <t.blackstone@inspyre.tech>                                =
+#  Created:              2/10/22, 9:49 PM                                      =
+# ==============================================================================
+
 from pypattyrn.behavioral.null import Null
 
 
@@ -29,6 +37,14 @@ For Example:
         
 
 """
+from inspy_logger import InspyLogger as ISL
+import inspyre_toolbox.settings as it_settings
+
+prog = 'InspyreToolbox'
+
+root_ISL = ISL(prog, it_settings.log_level.upper())
+
+ROOT_ISL_DEVICE = root_ISL.device
 
 
 class InvalidLogDeviceError(Exception):
@@ -52,7 +68,39 @@ class InvalidLogDeviceError(Exception):
         self.message = 'The passed device does not appear to have been initialized, or is not an InspyLogger device!'
 
 
-def add_isl_child(name, isl_device):
+class Manifest(list):
+    
+    def __init__(self, *arg, **kw):
+        # assert isinstance(comp, dict), '"comp" requires a dictionary!'
+        #
+        # for x, y in comp.items():
+        #     assert isinstance(x, str), f"Invalid key {x}. Please input a string, not {type(x).__name__}"
+        #     assert type(y).__name__ == 'Logger', f"Invalid value, the value should be a 'Logger' device. Instead got " \
+        #                                          f"type {type(y).__name__}"
+        #
+        # self.__comp = comp
+        # self.__get_comp_map()
+        super(Manifest, self).__init__(*arg, **kw)
+        self.__slots__ = ()
+        
+        
+    def __get_comp_map(self):
+        self.__comp_map = [(x, y1) for x, y in self.__comp.items() for y1 in y]
+    
+    @staticmethod
+    def __sum_lists(lists):
+        lt = []
+        for lst in lists:
+            lt += lst
+        return lt
+    
+    def __get_all(self):
+        return self.__sum_lists(map(list, self.__comp.values()))
+    
+    def __repr__(self):
+        return str(self.__get_all())
+
+def add_isl_child(name, isl_device=ROOT_ISL_DEVICE):
     """
 
     Manage using an InspyLogger device with Inspyre Toolbox.
@@ -80,3 +128,17 @@ def add_isl_child(name, isl_device):
         log = Null()
 
     return log
+
+
+mod_log = None
+ml = None
+
+
+if not ROOT_ISL_DEVICE.started:
+    ROOT_LOGGER = ROOT_ISL_DEVICE.start()
+    mod_log = ROOT_ISL_DEVICE.add_child(f'{prog}.core_helpers.logging')
+    ml = mod_log
+    ml.debug('Started logger.')
+else:
+    ml.debug("Logger already started")
+    

@@ -54,7 +54,7 @@ class TimerHistory(object):
         data_path = Path("~/Inspyre-Softworks/Inspyre-Toolbox/data").expanduser()
 
         filename = "ledger_" + str(time()).split('.')[0]
-        filepath = str(str(data_path) + "/" + filename + ".txt")
+        filepath = str(f'{str(data_path)}/{filename}.txt')
 
         filepath = str(Path(filepath).resolve())
 
@@ -111,11 +111,7 @@ class Timer(object):
         Returns:
 
         """
-        if ts is None:
-            diff_time = self.start_time
-        else:
-            diff_time = ts
-
+        diff_time = self.start_time if ts is None else ts
         self.mark_2 = time()
         # print(self.mark_2)
         # print(self.start_time)
@@ -133,10 +129,7 @@ class Timer(object):
         tpt += self.total_pause_time
         diff = diff - tpt
 
-        if seconds:
-            return diff
-        else:
-            return format_seconds_to_hhmmss(diff)
+        return diff if seconds else format_seconds_to_hhmmss(diff)
 
     def reset(self):
         """
@@ -146,6 +139,8 @@ class Timer(object):
         """
         self.history.add(action="RESET")
         self.start()
+        self.was_paused = False
+        self.paused = False
 
     def start(self):
         """
@@ -170,12 +165,12 @@ class Timer(object):
 
         :return:
         """
-        if not self.paused:
-            self.pause_start = time()
-            self.paused = True
-            self.history.add("PAUSE")
-        else:
+        if self.paused:
             return False
+        self.pause_start = time()
+        self.paused = True
+        self.was_paused = True
+        self.history.add("PAUSE")
 
     def unpause(self):
         """
