@@ -5,6 +5,4 @@ from inspyre_toolbox.humanize.errors.numerical import NumericalErrors
 
 
 class HumanizeErrors(object):
-    def __init__(self):
-        self.NumericalErrors = NumericalErrors()
-
+    NumericalErrors = NumericalErrors
