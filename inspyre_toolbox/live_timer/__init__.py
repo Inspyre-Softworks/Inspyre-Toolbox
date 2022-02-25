@@ -53,7 +53,7 @@ class TimerHistory(object):
     def write(self):
         data_path = Path("~/Inspyre-Softworks/Inspyre-Toolbox/data").expanduser()
 
-        filename = "ledger_" + str(time()).split('.')[0]
+        filename = f'ledger_{str(time()).split(".")[0]}'
         filepath = str(str(data_path) + "/" + filename + ".txt")
 
         filepath = str(Path(filepath).resolve())
@@ -63,6 +63,9 @@ class TimerHistory(object):
 
         with open(filepath, "w") as fp:
             fp.write(str(self.ledger))
+
+    def reset(self):
+        self.ledger = []
 
 
 def format_seconds_to_hhmmss(seconds):
@@ -98,9 +101,9 @@ class Timer(object):
         self.mark_2 = None
 
         # Start a Timer history object to track times for resets
-        self.history = TimerHistory(self.get_elapsed)
+        self.history = TimerHistory(self.__get_elapsed)
 
-    def get_elapsed(self, ts=None, sans_pause: bool = False, seconds=False):
+    def __get_elapsed(self, ts=None, sans_pause: bool = False, seconds=False):
         """
         
         Args:
@@ -111,11 +114,7 @@ class Timer(object):
         Returns:
 
         """
-        if ts is None:
-            diff_time = self.start_time
-        else:
-            diff_time = ts
-
+        diff_time = self.start_time if ts is None else ts
         self.mark_2 = time()
         # print(self.mark_2)
         # print(self.start_time)
@@ -133,10 +132,14 @@ class Timer(object):
         tpt += self.total_pause_time
         diff = diff - tpt
 
-        if seconds:
-            return diff
+        return diff if seconds else format_seconds_to_hhmmss(diff)
+
+    def get_elapsed(self, *args, **kwargs):
+        if self.is_running:
+            self.history.add("QUERY")
+            return self.__get_elapsed()
         else:
-            return format_seconds_to_hhmmss(diff)
+            raise Timer
 
     def reset(self):
         """
@@ -145,9 +148,18 @@ class Timer(object):
 
         """
         self.history.add(action="RESET")
-        self.start()
         self.was_paused = False
         self.paused = False
+        self.total_pause_time = 0
+        self.pause_start = None
+        self.pause_end = None
+        self.started = False
+        self.mark_2 = None
+        
+    def restart(self):
+        self.reset()
+        if not self.started:
+            self.start()
 
     def start(self):
         """
@@ -172,13 +184,12 @@ class Timer(object):
 
         :return:
         """
-        if not self.paused:
-            self.pause_start = time()
-            self.paused = True
-            self.was_paused = True
-            self.history.add("PAUSE")
-        else:
+        if self.paused:
             return False
+        self.pause_start = time()
+        self.paused = True
+        self.was_paused = True
+        self.history.add("PAUSE")
 
     def unpause(self):
         """
