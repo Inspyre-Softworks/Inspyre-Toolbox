@@ -53,8 +53,9 @@ class TimerHistory(object):
     def write(self):
         data_path = Path("~/Inspyre-Softworks/Inspyre-Toolbox/data").expanduser()
 
-        filename = "ledger_" + str(time()).split('.')[0]
-        filepath = str(f'{str(data_path)}/{filename}.txt')
+        filename = f'ledger_{str(time()).split(".")[0]}'
+        filepath = str(str(data_path) + "/" + filename + ".txt")
+
 
         filepath = str(Path(filepath).resolve())
 
@@ -63,6 +64,9 @@ class TimerHistory(object):
 
         with open(filepath, "w") as fp:
             fp.write(str(self.ledger))
+
+    def reset(self):
+        self.ledger = []
 
 
 def format_seconds_to_hhmmss(seconds):
@@ -98,9 +102,9 @@ class Timer(object):
         self.mark_2 = None
 
         # Start a Timer history object to track times for resets
-        self.history = TimerHistory(self.get_elapsed)
+        self.history = TimerHistory(self.__get_elapsed)
 
-    def get_elapsed(self, ts=None, sans_pause: bool = False, seconds=False):
+    def __get_elapsed(self, ts=None, sans_pause: bool = False, seconds=False):
         """
         
         Args:
@@ -131,6 +135,14 @@ class Timer(object):
 
         return diff if seconds else format_seconds_to_hhmmss(diff)
 
+    def get_elapsed(self, *args, **kwargs):
+        if self.is_running:
+            self.history.add("QUERY")
+            return self.__get_elapsed()
+        else:
+            raise Timer
+
+
     def reset(self):
         """
 
@@ -138,9 +150,19 @@ class Timer(object):
 
         """
         self.history.add(action="RESET")
-        self.start()
         self.was_paused = False
         self.paused = False
+        self.total_pause_time = 0
+        self.pause_start = None
+        self.pause_end = None
+        self.started = False
+        self.mark_2 = None
+        
+    def restart(self):
+        self.reset()
+        if not self.started:
+            self.start()
+
 
     def start(self):
         """

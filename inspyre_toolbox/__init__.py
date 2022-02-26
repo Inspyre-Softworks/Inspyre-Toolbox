@@ -1,3 +1,4 @@
+from typing import NewType
 
 
 def __split_evenly(target):
@@ -53,9 +54,8 @@ def __split_alt(target):
             list1.append(item)
         else:
             list2.append(item)
-            
-    return list1, list2
     
+    return list1, list2
 
 def split_list(target, split_method='middle'):
     """
@@ -104,3 +104,11 @@ def split_list(target, split_method='middle'):
     elif split_method.lower() == 'alternating_columns':
         return __split_alt(target)
 
+
+ChunkifiedList = NewType('ChunkifiedList', list)
+
+
+def chunkify(target: list, num_per: int) -> ChunkifiedList:
+    ret_lst = lambda target, num_per: [target[i:i + num_per] for i in range(0, len(target), num_per)]
+    
+    return ChunkifiedList(ret_lst(target, num_per))

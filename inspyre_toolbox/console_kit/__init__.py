@@ -14,10 +14,11 @@ import os
 
 
 def __get_delay(fast=False):
+
     possible = list(range(45, 100)) if fast else list(range(100, 301))
     return random.choice(possible) / 1000
 
-
+  
 def clear_console():
     """
 
@@ -29,6 +30,7 @@ def clear_console():
 
     """
     cmd = "cls" if os.name in ("nt", "dos") else "clear"
+
     os.system(cmd)
 
 
@@ -61,6 +63,7 @@ def animate_typing(
     if clear_screen:
         clear_console()
 
+
     # If we weren't instructed to skip a leading newline, print the newline.
     if not skip_pre_newline:
         print("\n")
@@ -70,6 +73,7 @@ def animate_typing(
             time_between = __get_delay(fast_typer)
         else:
             time_between = interval
+
             time_between = min(time_between, 0.301)
             if time_between <= 0:
                 time_between = __get_delay()
@@ -78,6 +82,5 @@ def animate_typing(
         sys.stdout.write(char)
 
     # If we weren't instructed to skip the post-animation newline, print the newline.
-
     if not skip_post_newline:
         print('\n')
