@@ -11,7 +11,7 @@ class NumericalErrors(object):
         Raised when a parameter is provided that is not an integer or a float where one was expectecd.
 
         """
-        def __init__(self, var, var_name: str = None, msg: str = None, skip_print: bool = False, redirect_print=None) :
+        def __init__(self, var, var_name: str = None, msg: str = None, skip_print: bool = False, redirect_print=None):
             """
 
             Raised when a parameter is provided that is not an integer or a float where one was expectecd.
@@ -38,16 +38,12 @@ class NumericalErrors(object):
                 var_type = type(var)
                 msg1 = f"{var_name} has a value of {var} and is of type {var_type}. An integer or float was needed."
 
-            if msg is None :
-                msg = msg1
-            else :
-                msg = msg1 + ' ' + msg
-
+            msg = msg1 if msg is None else f'{msg1} {msg}'
             self.msg = msg
             self.message = self.msg
 
-            if not skip_print :
-                if redirect_print :
+            if not skip_print:
+                if redirect_print:
                     redirect_print(self.message)
-                else :
+                else:
                     print(self.message)

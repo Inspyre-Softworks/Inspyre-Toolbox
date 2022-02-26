@@ -54,7 +54,7 @@ class TimerHistory(object):
         data_path = Path("~/Inspyre-Softworks/Inspyre-Toolbox/data").expanduser()
 
         filename = f'ledger_{str(time()).split(".")[0]}'
-        filepath = str(str(data_path) + "/" + filename + ".txt")
+        filepath = str(f'{str(data_path)}/{filename}.txt')
 
 
         filepath = str(Path(filepath).resolve())
