@@ -136,8 +136,10 @@ ml = None
 
 if not ROOT_ISL_DEVICE.started:
     ROOT_LOGGER = ROOT_ISL_DEVICE.start()
-    mod_log = ROOT_ISL_DEVICE.add_child(prog + '.core_helpers.logging')
+
+    mod_log = ROOT_ISL_DEVICE.add_child(f'{prog}.core_helpers.logging')
     ml = mod_log
+    
     ml.debug('Started logger.')
 else:
     ml.debug("Logger already started")

@@ -14,16 +14,11 @@ import os
 
 
 def __get_delay(fast=False):
-    if fast:
-        possible = list(range(45, 100))
-    else:
-        possible = list(range(100, 301))
-    
-    delay = random.choice(possible) / 1000
-    
-    return delay
 
+    possible = list(range(45, 100)) if fast else list(range(100, 301))
+    return random.choice(possible) / 1000
 
+  
 def clear_console():
     """
 
@@ -34,10 +29,8 @@ def clear_console():
     None.
 
     """
-    cmd = "clear"
-    if os.name in ("nt", "dos"):  # Are we running Winblows?
-        cmd = "cls"
-    
+    cmd = "cls" if os.name in ("nt", "dos") else "clear"
+
     os.system(cmd)
 
 
@@ -69,26 +62,25 @@ def animate_typing(
     # If we were instructed to clear the screen, do it.
     if clear_screen:
         clear_console()
-    
+
+
     # If we weren't instructed to skip a leading newline, print the newline.
     if not skip_pre_newline:
         print("\n")
-    
+
     for char in message:
         if interval is None:
             time_between = __get_delay(fast_typer)
         else:
             time_between = interval
-            if time_between >= 0.301:
-                time_between = 0.301
-            
+
+            time_between = min(time_between, 0.301)
             if time_between <= 0:
                 time_between = __get_delay()
-        
+
         sleep(time_between)
         sys.stdout.write(char)
-        
+
     # If we weren't instructed to skip the post-animation newline, print the newline.
-    
     if not skip_post_newline:
         print('\n')

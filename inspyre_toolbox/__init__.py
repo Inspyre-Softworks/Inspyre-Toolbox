@@ -57,7 +57,6 @@ def __split_alt(target):
     
     return list1, list2
 
-
 def split_list(target, split_method='middle'):
     """
     

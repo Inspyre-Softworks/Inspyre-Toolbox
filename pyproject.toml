@@ -12,7 +12,6 @@ psutil = "^5.8.0"
 DateTime = "^4.3"
 pypattyrn = "^1.2"
 inspy-logger = "^2.1a14"
-inspyred-print = "^1.1"
 
 [tool.poetry.dev-dependencies]
 pyls-spyder = "^0.4.0"

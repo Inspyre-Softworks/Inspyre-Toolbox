@@ -5,14 +5,15 @@ Created on Wed Jun  9 01:23:36 2021
 
 @author: taylor
 """
-import typing
-from decimal import Decimal
-from typing import Any, Optional, Union, Callable, ContextManager
+
+from typing import Any, Callable, List, Optional, Union
 
 from inflect import engine
+import typing
+from decimal import Context, Decimal
+
 
 from inspyre_toolbox.core_helpers.logging import ROOT_ISL_DEVICE
-from inspyre_toolbox.humanize.errors import HumanizeErrors
 
 
 # Instantiate inflect.engine as 'INF'
@@ -73,7 +74,116 @@ class Numerical(object):
     """
     
     
-    def __init__(self, number, noun: typing.Optional[str] = None, store_as_float=False):
+    def __add__(self, other_num: (int, float), force_return_count: object = False,
+                force_return_self: object = False) -> object:
+        """
+        
+        Return self + other_num.
+        
+        Arguments:
+            other_num (int|float):
+                The number that you wish to add to `num` .
+                 
+            force_return_count (bool, Optional):
+                Return 'count_noun' after getting the sum. 
+                
+                Optional, defaults to bool(False).
+            
+            force_return_self:
+                Return the object.
+                
+                Optional, defaults to bool(False). 
+                
+        Note:
+            Passing a value of bool(True) (or the evaluated equivalent) to both 'force_return_self' and
+            'force_return_count' will result in a 'ValueError' exception being raised.
+
+        Returns:
+            float or int
+
+        """
+        self.number = self.number + other_num
+        
+        if force_return_count and self.__noun is None:
+            raise ValueError()
+        if force_return_count:
+            return self.count_noun()
+        elif force_return_self:
+            return self
+        else:
+            return self.number
+    
+    
+    def __mul__(self, multiplied_by, force_return_count=False, force_return_self=False):
+        self.number = self.number * float(multiplied_by)
+        
+        if force_return_count and self.__noun is None:
+            raise ValueError()
+        if force_return_count:
+            return self.count_noun()
+        elif force_return_self:
+            return self
+        else:
+            return self.number
+    
+    
+    def __rtruediv__(self, principle, force_return_count=False, force_return_self=False):
+        if principle == 0 or self.number == 0:
+            raise ZeroDivisionError()
+        
+        self.number = float(principle) / self.number
+        
+        if force_return_count and self.__noun is None:
+            raise ValueError()
+        if force_return_count:
+            return self.count_noun()
+        elif force_return_self:
+            return self
+        else:
+            return self.number
+    
+    
+    def __truediv__(self, divide_by, force_return_count=False, force_return_self=False):
+        if divide_by == 0 or self.number == 0:
+            raise ZeroDivisionError()
+        
+        self.number = self.number / float(divide_by)
+        
+        if force_return_count and self.__noun is None:
+            raise ValueError()
+        if force_return_count:
+            return self.count_noun()
+        elif force_return_self:
+            return self
+        else:
+            return self.number
+    
+    
+    def __sub__(self, other, force_return_count=False, force_return_self=False):
+        self.number = self.number - float(other)
+        if force_return_count and self.__noun is None:
+            raise ValueError()
+        if force_return_count:
+            return self.count_noun()
+        elif force_return_self:
+            return self
+        else:
+            return self.number
+    
+    
+    def __sqrt__(self) -> Callable[[Optional[Context]], Decimal]:
+        return self.dec_num.sqrt
+    
+    
+    def __repr__(self):
+        return self.to_words()
+    
+    
+    def __int__(self):
+        return int(self.number)
+    
+    
+    def __init__(self, number, noun: typing.Optional[str] = None, store_as_float=True):
         """
 
         Create a new instance, with a new number to manipulate
@@ -94,8 +204,9 @@ class Numerical(object):
                         var=number,
                         var_name="number",
                         msg=f"Type {type(number)} is not valid. Must be {type(1)} or {type(1.1)}",
+
                         ) from e
-            
+                
             if store_as_float:
                 number = float(number)
         
@@ -122,9 +233,7 @@ class Numerical(object):
         
         Args:
             
-            number (Optional, float | int | str):
-                The number of the nouns you want to count.
-            
+            number: 
             noun (Optional, str):
                 The thing you want to describe the number of. Defaults to 'self.__noun'.
             
@@ -182,8 +291,10 @@ class Numerical(object):
 
         """
 
-        number_changed  = False
-        noun_changed    = False
+        
+        number_changed = False
+        noun_changed = False
+
         number_previous = None
         noun_previous   = None
         
@@ -193,10 +304,12 @@ class Numerical(object):
                 if number != self.__number and not save_number:
                     number_previous = self.__number
                     number_changed = True
-                
+
+
                 self.__number = number
-            except ValueError as e:
-                
+            except ValueError:
+
+
                 warning = "If passing a noun alone to 'count_noun' you need to include the parameter name\n" \
                           "For example:\n" \
                           "\n" \
@@ -208,6 +321,7 @@ class Numerical(object):
                 
                 raise ValueError(warning) from e
         
+
         if noun is not None:
             
             noun = str(noun)
@@ -230,7 +344,7 @@ class Numerical(object):
             number_previous = None
             number_changed  = False
         if noun_changed:
-            self.__noun   = noun_previous
+            self.__noun = noun_previous
             noun_previous = None
             noun_changed  = None
         
@@ -239,7 +353,7 @@ class Numerical(object):
     
     @property
     def noun(self):
-        """
+      """
 
         The value of 'Numerical.noun'.
 
@@ -492,7 +606,6 @@ class Numerical(object):
             raise ValueError(
                     "The parameter 'target_num' needs to be an integer or a float"
                     )
-        
         return INF.number_to_words(str(target_num))
     
     
