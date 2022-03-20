@@ -29,7 +29,7 @@ class NumericalStrings(object):
     An object containing all the basic parts of numbers in english, written-out as strings.
 
     """
-    less_than_20: list[Union[str, Any]] = [
+    less_than_20 = [
             "",
             "One",
             "Two",
@@ -53,7 +53,7 @@ class NumericalStrings(object):
             ]
     """ A list of all the numbers  'in string form' from 'One' to 'Twenty' """
 
-    tens: list[str] = [
+    tens = [
             "",
             "Ten",
             "Twenty",
@@ -67,7 +67,7 @@ class NumericalStrings(object):
             ]
     """ A list of all the double-digit numbers ending in '0' written-out in string form """
 
-    thousands: list[str] = [
+    thousands = [
             "",
             "Thousand",
             "Million",
