@@ -226,7 +226,7 @@ class Numerical(object):
 
             noun = str(noun)
             try:
-                noun = str(noun)
+                noun = noun
                 if self.__noun is not None and noun != self.__noun:
                     if not save_noun:
                         noun_changed = True
@@ -430,7 +430,7 @@ class Numerical(object):
 
             # If we did not receive a bool(True) value for the 'skip_commify' parameter we'll
             # send our number off to be commified by self.commify before concatenation
-            c_count = self.commify(target_number=count) if not skip_commify else count
+            c_count = count if skip_commify else self.commify(target_number=count)
         # If the parameter 'only_noun' evaluates to bool(True) the request should not contain
         # the root number in any form.
         statement = n_noun if only_noun else f"{c_count} {n_noun}"
