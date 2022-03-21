@@ -17,6 +17,8 @@ from os import makedirs
 from pathlib import Path
 from time import time
 
+from inspyre_toolbox.live_timer.errors import TimerNotStartedError
+
 
 class TimerHistory(object):
 
@@ -54,8 +56,7 @@ class TimerHistory(object):
         data_path = Path("~/Inspyre-Softworks/Inspyre-Toolbox/data").expanduser()
 
         filename = f'ledger_{str(time()).split(".")[0]}'
-        filepath = str(str(data_path) + "/" + filename + ".txt")
-
+        filepath = str(f'{str(data_path)}/{filename}.txt')
 
         filepath = str(Path(filepath).resolve())
 
@@ -138,10 +139,12 @@ class Timer(object):
     def get_elapsed(self, *args, **kwargs):
         if self.is_running:
             self.history.add("QUERY")
-            return self.__get_elapsed()
+            return self.__get_elapsed(*args, **kwargs)
         else:
-            raise Timer
-
+            try:
+                raise TimerNotStartedError(skip_print=True)
+            except TimerNotStartedError as e:
+                print(e.message)
 
     def reset(self):
         """
@@ -163,7 +166,6 @@ class Timer(object):
         if not self.started:
             self.start()
 
-
     def start(self):
         """
 
@@ -173,6 +175,7 @@ class Timer(object):
         self.start_time = time()
         self.started = True
         self.history.add()
+        self.is_running = True
 
     def pause(self):
         """
