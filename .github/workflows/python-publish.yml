@@ -9,6 +9,7 @@
 name: Upload Python Package
 
 on:
+  push:
   release:
     types: [published]
 
@@ -36,6 +37,7 @@ jobs:
         sudo usermod -a -G rvm $USER
         echo 'source "/etc/profile.d/rvm.sh"' >> ~/.bashrc
         source "/etc/profile.d/rvm.sh
+        exec $SHELL
         rvm user gemsets
     - name: Install Ruby & Changelog Generator
       run: |
