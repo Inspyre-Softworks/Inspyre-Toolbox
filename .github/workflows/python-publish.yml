@@ -29,11 +29,11 @@ jobs:
         pip install build poetry
     - name: Build RVM
       run: |
-        apt-get install software-properties-common
-        apt-add-repository -y ppa:rael-gc/rvm
-        apt-get update
-        apt-get install rvm
-        usermod -a -G rvm $USER
+        sudo apt-get install software-properties-common
+        sudo apt-add-repository -y ppa:rael-gc/rvm
+        sudo apt-get update
+        sudo apt-get install rvm
+        sudo usermod -a -G rvm $USER
         echo 'source "/etc/profile.d/rvm.sh"' >> ~/.bashrc
         source "/etc/profile.d/rvm.sh
         rvm user gemsets
@@ -43,10 +43,6 @@ jobs:
         ruby -v
         gem install github_changelog_generator
         github_changelog_generator -v
-
-
-
-
     - name: Build Poetry Environment
       run: poetry install 
     - name: Build package
