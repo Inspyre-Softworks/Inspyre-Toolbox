@@ -6,6 +6,7 @@
 
 [![Python package](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/python-package.yml)
 ![Lines of Code](https://badgen.net/codeclimate/loc/tayjaybabee/Inspyre-Toolbox)
+[![CodeQL](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/codeql-analysis.yml)
 ![Latest Github Release](https://badgen.net/github/release/tayjaybabee/Inspyre-Toolbox)
 ![Latest Stable Release](https://badgen.net/github/release/tayjaybabee/Inspyre-Toolbox/stable)
 ![PyPi Version](https://badgen.net/pypi/v/Inspyre-Toolbox)
