@@ -48,5 +48,5 @@ jobs:
       run: |
         poetry install
         poetry build
-        poetry publish -u __token__ -p $PYPI_TOKEN
+        poetry publish -u __token__ -p "$PYPI_TOKEN"
 
