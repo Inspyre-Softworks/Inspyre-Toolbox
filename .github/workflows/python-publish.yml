@@ -43,8 +43,10 @@ jobs:
         gem install github_changelog_generator
         github_changelog_generator -v
     - name: Build Poetry Environment
+      env:
+        PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
       run: |
         poetry install
         poetry build
-        poetry publish -u __token__ -p ${{ secrets.PYPI_API_TOKEN }}
+        poetry publish -u __token__ -p $PYPI_TOKEN
 
