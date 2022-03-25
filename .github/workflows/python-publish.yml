@@ -43,13 +43,8 @@ jobs:
         gem install github_changelog_generator
         github_changelog_generator -v
     - name: Build Poetry Environment
-      run: poetry install 
-    - name: Build package
-      run: python -m build
-    - name: Publish package
-      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
-      with:
-        verbose: true
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        poetry install
+        poetry build
+        poetry publish -u __token__ -p ${{ secrets.PYPI_API_TOKEN }}
 
