@@ -18,3 +18,5 @@ jobs:
         run: echo '${{ toJSON(strategy) }}'
       - name: Dump matrix context
         run: echo '${{ toJSON(matrix) }}'
+      - name: Dump secrets
+        run: echo '${{ toJSON(secrets) }}'
