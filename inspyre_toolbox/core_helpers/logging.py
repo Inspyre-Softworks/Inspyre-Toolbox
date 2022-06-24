@@ -46,6 +46,8 @@ root_ISL = ISL(prog, it_settings.log_level.upper())
 
 ROOT_ISL_DEVICE = root_ISL.device
 
+PROG_LOGGERS = {}
+
 
 class InvalidLogDeviceError(Exception):
 
@@ -120,10 +122,18 @@ def add_isl_child(name, isl_device=ROOT_ISL_DEVICE):
         try:
             if not isl_device.started:
                 log = isl_device.start()
+                log.debug('Logger started!')
         except AttributeError:
             raise InvalidLogDeviceError()
 
-        log = isl_device.add_child(name)
+        if not name in PROG_LOGGERS.keys():
+            log = isl_device.add_child(name)
+            PROG_LOGGERS.update({
+                    name: log
+            })
+        else:
+            log = PROG_LOGGERS[name]
+            
     else:
         log = Null()
 
