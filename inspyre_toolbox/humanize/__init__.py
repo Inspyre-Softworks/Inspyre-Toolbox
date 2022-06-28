@@ -303,15 +303,24 @@ class Numerical(object):
 
         self.__number = new_value
         log.info("New value set for 'Numerical.number'")
-
+        self.commify(int(new_value))
 
     @property
     def store_as_float(self):
         return self.__store_as_float
 
-
     @store_as_float.setter
     def store_as_float(self, opt):
+        """
+
+        Set the 'store_as_float' property.
+
+        Numerical.store_as_float is a settings property that dictates if the principle number of the Numerical class
+        after initialization.
+
+        Args:
+            opt:
+        """
         log = ROOT_ISL_DEVICE.add_child(__name__)
         changed = False
 
@@ -321,11 +330,12 @@ class Numerical(object):
         else:
             log.debug("Success")
 
-        # log.debug(f"Setting StoreAsFloat to {a}")
+        log.debug(f"Setting StoreAsFloat to {opt}")
 
         if self.__store_as_float != opt:
             changed = True
             self.__store_as_float = not self.__store_as_float
+
         if changed:
             self.number = float(self.number) if self.__store_as_float else int(self.number)
         else:
@@ -430,7 +440,7 @@ class Numerical(object):
 
             # If we did not receive a bool(True) value for the 'skip_commify' parameter we'll
             # send our number off to be commified by self.commify before concatenation
-            c_count = self.commify(target_number=count) if not skip_commify else count
+            c_count = count if skip_commify else self.commify(target_number=count)
         # If the parameter 'only_noun' evaluates to bool(True) the request should not contain
         # the root number in any form.
         statement = n_noun if only_noun else f"{c_count} {n_noun}"
