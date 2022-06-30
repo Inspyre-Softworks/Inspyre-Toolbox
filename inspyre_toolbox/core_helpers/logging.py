@@ -1,4 +1,3 @@
-
 # ==============================================================================
 #  Copyright (c) Inspyre Softworks 2022.                                       =
 #                                                                              =
@@ -8,7 +7,6 @@
 # ==============================================================================
 
 from pypattyrn.behavioral.null import Null
-
 
 force_lowkey_log_name = False
 """
@@ -46,6 +44,8 @@ root_ISL = ISL(prog, it_settings.log_level.upper())
 
 ROOT_ISL_DEVICE = root_ISL.device
 
+PROG_LOGGERS = {}
+
 
 class InvalidLogDeviceError(Exception):
 
@@ -69,7 +69,7 @@ class InvalidLogDeviceError(Exception):
 
 
 class Manifest(list):
-    
+
     def __init__(self, *arg, **kw):
         # assert isinstance(comp, dict), '"comp" requires a dictionary!'
         #
@@ -82,23 +82,23 @@ class Manifest(list):
         # self.__get_comp_map()
         super(Manifest, self).__init__(*arg, **kw)
         self.__slots__ = ()
-        
-        
+
     def __get_comp_map(self):
         self.__comp_map = [(x, y1) for x, y in self.__comp.items() for y1 in y]
-    
+
     @staticmethod
     def __sum_lists(lists):
         lt = []
         for lst in lists:
             lt += lst
         return lt
-    
+
     def __get_all(self):
         return self.__sum_lists(map(list, self.__comp.values()))
-    
+
     def __repr__(self):
         return str(self.__get_all())
+
 
 def add_isl_child(name, isl_device=ROOT_ISL_DEVICE):
     """
@@ -120,10 +120,18 @@ def add_isl_child(name, isl_device=ROOT_ISL_DEVICE):
         try:
             if not isl_device.started:
                 log = isl_device.start()
-        except AttributeError:
-            raise InvalidLogDeviceError()
+                log.debug('Logger started!')
+        except AttributeError as e:
+            raise InvalidLogDeviceError() from e
 
-        log = isl_device.add_child(name)
+        if name not in PROG_LOGGERS.keys():
+            log = isl_device.add_child(name)
+            PROG_LOGGERS.update({
+                    name: log
+            })
+        else:
+            log = PROG_LOGGERS[name]
+
     else:
         log = Null()
 
@@ -133,14 +141,12 @@ def add_isl_child(name, isl_device=ROOT_ISL_DEVICE):
 mod_log = None
 ml = None
 
-
 if not ROOT_ISL_DEVICE.started:
     ROOT_LOGGER = ROOT_ISL_DEVICE.start()
 
     mod_log = ROOT_ISL_DEVICE.add_child(f'{prog}.core_helpers.logging')
     ml = mod_log
-    
+
     ml.debug('Started logger.')
 else:
     ml.debug("Logger already started")
-    

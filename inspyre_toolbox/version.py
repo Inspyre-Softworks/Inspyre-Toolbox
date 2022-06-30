@@ -20,6 +20,18 @@ print(__ver_parser.sections())
 class Version(object):
 
     def _check_most_current(self):
+        """
+        The _check_most_current function checks whether the most recent
+        version of inspyre_toolbox is installed. If it is not, then the function returns
+         False and a warning message will be printed to stdout.
+        Otherwise, it returns True
+
+        Args:
+            self: Access attributes of the class within methods
+
+        Returns:
+            A boolean value
+        """
         res = up_to_date('inspyre_toolbox')
 
         self.is_latest = res
@@ -53,4 +65,5 @@ class Version(object):
 
 
 VERSION = Version(__ver_parser)
+FULL = VERSION.full
 UPDATE_PENDING = not VERSION.is_latest

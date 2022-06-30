@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "inspyre-toolbox"
-version = "1.2.3"
+version = "1.3dev1"
 description = "A toolbox containing some useful tools for Inspyre Softworks packages. Generally useful to some programmers too."
 authors = ["T Blackstone <t.blackstone@inspyre.tech>"]
 license = "MIT"
@@ -12,12 +12,18 @@ psutil = "^5.8.0"
 DateTime = "^4.3"
 pypattyrn = "^1.2"
 inspy-logger = "^2.1a14"
+tqdm = "^4.64.0"
+inspyred-print = "^1.2.1"
 
 [tool.poetry.dev-dependencies]
 jedi = "^0.18.0"
 parso = "^0.8.2"
 releases = "^1.6.3"
 ptipython = "^1.0.1"
+bpython = "^0.22.1"
+Sphinx = "^5.0.2"
+sphinx-rtd-theme = "1.0.0"
+sphinxcontrib-fulltoc = "^1.2.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -1,4 +1,3 @@
-
 # ==============================================================================
 #  Copyright (c) Inspyre Softworks 2022.                                       =
 #                                                                              =
@@ -7,18 +6,17 @@
 #  Created:              2/10/22, 9:42 PM                                      =
 # ==============================================================================
 
-from time import sleep
+import os
 import random
 import sys
-import os
+from time import sleep
 
 
 def __get_delay(fast=False):
-
     possible = list(range(45, 100)) if fast else list(range(100, 301))
     return random.choice(possible) / 1000
 
-  
+
 def clear_console():
     """
 
@@ -42,27 +40,37 @@ def animate_typing(
         clear_screen: bool = False,
         fast_typer: bool = False,
         override_upper_limit: bool = False,
-        ):
+):
     """
     
     Animate typing in the terminal/console.
     
     Args:
-        message:
-        interval:
+        message (str):
+            The message you'd like to print through a typing animation.
+
+        interval (Optional(int|float)):
+            The time (in number of seconds as an integer) that you'd like to have pass between characters being printed
+            to the line. (Defaults to random intervals to more realistically simulate typing.
+
         skip_pre_newline:
-        skip_post_newline:
+            Don't print a newline before commencing the animation.
+
+        skip_post_newline (Optional(bool)):
+            Don't print a newline after we're finished with the typing animation. (Optional)
+
         clear_screen:
-        fast_typer:
+
+         fast_typer:
         override_upper_limit:
 
     Returns:
+        None
 
     """
     # If we were instructed to clear the screen, do it.
     if clear_screen:
         clear_console()
-
 
     # If we weren't instructed to skip a leading newline, print the newline.
     if not skip_pre_newline:

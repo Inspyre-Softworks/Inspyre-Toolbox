@@ -6,8 +6,11 @@ Author: Taylor-Jayde Blackstone
 Created: 12/12/2020 - 12:37AM
 
 """
-from inspyre_toolbox.live_timer import Timer
+
 from time import sleep
+
+from inspyre_toolbox.live_timer import Timer
+
 timer = Timer()
 timer.start()
 acc = 0
@@ -18,10 +21,9 @@ while True:
     elif acc == 25:
         timer.unpause()
 
+    print(timer.get_elapsed())
     if acc == 31:
-        print(timer.get_elapsed())
         print(timer.get_elapsed(True))
         break
     else:
-        print(timer.get_elapsed())
         sleep(1)

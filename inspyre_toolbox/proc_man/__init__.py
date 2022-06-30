@@ -1,20 +1,17 @@
 #  Copyright (c) 2021. Taylor-Jayde Blackstone <t.blackstone@inspyre.tech> https://inspyre.tech
-import os
 import ctypes
-import psutil
+import os
 from datetime import datetime
+
+import psutil
+from inspy_logger import InspyLogger
 from pypattyrn.behavioral.null import Null
 
-from inspyre_toolbox.proc_man.errors import NoFoundProcessesError
 from inspyre_toolbox.core_helpers.logging import add_isl_child, force_lowkey_log_name
 from inspyre_toolbox.humanize import Numerical
-from inspy_logger import InspyLogger
-
-import subprocess
-
+from inspyre_toolbox.proc_man.errors import NoFoundProcessesError
 
 fts = datetime.fromtimestamp
-
 
 ISL = InspyLogger('InspyreToolBox.ProcMan', 'debug')
 
@@ -38,12 +35,13 @@ class Colors(object):
             self.end_color = Format.end_mod
 
 
-def isAdmin():
+
+def is_admin():
     try:
-        is_admin = (os.getuid() == 0)
+        _is_admin = (os.getuid() == 0)
     except AttributeError:
-        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-    return is_admin
+        _is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+    return _is_admin
 
 
 def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_the_dl=False, colorful_logging=False):
@@ -97,15 +95,11 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
     isl_dev = inspy_logger_device
 
     prefix = '' if on_the_dl else 'InspyreToolbox.'
-    log_name = prefix + 'proc_man.find_by_name'
+    log_name = f'{prefix}proc_man.find_by_name'
 
     log = add_isl_child(log_name, isl_dev)
 
-    if not force_lowkey_log_name:
-        r_null = not colorful_logging
-    else:
-        r_null = force_lowkey_log_name
-
+    r_null = force_lowkey_log_name or not colorful_logging
     colors = Colors(return_null=not colorful_logging)
 
     procs_found = []
@@ -122,16 +116,12 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
         try:
             # Gather the information of all the currently running processes
             proc_info = proc.as_dict(
-                attrs=['pid', 'name', 'create_time', 'username'])
+                    attrs=['pid', 'name', 'create_time', 'username'])
             log.debug(proc_info)
 
             # If we're not caring about case let's go ahead and make both
             # things we're comparing lowercase.
-            if not case_sensitive:
-                proc_name = proc_info['name'].lower()
-            else:
-                proc_name = proc_info['name']
-
+            proc_name = proc_info['name'] if case_sensitive else proc_info['name'].lower()
             if name in proc_name:
                 log.debug(f'{colors.green}Found match: {colors.blue}{proc_info["name"]}'
                           f'({colors.yellow}{proc_info["pid"]}{colors.blue})')
@@ -140,7 +130,7 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
                 procs_found.append(proc_info)
 
                 log.debug(
-                    f'{colors.green}Added {proc_info["pid"]} to found process list')
+                        f'{colors.green}Added {proc_info["pid"]} to found process list')
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
 
@@ -173,7 +163,7 @@ def kill_all_in_list(kill_list, inspy_logger_device=None, on_the_dl=False, color
     """
 
     prefix = '' if on_the_dl else 'InspyreToolbox.'
-    log_name = prefix + 'ProcMan.kill_all_in_list'
+    log_name = f'{prefix}ProcMan.kill_all_in_list'
 
     log = add_isl_child(log_name, ISL.device)
 
@@ -200,7 +190,13 @@ def kill_all_in_list(kill_list, inspy_logger_device=None, on_the_dl=False, color
         #     f'{colors.green}Kill signal sent to {colors.yellow}{proc["pid"]}')
 
 
-def kill_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_the_dl=False, colorful_logging=False):
+def kill_all_by_name(
+        name,
+        case_sensitive=False,
+        inspy_logger_device=None,
+        on_the_dl=False,
+        colorful_logging=False
+):
     """
 
     Kill all currently running programs (and all instances thereof) which have a name containing the string given as a
@@ -214,11 +210,14 @@ def kill_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
         THE PROCESS!!!!
 
     Args:
-        name (str): The name of the program you'd like to kill all instances of. Whatever you provide here will be
-        used as a query to find all programs that have name that contains this string.
+        name (str):
+            The name of the program you'd like to kill all instances of. Whatever
+            you provide here will be used as a query to find all programs that have
+            a name that contains this string.
 
-        case_sensitive (bool): Tell the function that the letter casing is irrelevant to finding matching programs. (
-        Optional, defaults to False)
+        case_sensitive (bool):
+            Tell the function that the letter casing is irrelevant to finding matching
+             programs. (Optional, defaults to False)
 
         inspy_logger_device (inspy_logger.InspyLogger().device):
             The instantiated device object from the inspy_logger package. (Optional, defaults to None)
@@ -281,16 +280,16 @@ def kill_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
     username = os.getlogin()
 
     # Find out if they are an administrator or not.
-    is_admin = isAdmin()
+    __is_admin = is_admin()
 
     started_by_user = []
 
-    if not is_admin:
+    if not __is_admin:
         for proc in procs:
             log.debug(proc['username'])
             if proc['username'].endswith(username):
                 started_by_user.append(proc)
-        
+
     started_by_user.reverse()
-    
+
     kill_all_in_list(started_by_user)

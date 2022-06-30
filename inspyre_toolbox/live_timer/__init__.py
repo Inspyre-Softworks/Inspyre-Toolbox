@@ -13,64 +13,34 @@ Description:
 
 """
 
-from os import makedirs
-from pathlib import Path
 from time import time
 
-from inspyre_toolbox.live_timer.errors import TimerNotStartedError
+from inspyre_toolbox.core_helpers.logging import ROOT_ISL_DEVICE, add_isl_child
+from inspyre_toolbox.live_timer.errors import TimerNotRunningError, TimerNotStartedError
+from inspyre_toolbox.live_timer.history import TimerHistory
 
+LOG_NAME = 'InspyreToolbox.live_timer'
 
-class TimerHistory(object):
+LOG = add_isl_child(LOG_NAME)
 
-    def __init__(self, elapsed_method):
-        self.get_elapsed = elapsed_method
-        self.ledger = []
-        self.actions = [
-                "START",
-                "STOP",
-                "PAUSE",
-                "UNPAUSE",
-                "RESET",
-                "CREATE",
-                "QUERY"
-                ]
-        self.add("CREATE")
+.
+#ROOT_ISL_DEVICE.adjust_level('debug')
 
-    def add(self, action: str = "START"):
-        action = action.upper()
-        entry = {
-            "time": time(),
-            "elapsed_since_last": "",
-            "action": action,
-            "rt_at_create": ""
-        }
-        if action == "CREATE":
-            entry['elapsed_since_last'] = 0.00
-        else:
-            entry['elapsed_since_last'] = self.get_elapsed(self.ledger[-1]['time'])
-            entry['rt_at_create'] = self.get_elapsed(self.ledger[0]['time'])
-
-        self.ledger.append(entry)
-
-    def write(self):
-        data_path = Path("~/Inspyre-Softworks/Inspyre-Toolbox/data").expanduser()
-
-        filename = f'ledger_{str(time()).split(".")[0]}'
-        filepath = str(f'{str(data_path)}/{filename}.txt')
-
-        filepath = str(Path(filepath).resolve())
-
-        if not data_path.exists():
-            makedirs(data_path)
-
-        with open(filepath, "w") as fp:
-            fp.write(str(self.ledger))
-
-    def reset(self):
-        self.ledger = []
+LOG.debug('Log started!')
 
 
 def format_seconds_to_hhmmss(seconds):
+    """
+    The format_seconds_to_hhmmss function accepts a number of seconds and returns a string
+    representing the amount of time represented by those seconds in HH:MM:SS format.
+
+    Args:
+        seconds (int):
+            The number of seconds to be converted. (Required)
+
+    Returns:
+        A string with the number of hours, minutes and seconds
+    """
     hours = seconds // (60 * 60)
     seconds %= (60 * 60)
     minutes = seconds // 60
@@ -79,50 +49,77 @@ def format_seconds_to_hhmmss(seconds):
 
 
 class Timer(object):
-    
     def __repr__(self):
-        statement = "Timer("\
+        statement = "Timer(" \
                     f"Started: {self.started} |"
         if self.started:
             runtime = time() - self.start_time
             runtime = format_seconds_to_hhmmss(runtime)
             statement += f" Started: {self.start_time} - Current Runtime: {runtime}"
 
-    def __init__(self):
-        
+    def __init__(self, auto_start=False, history=None):
+
+        self.log_name = f'{LOG_NAME}.Timer'
+
+        # Set up logger
+        self.log = add_isl_child(self.log_name)
+
         # Define some default attribute values
-        
-        self.start_time = None
-        self.is_running = False
-        self.pause_start = time()
-        self.pause_end = None
-        self.total_pause_time = 0
-        self.started = False
-        self.paused = False
-        self.was_paused = False
+
+        self.running = False
         self.mark_2 = None
+        self.pause_end = None
+        self.pause_start = time()
+        self.paused = False
+        self.start_time = None
+        self.started = False
+        self.stopped = False
+        self.total_pause_time = 0
+        self.was_paused = False
+
+        self.log.debug('Set up class attributes.')
 
         # Start a Timer history object to track times for resets
-        self.history = TimerHistory(self.__get_elapsed)
+        self.history = TimerHistory(self.__get_elapsed) if history is None else history
+
+        self.log.debug('Timer class instantiated!')
 
     def __get_elapsed(self, ts=None, sans_pause: bool = False, seconds=False):
         """
-        
+        The __get_elapsed function is a private function that is called by the public functions
+        start(), pause(), and stop(). It returns the elapsed time in seconds, or as a string if
+        seconds=False. The __get_elapsed function does not take any parameters. If you call this
+        private function directly, it will return an error
+
         Args:
-            ts:
-            sans_pause:
-            seconds:
+            self:
+                Access variables that belongs to the class
+
+            ts (int|float):
+                Pass in the current timestamp, (Optional, defaults to time.time())
+
+            sans_pause (bool):
+                Determine whether or not to include the time that the timer was
+                paused in the elapsed time. (Optional; defaults to True)
+
+            seconds (bool):
+                Return the elapsed time as number of seconds. (Optional; defaults
+                to False)
 
         Returns:
-
+            The time elapsed since the start of the timer
         """
+        log = add_isl_child(f'{self.log_name}__get_elapsed')
+
         diff_time = self.start_time if ts is None else ts
-        self.mark_2 = time()
-        # print(self.mark_2)
-        # print(self.start_time)
+
+        # ver1.2.7
+        # If we were running but are now stopped, we will skip marking
+        if not self.stopped:
+            self.mark_2 = time()
 
         diff = self.mark_2 - diff_time
-        # print(format_seconds_to_hhmmss(diff))
+
         if sans_pause:
             return format_seconds_to_hhmmss(diff)
 
@@ -137,7 +134,21 @@ class Timer(object):
         return diff if seconds else format_seconds_to_hhmmss(diff)
 
     def get_elapsed(self, *args, **kwargs):
-        if self.is_running:
+        """
+        The get_elapsed function returns the elapsed time since the timer was started.
+        If the timer is not running, it returns None. If it has been stopped,
+        it returns the elapsed time from start to stop.
+
+        Args:
+            self: Access the attributes and methods of the class in python
+            *args: Pass a non-keyworded, variable-length argument list
+            **kwargs: Pass a keyworded, variable-length argument list
+
+        Returns:
+            The current elapsed time since the timer was started
+
+        """
+        if not self.running and self.stopped or self.running:
             self.history.add("QUERY")
             return self.__get_elapsed(*args, **kwargs)
         else:
@@ -153,15 +164,24 @@ class Timer(object):
 
         """
         self.history.add(action="RESET")
-        self.was_paused = False
-        self.paused = False
-        self.total_pause_time = 0
-        self.pause_start = None
-        self.pause_end = None
-        self.started = False
-        self.mark_2 = None
-        
+
+        return Timer(history=self.history)
+
+        # if self.running:
+        #     self.stop()
+        # self.total_pause_time = 0
+        # self.pause_start = None
+        # self.pause_end = None
+        # self.started = False
+
     def restart(self):
+        """
+        The restart function resets the timer to its original state and starts it
+        running.
+
+        Returns:
+            None
+        """
         self.reset()
         if not self.started:
             self.start()
@@ -175,21 +195,28 @@ class Timer(object):
         self.start_time = time()
         self.started = True
         self.history.add()
-        self.is_running = True
+        self.running = True
 
     def pause(self):
         """
 
         Pause the running timer.
 
-        This function will pause the running timer. What this really means in this context is that this function will
-        fill the 'self.pause_start' time with the current time. When you unpause at a later time the 'self.unpause'
-        function will reference 'self.pause_start' for comparison.
+        This function will pause the running timer.
 
-        This function also sets the 'self.paused' variable to 'True'.
+        What this really means in this context is that this function will fill the
+        'self.pause_start' time with the current time. When you unpause at a later
+        time the 'self.unpause' function will reference 'self.pause_start' for
+        comparison.
 
-        :return:
+        Note:
+            This function also sets the 'self.paused' variable to 'True'.
+
         """
+        if not self.started:
+            raise TimerNotStartedError()
+        if not self.running:
+            raise TimerNotRunningError()
         if self.paused:
             return False
         self.pause_start = time()
@@ -202,21 +229,56 @@ class Timer(object):
 
         Un-Pause the running timer.
 
-        This function will unpause the running timer. What that really means in this context is that since it marks the
-        time that one paused the timer previously and this will compare the time elapsed between when the pause function
+        This function will unpause the running timer. What that really means in this
+        context is that since it marks the time that one paused the timer previously
+        and this will compare the time elapsed between when the pause function
         was called and when this is called and keeps track of it.
 
-        Whenever get_elapsed is called, it looks at the amount of seconds that have been added by this function and
-        removes that total from the number of seconds elapsed before passing them to be naturalized.
+        Whenever get_elapsed is called, it looks at the amount of seconds that
+        have been added by this function's operation process and removes that
+        total from the number of seconds elapsed before passing them to be
+        naturalized.
 
-        :return:
-              bool
+        Returns:
+            bool:
+                If;
+                    * True:
+                        The timer was successfully un-paused
+                    * False:
+                        The timer was no successfully un-paused (most likely due to its
+                        state not actually being paused),
         """
+        if not self.started:
+            raise TimerNotStartedError()
+        if not self.running:
+            raise TimerNotRunningError()
         if self.paused:
             self.pause_end = time()
             diff = self.pause_end - self.pause_start
             self.total_pause_time += diff
             self.paused = False
             self.history.add("UNPAUSE")
+            return True
         else:
             return False
+
+    def stop(self):
+        """
+        The 'stop' function stops the timer, but leaves it in a paused state.
+        The 'resume' function resumes the timer from where it was stopped.
+
+        Args:
+            self: Reference the object itself
+
+        Returns:
+            The time when the timer is stopped
+        """
+        if not self.started:
+            raise TimerNotStartedError()
+        if self.running:
+            self.running = False
+            self.paused = False
+            self.stopped = True
+            self.mark_2 = time()
+        else:
+            raise TimerNotRunningError()

@@ -7,15 +7,13 @@ Created on Wed Jun  9 01:23:36 2021
 """
 
 import typing
-from decimal import Context, Decimal
-from typing import Any, Callable, Optional, Union, ContextManager
+from decimal import Decimal
+from typing import Callable, ContextManager, Optional, Union
 
 from inflect import engine
 
 from inspyre_toolbox.core_helpers.logging import ROOT_ISL_DEVICE
-
 from inspyre_toolbox.humanize.errors import HumanizeErrors
-
 
 # Instantiate inflect.engine as 'INF'
 INF = engine()
@@ -50,7 +48,7 @@ class NumericalStrings(object):
             "Seventeen",
             "Eighteen",
             "Nineteen",
-            ]
+    ]
     """ A list of all the numbers  'in string form' from 'One' to 'Twenty' """
 
     tens = [
@@ -64,7 +62,7 @@ class NumericalStrings(object):
             "Seventy",
             "Eighty",
             "Ninety",
-            ]
+    ]
     """ A list of all the double-digit numbers ending in '0' written-out in string form """
 
     thousands = [
@@ -72,7 +70,7 @@ class NumericalStrings(object):
             "Thousand",
             "Million",
             "Billion"
-            ]
+    ]
     """ Contains thousand, million, and billion strings """
 
 
@@ -108,7 +106,7 @@ class Numerical(object):
                         var_name="number",
                         msg=f"Type {type(number)} is not valid. Must be {type(1)} or {type(1.1)}",
 
-                        ) from e
+                ) from e
 
             if store_as_float:
                 number = float(number)
@@ -124,7 +122,6 @@ class Numerical(object):
         self.cls_logger = ROOT_ISL_DEVICE.add_child(self.log_name)
         self.cls_logger.debug(f"Started logger: {self.log_name}")
 
-
     def count_noun(
             self,
             number: Optional[Union[float, str, int]] = None,
@@ -132,7 +129,7 @@ class Numerical(object):
             save_number: Optional[bool] = True,
             save_noun: Optional[bool] = True,
             **kwargs: object
-            ):
+    ):
         """
         
         Args:
@@ -226,7 +223,6 @@ class Numerical(object):
 
             noun = str(noun)
             try:
-                noun = str(noun)
                 if self.__noun is not None and noun != self.__noun:
                     if not save_noun:
                         noun_changed = True
@@ -249,7 +245,6 @@ class Numerical(object):
 
         return ret
 
-
     @property
     def noun(self):
         """
@@ -262,7 +257,6 @@ class Numerical(object):
         """
         return self.__noun
 
-
     @noun.setter
     def noun(self, new_value):
         if isinstance(new_value, str):
@@ -270,26 +264,21 @@ class Numerical(object):
         else:
             raise ValueError("Can only set a string as 'noun'")
 
-
     @noun.deleter
     def noun(self):
         self.__noun = None
-
 
     @property
     def dec_num(self):
         return Decimal(self.number)
 
-
     @property
     def commified(self):
         return self.commify()
 
-
     @property
     def number(self):
         return self.__number
-
 
     @number.setter
     def number(self, new_value):
@@ -303,15 +292,24 @@ class Numerical(object):
 
         self.__number = new_value
         log.info("New value set for 'Numerical.number'")
-
+        self.commify(int(new_value))
 
     @property
     def store_as_float(self):
         return self.__store_as_float
 
-
     @store_as_float.setter
     def store_as_float(self, opt):
+        """
+
+        Set the 'store_as_float' property.
+
+        Numerical.store_as_float is a settings property that dictates if the principle number of the Numerical class
+        after initialization.
+
+        Args:
+            opt:
+        """
         log = ROOT_ISL_DEVICE.add_child(__name__)
         changed = False
 
@@ -321,16 +319,16 @@ class Numerical(object):
         else:
             log.debug("Success")
 
-        # log.debug(f"Setting StoreAsFloat to {a}")
+        log.debug(f"Setting StoreAsFloat to {opt}")
 
         if self.__store_as_float != opt:
             changed = True
             self.__store_as_float = not self.__store_as_float
+
         if changed:
             self.number = float(self.number) if self.__store_as_float else int(self.number)
         else:
             log.error("Numerical.store_as_float contains the same value as second valve.")
-
 
     def __count_noun(
             self,
@@ -344,7 +342,7 @@ class Numerical(object):
             period=False,
             round_num=None,
             as_int=False
-            ):
+    ):
         """
 
         An alias for inflect.engine().plural_noun
@@ -430,7 +428,7 @@ class Numerical(object):
 
             # If we did not receive a bool(True) value for the 'skip_commify' parameter we'll
             # send our number off to be commified by self.commify before concatenation
-            c_count = self.commify(target_number=count) if not skip_commify else count
+            c_count = count if skip_commify else self.commify(target_number=count)
         # If the parameter 'only_noun' evaluates to bool(True) the request should not contain
         # the root number in any form.
         statement = n_noun if only_noun else f"{c_count} {n_noun}"
@@ -447,7 +445,6 @@ class Numerical(object):
         # Return the appropriate pluralized (or not) noun based off the number provided
         return statement
 
-
     def to_str(self):
         """
 
@@ -458,7 +455,6 @@ class Numerical(object):
 
         """
         return str(self.number)
-
 
     def commify(self, target_number: int = None):
         """
@@ -475,7 +471,6 @@ class Numerical(object):
         """
         num = self.number if target_number is None else target_number
         return "{:,}".format(num)
-
 
     def to_words(self, target_num=None):
         """
@@ -501,10 +496,10 @@ class Numerical(object):
         if not isinstance(target_num, int) and not isinstance(target_num, float):
             raise ValueError(
                     "The parameter 'target_num' needs to be an integer or a float"
-                    )
+            )
         return INF.number_to_words(str(target_num))
 
-    def __radd__(self, other: (int, float), force_return_count = False, force_return_self = False,
+    def __radd__(self, other: (int, float), force_return_count=False, force_return_self=False,
                  replace_number=False):
 
         self.__check_other__(other)
@@ -523,8 +518,7 @@ class Numerical(object):
         else:
             return ans
 
-
-    def __add__(self, other: (int, float), force_return_count = False, force_return_self = False, replace_number=True):
+    def __add__(self, other: (int, float), force_return_count=False, force_return_self=False, replace_number=True):
         """
 
         Return self + other_num.
@@ -543,8 +537,7 @@ class Numerical(object):
 
                 Optional, defaults to bool(False).
 
-        Note:
-            Passing a value of bool(True) (or the evaluated equivalent) to both 'force_return_self' and
+        .. warning:: Passing a value of bool(True) (or the evaluated equivalent) to both 'force_return_self' and
             'force_return_count' will result in a 'ValueError' exception being raised.
 
         Returns:
@@ -566,7 +559,6 @@ class Numerical(object):
             return self
         else:
             return ans
-
 
     def __mul__(self, other, force_return_count=False, force_return_self=False, replace_number=True):
 
@@ -649,7 +641,6 @@ class Numerical(object):
         else:
             return ans
 
-
     def __truediv__(self, other, force_return_count=False, force_return_self=False, replace_number=True):
 
         self.__check_other__(other)
@@ -707,14 +698,11 @@ class Numerical(object):
         else:
             return ans
 
-
     def __sqrt__(self) -> Callable[[Optional[ContextManager]], Decimal]:
         return self.dec_num.sqrt
 
-
     def __str__(self):
         return self.to_words()
-
 
     def __float__(self):
         return float(self.number)

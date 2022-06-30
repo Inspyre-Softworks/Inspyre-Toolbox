@@ -3,9 +3,13 @@
 In this example we demonstrate simple usage of the humanize module in conjunction with the 'live_timer' module.
 
 """
-from inspyre_toolbox.humanize import Numerical  # Numerical is the only class in humanize that would be remotely useful to anyone
-from inspyre_toolbox.live_timer import Timer  # Just demonstrating the timer, the timer is not needed to utilize Numerical
 from time import sleep
+
+from inspyre_toolbox.humanize import \
+    Numerical  # Numerical is the only class in humanize that would be remotely useful to anyone
+from inspyre_toolbox.live_timer import \
+    Timer  # Just demonstrating the timer, the timer is not needed to utilize Numerical
+
 
 class Logging:
     def __init__(self):
@@ -42,5 +46,6 @@ def do_it(do_log=False, no_sleep=False, num_iters=1000):
         out(f"{iter_count}. | {elapsed_count}.")
         if not no_sleep:
             sleep(.1)
+
 
 do_it(do_log=True, no_sleep=True, num_iters=1500)
