@@ -3,21 +3,20 @@
 
 
 class NumericalErrors(object):
-
-
     class NotANumberError(Exception):
         """
 
         Raised when a parameter is provided that is not an integer or a float where one was expectecd.
 
         """
-        def __init__(self, var, var_name: str = None, msg: str = None, skip_print: bool = False, redirect_print=None) :
+
+        def __init__(self, var, var_name: str = None, msg: str = None, skip_print: bool = False, redirect_print=None):
             """
 
             Raised when a parameter is provided that is not an integer or a float where one was expectecd.
 
-            Args:
-                var (Any): The variable which triggered the raising of this exception.
+            Arguments:
+                var (``Any``): e variable which triggered the raising of this exception.
                 var_name (str, optional): The name of the variable that was passed to raise this exception. Defaults to
                 None.
                 msg (str, optional): The message you'd like the end-user to see upon raising. Defaults to None.
@@ -30,24 +29,18 @@ class NumericalErrors(object):
                 None.
 
             """
-            print(NumericalErrors.string_)
-
-            if var_name is None :
+            if var_name is None:
                 msg1 = "The variable provided is neither an integer or a float. One or the other is needed."
-            else :
+            else:
                 var_type = type(var)
                 msg1 = f"{var_name} has a value of {var} and is of type {var_type}. An integer or float was needed."
 
-            if msg is None :
-                msg = msg1
-            else :
-                msg = msg1 + ' ' + msg
-
+            msg = msg1 if msg is None else f'{msg1} {msg}'
             self.msg = msg
             self.message = self.msg
 
-            if not skip_print :
-                if redirect_print :
+            if not skip_print:
+                if redirect_print:
                     redirect_print(self.message)
-                else :
+                else:
                     print(self.message)

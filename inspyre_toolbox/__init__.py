@@ -19,10 +19,10 @@ def __split_evenly(target):
     """
     length = len(target)
     mi = length // 2
-    
+
     list1 = target[:mi]
     list2 = target[mi:]
-    
+
     return list1, list2
 
 
@@ -48,14 +48,15 @@ def __split_alt(target):
     """
     list1 = []
     list2 = []
-    
+
     for item in target:
         if target.index(item) % 2 == 0:
             list1.append(item)
         else:
             list2.append(item)
-    
+
     return list1, list2
+
 
 def split_list(target, split_method='middle'):
     """
@@ -72,7 +73,7 @@ def split_list(target, split_method='middle'):
     valid_split_methods = [
             'alternating_columns',
             'middle',
-            ]
+    ]
     """
     valid_split_methods:
         
@@ -110,5 +111,5 @@ ChunkifiedList = NewType('ChunkifiedList', list)
 
 def chunkify(target: list, num_per: int) -> ChunkifiedList:
     ret_lst = lambda target, num_per: [target[i:i + num_per] for i in range(0, len(target), num_per)]
-    
+
     return ChunkifiedList(ret_lst(target, num_per))

@@ -6,10 +6,10 @@
 #  Created:              2/10/22, 9:42 PM                                      =
 # ==============================================================================
 
-from time import sleep
+import os
 import random
 import sys
-import os
+from time import sleep
 
 
 def __get_delay(fast=False):

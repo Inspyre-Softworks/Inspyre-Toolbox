@@ -6,8 +6,10 @@ Author: Taylor-Jayde Blackstone
 Created: 12/12/2020 - 12:37AM
 
 """
-from inspyre_toolbox.live_timer import Timer
 from time import sleep
+
+from inspyre_toolbox.live_timer import Timer
+
 timer = Timer()
 timer.start()
 acc = 0

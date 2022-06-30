@@ -6,6 +6,10 @@ Contains errors for inspyre_toolbox.conversions.roman_numerals
 
 
 class InvalidRomanNumeralStringError(Exception):
+    """
+    .. _rn_constant:
+
+    """
     message = "An invalid Roman numeral string was passed to the 'provided' parameter."
 
     def __init__(self, provided, message=message, skip_print=True):

@@ -6,8 +6,8 @@ timer = timekeep.Timer()
 timer.start()
 
 layout = [
-    [GUI.Text("00:00:00", key="TIMER")],
-    [GUI.Button("Quit", tooltip="Quit the program", enable_events=True, key="QUIT_BUTTON")]
+        [GUI.Text("00:00:00", key="TIMER")],
+        [GUI.Button("Quit", tooltip="Quit the program", enable_events=True, key="QUIT_BUTTON")]
 ]
 
 
