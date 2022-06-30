@@ -95,15 +95,11 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
     isl_dev = inspy_logger_device
 
     prefix = '' if on_the_dl else 'InspyreToolbox.'
-    log_name = prefix + 'proc_man.find_by_name'
+    log_name = f'{prefix}proc_man.find_by_name'
 
     log = add_isl_child(log_name, isl_dev)
 
-    if not force_lowkey_log_name:
-        r_null = not colorful_logging
-    else:
-        r_null = force_lowkey_log_name
-
+    r_null = force_lowkey_log_name or not colorful_logging
     colors = Colors(return_null=not colorful_logging)
 
     procs_found = []
@@ -125,11 +121,7 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
 
             # If we're not caring about case let's go ahead and make both
             # things we're comparing lowercase.
-            if not case_sensitive:
-                proc_name = proc_info['name'].lower()
-            else:
-                proc_name = proc_info['name']
-
+            proc_name = proc_info['name'] if case_sensitive else proc_info['name'].lower()
             if name in proc_name:
                 log.debug(f'{colors.green}Found match: {colors.blue}{proc_info["name"]}'
                           f'({colors.yellow}{proc_info["pid"]}{colors.blue})')
@@ -171,7 +163,7 @@ def kill_all_in_list(kill_list, inspy_logger_device=None, on_the_dl=False, color
     """
 
     prefix = '' if on_the_dl else 'InspyreToolbox.'
-    log_name = prefix + 'ProcMan.kill_all_in_list'
+    log_name = f'{prefix}ProcMan.kill_all_in_list'
 
     log = add_isl_child(log_name, ISL.device)
 
