@@ -7,7 +7,6 @@ from inspyre_toolbox.core_helpers.debugging import who_rang
 
 
 class TimerNotRunningError(Exception):
-
     default_message = 'This timer is not running!'
 
     def __init__(self, message=default_message, skip_print=False, caller=who_rang()):
@@ -29,9 +28,7 @@ class TimerNotRunningError(Exception):
 
 
 class TimerNotStartedError(TimerNotRunningError):
-
-    default_message='Timer has not yet been started!'
+    default_message = 'Timer has not yet been started!'
 
     def __init__(self, message=default_message, skip_print=False, caller=who_rang(), **kwargs):
-
         super(TimerNotStartedError, self).__init__(kwargs)

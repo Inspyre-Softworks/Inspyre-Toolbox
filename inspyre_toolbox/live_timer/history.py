@@ -16,7 +16,7 @@ class TimerHistory(object):
                 "RESET",
                 "CREATE",
                 "QUERY"
-                ]
+        ]
         self.add("CREATE")
 
     def add(self, action: str = "START") -> dict:
@@ -35,10 +35,10 @@ class TimerHistory(object):
         """
         action = action.upper()
         entry = {
-            "time": time(),
-            "elapsed_since_last": "",
-            "action": action,
-            "rt_at_create": ""
+                "time":               time(),
+                "elapsed_since_last": "",
+                "action":             action,
+                "rt_at_create":       ""
         }
         if action == "CREATE":
             entry['elapsed_since_last'] = 0.00
