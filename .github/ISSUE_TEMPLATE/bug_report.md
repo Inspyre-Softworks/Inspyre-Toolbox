@@ -2,7 +2,7 @@
 name: Bug report
 about: See something, say something.
 title: "[Bug Report]"
-labels: bug
+labels: Status::Awaiting::Developer Response, Bug::Unconfirmed, 
 assignees: tayjaybabee
 
 ---
