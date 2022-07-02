@@ -1,9 +1,39 @@
+[build-system]
+requires = [ "poetry-core>=1.0.0",]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "inspyre-toolbox"
-version = "1.3dev1"
+version = "v1.3.1-dev1"
 description = "A toolbox containing some useful tools for Inspyre Softworks packages. Generally useful to some programmers too."
-authors = ["T Blackstone <t.blackstone@inspyre.tech>"]
+authors = [ "T Blackstone <t.blackstone@inspyre.tech>",]
 license = "MIT"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Terminals",
+    "Topic :: Utilities",
+]
+keywords = [
+    'toolbox',
+    'timer',
+    'commify',
+    'strings',
+    'elapsed'
+]
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0"
@@ -24,7 +54,3 @@ bpython = "^0.22.1"
 Sphinx = "^5.0.2"
 sphinx-rtd-theme = "1.0.0"
 sphinxcontrib-fulltoc = "^1.2.0"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"

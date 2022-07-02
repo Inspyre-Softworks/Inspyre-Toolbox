@@ -23,7 +23,6 @@ LOG_NAME = 'InspyreToolbox.live_timer'
 
 LOG = add_isl_child(LOG_NAME)
 
-.
 #ROOT_ISL_DEVICE.adjust_level('debug')
 
 LOG.debug('Log started!')
