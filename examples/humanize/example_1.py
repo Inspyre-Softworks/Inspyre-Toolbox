@@ -28,7 +28,7 @@ def do_it(do_log=False, no_sleep=False, num_iters=1000):
 
     if do_log:
         logger = Logging()
-        log = logger.log_dev.add_child("do_it")
+        log = logger.log_dev.get_child("do_it")
         log.debug("Logger started, starting iteration")
         out = log.debug
     else:
