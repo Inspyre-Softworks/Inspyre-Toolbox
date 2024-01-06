@@ -493,11 +493,12 @@ class Numerical(object):
         if target_num is None:
             target_num = self.number
 
-        if not isinstance(target_num, int) and not isinstance(target_num, float):
+        if isinstance(target_num, (int, float)):
+            return INF.number_to_words(str(target_num))
+        else:
             raise ValueError(
                     "The parameter 'target_num' needs to be an integer or a float"
             )
-        return INF.number_to_words(str(target_num))
 
     def __radd__(self, other: (int, float), force_return_count=False, force_return_self=False,
                  replace_number=False):

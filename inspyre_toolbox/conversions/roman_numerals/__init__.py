@@ -167,7 +167,4 @@ def roman_numeral_to_integer(roman_numeral: str, noun: str = None, return_object
     if return_object:
         return rn
 
-    if commify:
-        return rn.as_numerical.commify()
-
-    return rn.as_int
+    return rn.as_numerical.commify() if commify else rn.as_int
