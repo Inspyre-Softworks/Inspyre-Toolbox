@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "inspyre-toolbox"
-version = "v1.4.0"
+version = "v1.4.1"
 description = "A toolbox containing some useful tools for Inspyre Softworks packages. Generally useful to some programmers too."
 authors = [ "T Blackstone <t.blackstone@inspyre.tech>",]
 license = "MIT"
@@ -12,7 +12,7 @@ classifiers = [ "Intended Audience :: Developers", "License :: OSI Approved :: M
 keywords = [ "toolbox", "timer", "commify", "strings", "elapsed",]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<4.0"
+python = ">=3.9,<4.0"
 inflect = "^5.3.0"
 psutil = "^5.8.0"
 DateTime = "^4.3"
@@ -27,7 +27,6 @@ ist-bytes-converter = "inspyre_toolbox.cli.ist_bytes_converter:main"
 [tool.poetry.group.dev.dependencies]
 ptipython = "^1.0.1"
 prompt-toolkit = "^3.0.43"
-ipython = "^8.21.0"
 Sphinx = "^5.0.2"
 sphinx-rtd-theme = "1.0.0"
 sphinxcontrib-fulltoc = "^1.2.0"
