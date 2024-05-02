@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "inspyre-toolbox"
-version = "v1.4.2"
+version = "v1.4.3"
 description = "A toolbox containing some useful tools for Inspyre Softworks packages. Generally useful to some programmers too."
 authors = [ "T Blackstone <t.blackstone@inspyre.tech>",]
 license = "MIT"
@@ -19,7 +19,7 @@ DateTime = "^4.3"
 pypattyrn = "^1.2"
 tqdm = "^4.64.0"
 inspyred-print = "^1.2.1"
-inspy-logger = "3.1.0.dev3"
+inspy-logger = "^3.1.0.dev4"
 
 [tool.poetry.scripts]
 ist-bytes-converter = "inspyre_toolbox.cli.ist_bytes_converter:main"
