@@ -15,11 +15,13 @@ Description:
 
 from time import time
 
-from inspyre_toolbox.core_helpers.logging import ROOT_ISL_DEVICE, add_isl_child
+from inspy_logger import Loggable
+
+from inspyre_toolbox.core_helpers.logging import add_isl_child
 from inspyre_toolbox.live_timer.errors import TimerNotRunningError, TimerNotStartedError
 from inspyre_toolbox.live_timer.history import TimerHistory
 
-LOG_NAME = 'InspyreToolbox.live_timer'
+LOG_NAME = 'live_timer'
 
 LOG = add_isl_child(LOG_NAME)
 
@@ -47,21 +49,32 @@ def format_seconds_to_hhmmss(seconds):
     return "%02i:%02i:%02i" % (hours, minutes, seconds)
 
 
-class Timer(object):
+class Timer(Loggable):
     def __repr__(self):
-        statement = "Timer(" \
-                    f"Started: {self.started} |"
+        """
+        Return a string representation of the Timer object.
+
+        Returns:
+            str: A formatted string representing the Timer object.
+        """
+        status = "Running" if self.running else "Stopped"
+        state = "Paused" if self.paused else "Not Paused"
+        start_info = f"Started at: {self.start_time}" if self.started else "Not Started"
+        runtime_info = ""
         if self.started:
             runtime = time() - self.start_time
-            runtime = format_seconds_to_hhmmss(runtime)
-            statement += f" Started: {self.start_time} - Current Runtime: {runtime}"
+            runtime_info = f" | Runtime: {format_seconds_to_hhmmss(runtime)}"
+        return f"Timer(Status: {status} | State: {state} | {start_info}{runtime_info})"
 
     def __init__(self, auto_start=False, history=None):
+        super().__init__(parent_log_device=LOG)
 
-        self.log_name = f'{LOG_NAME}.Timer'
+        self.log = self.class_logger
 
-        # Set up logger
-        self.log = add_isl_child(self.log_name)
+        self.__auto_start = False
+        self._status = 'Stopped'
+
+        self.class_logger.debug('Setting up Timer class attributes...')
 
         # Define some default attribute values
 
@@ -72,6 +85,7 @@ class Timer(object):
         self.paused = False
         self.start_time = None
         self.started = False
+
         self.stopped = False
         self.total_pause_time = 0
         self.was_paused = False
@@ -82,6 +96,27 @@ class Timer(object):
         self.history = TimerHistory(self.__get_elapsed) if history is None else history
 
         self.log.debug('Timer class instantiated!')
+
+        self.auto_start = auto_start
+
+    @property
+    def auto_start(self):
+        return self.__auto_start
+
+    @auto_start.setter
+    def auto_start(self, new: bool):
+        if new and not self.started:
+            self.start()
+
+        self.__auto_start = new
+
+    @property
+    def elapsed(self):
+        return self.get_elapsed(seconds=True)
+
+    @property
+    def num_resets(self):
+        return self.history.num_resets
 
     def __get_elapsed(self, ts=None, sans_pause: bool = False, seconds=False):
         """
@@ -108,7 +143,7 @@ class Timer(object):
         Returns:
             The time elapsed since the start of the timer
         """
-        log = add_isl_child(f'{self.log_name}__get_elapsed')
+        log = self.create_child_logger()
 
         diff_time = self.start_time if ts is None else ts
 
@@ -175,8 +210,9 @@ class Timer(object):
 
     def restart(self):
         """
-        The restart function resets the timer to its original state and starts it
-        running.
+        The restart function resets the timer to its original state and starts it running.
+
+        This method modifies the current instance instead of creating a new one.
 
         Returns:
             None
@@ -184,6 +220,8 @@ class Timer(object):
         self.reset()
         if not self.started:
             self.start()
+        # Update the current instance instead of creating a new one
+        self.__dict__.update(Timer(history=self.history).__dict__)
 
     def start(self):
         """

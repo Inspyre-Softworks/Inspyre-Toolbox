@@ -10,7 +10,7 @@ URLS = dict(
     developer_url='https://inspyre.tech',
     docs_url='https://inspyre-toolbox.readthedocs.io/en/latest',
     github_url='https://github.com/tayjaybabee/Inspyre-Toolbox',
-    pypi_url='https://pypi.org/project/inspyre-toolbox',
+    pypi_url='https://pypi.org/pypi/inspyre-toolbox',
 )
 """The URLs used in the project."""
 
@@ -35,7 +35,7 @@ RELEASE_MAP = {
 VERSION = {
     'major': 1,
     'minor': 4,
-    'patch': 1,
+    'patch': 2,
     'release': 'final',
     'release_num': 0
 }
