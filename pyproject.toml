@@ -19,7 +19,7 @@ DateTime = "^4.3"
 pypattyrn = "^1.2"
 tqdm = "^4.64.0"
 inspyred-print = "^1.2.1"
-inspy-logger = "^3.1.0.dev4"
+inspy-logger = "3.1.0-dev4"
 
 [tool.poetry.scripts]
 ist-bytes-converter = "inspyre_toolbox.cli.ist_bytes_converter:main"
