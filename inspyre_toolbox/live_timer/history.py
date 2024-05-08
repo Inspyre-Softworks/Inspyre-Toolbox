@@ -19,6 +19,17 @@ class TimerHistory(object):
         ]
         self.add("CREATE")
 
+    @property
+    def num_resets(self) -> int:
+        """
+        Get the number of times the timer has been reset
+
+        Returns:
+            The number of times the timer has been reset
+
+        """
+        return len([entry for entry in self.ledger if entry['action'] == "RESET"])
+
     def add(self, action: str = "START") -> dict:
         """
         The add function adds a new entry to the ledger.

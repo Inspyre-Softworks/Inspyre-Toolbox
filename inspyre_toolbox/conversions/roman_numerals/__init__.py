@@ -4,11 +4,13 @@ from inspyre_toolbox.conversions.roman_numerals.errors import InvalidRomanNumera
 from inspyre_toolbox.core_helpers.logging import ROOT_ISL_DEVICE, add_isl_child
 from inspyre_toolbox.humanize import Numerical
 
-ROOT_ISL_DEVICE.adjust_level('debug')
+ROOT_ISL_DEVICE.set_level('DEBUG')
 
 LOG_NAME = 'conversions.roman_numerals'
 
-LOG = add_isl_child(LOG_NAME)
+MOD_LOG_DEVICE = add_isl_child(LOG_NAME)
+
+LOG = MOD_LOG_DEVICE.logger
 
 LOG.debug('Logger started.')
 
@@ -54,7 +56,9 @@ def validate_roman_numeral_str(roman_numeral: str):
     Returns:
         True if the roman_numeral is a valid roman numeral string
     """
-    log = add_isl_child(f'{LOG_NAME}.validate_roman_numeral_str')
+    log_device = ROOT_ISL_DEVICE.get_child(f'{LOG_NAME}.validate_roman_numeral_str')
+    log = log_device.logger
+
     try:
         if not isinstance(roman_numeral, str):
             raise TypeError(f"The parameter 'roman_numeral' for 'validate_roman_numeral_str' must be of type 'str' "
@@ -163,7 +167,4 @@ def roman_numeral_to_integer(roman_numeral: str, noun: str = None, return_object
     if return_object:
         return rn
 
-    if commify:
-        return rn.as_numerical.commify()
-
-    return rn.as_int
+    return rn.as_numerical.commify() if commify else rn.as_int

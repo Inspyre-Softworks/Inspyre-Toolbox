@@ -1,42 +1,61 @@
 #  Copyright (c) 2021. Taylor-Jayde Blackstone <t.blackstone@inspyre.tech> https://inspyre.tech
+import contextlib
 import ctypes
 import os
 from datetime import datetime
 
 import psutil
-from inspy_logger import InspyLogger
 from pypattyrn.behavioral.null import Null
 
-from inspyre_toolbox.core_helpers.logging import add_isl_child, force_lowkey_log_name
+import inspyre_toolbox.settings as it_settings
+from inspyre_toolbox.core_helpers.logging import add_isl_child, force_lowkey_log_name, ISL as InspyLogger
 from inspyre_toolbox.humanize import Numerical
 from inspyre_toolbox.proc_man.errors import NoFoundProcessesError
 
+
 fts = datetime.fromtimestamp
 
-ISL = InspyLogger('InspyreToolBox.ProcMan', 'debug')
+ISL = InspyLogger('InspyreToolBox.ProcMan', it_settings.log_level.upper())
 
-LOG = ISL.device.start()
+LOG = ISL
 
 
 class Colors(object):
     def __init__(self, return_null=True):
+        """
+        Initializes a Colors object.
+
+        Args:
+            return_null (bool, optional):
+                If True, instantiate the Colors object with Null values for each color attribute.
+
+                If False, instantiate the Colors object with actual color values.Defaults to True.
+        """
         if return_null:
-            self.red = Null()
-            self.yellow = Null()
-            self.blue = Null()
-            self.green = Null()
+            self.red       = Null()
+            self.yellow    = Null()
+            self.blue      = Null()
+            self.green     = Null()
             self.end_color = Null()
         else:
             from inspyred_print import Color, Format
-            self.red = Color.red
-            self.yellow = Color.yellow
-            self.blue = Color.blue
-            self.green = Color.green
-            self.end_color = Format.end_mod
+            color = Color()
+            fmt = Format()
+            self.red       = color.red
+            self.yellow    = color.yellow
+            self.blue      = color.blue
+            self.green     = color.green
+            self.end_color = fmt.end_mod
 
 
+def is_admin() -> bool:
+    """
+    Checks if the current user has administrative privileges.
 
-def is_admin():
+    Returns:
+        bool:
+            True if the current user has administrative privileges, False otherwise.
+    """
     try:
         _is_admin = (os.getuid() == 0)
     except AttributeError:
@@ -113,7 +132,7 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
 
     # Iterate through the process list
     for proc in psutil.process_iter():
-        try:
+        with contextlib.suppress(psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             # Gather the information of all the currently running processes
             proc_info = proc.as_dict(
                     attrs=['pid', 'name', 'create_time', 'username'])
@@ -131,9 +150,6 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
 
                 log.debug(
                         f'{colors.green}Added {proc_info["pid"]} to found process list')
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass
-
     num_found = Numerical(len(procs_found), noun='process')
 
     log.debug(f'Found: {colors.yellow}{num_found.count_noun()}')
@@ -145,15 +161,18 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
 def kill_all_in_list(kill_list, inspy_logger_device=None, on_the_dl=False, colorful_logging=False):
     """
 
-    When provided a list of processes kill each process in the list.
+    When provided a list of processes, kill each process in the list.
 
     Args:
         kill_list:
             A list of processes in the format of a dictionary
+
         inspy_logger_device:
             An instantiated inspy-logger device.
+
         on_the_dl:
             Don't include 'InspyreToolbox' in the name of the logger.
+
         colorful_logging:
             Should logging be colorful?
 

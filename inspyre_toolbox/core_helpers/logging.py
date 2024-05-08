@@ -35,14 +35,15 @@ For Example:
         
 
 """
-from inspy_logger import InspyLogger as ISL
+INSPY_LOG_LEVEL = 'info'
+from inspy_logger import Logger as ISL
 import inspyre_toolbox.settings as it_settings
 
 prog = 'InspyreToolbox'
 
 root_ISL = ISL(prog, it_settings.log_level.upper())
 
-ROOT_ISL_DEVICE = root_ISL.device
+ROOT_ISL_DEVICE = root_ISL
 
 PROG_LOGGERS = {}
 
@@ -116,37 +117,4 @@ def add_isl_child(name, isl_device=ROOT_ISL_DEVICE):
         The log device.
 
     """
-    if isl_device:
-        try:
-            if not isl_device.started:
-                log = isl_device.start()
-                log.debug('Logger started!')
-        except AttributeError as e:
-            raise InvalidLogDeviceError() from e
-
-        if name not in PROG_LOGGERS.keys():
-            log = isl_device.add_child(name)
-            PROG_LOGGERS.update({
-                    name: log
-            })
-        else:
-            log = PROG_LOGGERS[name]
-
-    else:
-        log = Null()
-
-    return log
-
-
-mod_log = None
-ml = None
-
-if not ROOT_ISL_DEVICE.started:
-    ROOT_LOGGER = ROOT_ISL_DEVICE.start()
-
-    mod_log = ROOT_ISL_DEVICE.add_child(f'{prog}.core_helpers.logging')
-    ml = mod_log
-
-    ml.debug('Started logger.')
-else:
-    ml.debug("Logger already started")
+    return ROOT_ISL_DEVICE.get_child(name)

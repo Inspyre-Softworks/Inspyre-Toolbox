@@ -119,7 +119,7 @@ class Numerical(object):
 
         self.log_name = 'Inspyre-Toolbox.humanize.Numerical'
 
-        self.cls_logger = ROOT_ISL_DEVICE.add_child(self.log_name)
+        self.cls_logger = ROOT_ISL_DEVICE.get_child(self.log_name)
         self.cls_logger.debug(f"Started logger: {self.log_name}")
 
     def count_noun(
@@ -283,7 +283,7 @@ class Numerical(object):
     @number.setter
     def number(self, new_value):
         log_name = f'{self.log_name}.number.Setter'
-        log = ROOT_ISL_DEVICE.add_child(log_name)
+        log = ROOT_ISL_DEVICE.get_child(log_name)
         try:
             float(new_value)
             int(new_value)
@@ -310,7 +310,7 @@ class Numerical(object):
         Args:
             opt:
         """
-        log = ROOT_ISL_DEVICE.add_child(__name__)
+        log = ROOT_ISL_DEVICE.get_child(__name__)
         changed = False
 
         log.debug("Checking value validity.")
@@ -400,7 +400,7 @@ class Numerical(object):
 
         """
         # Make sure our noun is a string or raise ValueError
-        log = ROOT_ISL_DEVICE.add_child(__name__)
+        log = ROOT_ISL_DEVICE.get_child(__name__)
         if not isinstance(noun, str):
             raise ValueError("Noun must be of type: str")
 
@@ -493,11 +493,12 @@ class Numerical(object):
         if target_num is None:
             target_num = self.number
 
-        if not isinstance(target_num, int) and not isinstance(target_num, float):
+        if isinstance(target_num, (int, float)):
+            return INF.number_to_words(str(target_num))
+        else:
             raise ValueError(
                     "The parameter 'target_num' needs to be an integer or a float"
             )
-        return INF.number_to_words(str(target_num))
 
     def __radd__(self, other: (int, float), force_return_count=False, force_return_self=False,
                  replace_number=False):

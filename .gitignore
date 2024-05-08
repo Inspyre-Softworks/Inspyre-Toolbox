@@ -14,3 +14,4 @@ requirements.txt
 /.autosrc
 /kite-installer
 /docs
+*.log
