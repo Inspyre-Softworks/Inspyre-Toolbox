@@ -1,4 +1,4 @@
-from inspyre_toolbox.common.meta import VERSION as _VERSION, URLS as _URLS, RELEASE_MAP
+from inspyre_toolbox.common.meta import VERSION as CURRENT_VERSION, URLS as PROJECT_URLS, RELEASE_MAP
 import requests
 from packaging import version as pkg_version
 import sys
