@@ -203,10 +203,6 @@ class RestrictedSetter:
             if caller_self is None or caller_self.__class__ != obj.__class__:
                 raise PermissionError("Property can only be set within class methods.")
 
-        print(value)
-        for val in self.allowed_values:
-            print(val)
-
         if self.allowed_values is not None and value not in self.allowed_values:
             allowed_vals = ', '.join(map(str, self.allowed_values))
             raise ValueError(f"Value must be one of {allowed_vals}, got {value}")
