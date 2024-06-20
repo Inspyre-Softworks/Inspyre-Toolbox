@@ -35,7 +35,7 @@ RELEASE_MAP = {
 VERSION = {
     'major': 1,
     'minor': 5,
-        'patch': 2,
+        'patch': 3,
     'release': 'final',
     'release_num': 0
 }
