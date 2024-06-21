@@ -75,7 +75,9 @@ def how_many_until(current:list, target=.98, iter_limit=pow(10, 10), delay=0):
         iter_limit = iters
 
 
-def download_time(file_size_bytes: int, download_speed: int, download_speed_unit: str = 'bit', return_in_seconds=False):
+from typing import Union
+
+def download_time(file_size_bytes: int, download_speed: int, download_speed_unit: str = 'bit', return_in_seconds=False) -> Union[str, float]:
     bc = ByteConverter(file_size_bytes, 'byte')
     speed_data = find_unit(download_speed_unit.lower())
 
