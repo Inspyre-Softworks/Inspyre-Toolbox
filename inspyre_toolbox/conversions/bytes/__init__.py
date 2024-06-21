@@ -133,7 +133,7 @@ class ByteConverter(Loggable):
 
         self.__family_factors = [self.UNITS[u] for u in self.UNIT_FAMILY]
 
-    def convert(self, unit: str, strict_case: bool = False):
+    def convert(self, unit: str, strict_case: bool = False) -> float:
         """
         Converts the bytes value to the specified unit.
 
