@@ -483,7 +483,7 @@ class ByteConverter(Loggable):
         """Returns the value in yottabytes"""
         return self.convert('yottabyte')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.__initial_value} {self.__initial_unit}'
 
     def __repr__(self):
