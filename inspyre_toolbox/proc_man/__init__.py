@@ -1,6 +1,5 @@
 #  Copyright (c) 2021. Taylor-Jayde Blackstone <t.blackstone@inspyre.tech> https://inspyre.tech
 import contextlib
-import ctypes
 import os
 from datetime import datetime
 
@@ -8,10 +7,9 @@ import psutil
 from pypattyrn.behavioral.null import Null
 
 import inspyre_toolbox.settings as it_settings
-from inspyre_toolbox.core_helpers.logging import add_isl_child, force_lowkey_log_name, ISL as InspyLogger
+from inspyre_toolbox.core_helpers.logging import ISL as InspyLogger, add_isl_child, force_lowkey_log_name
 from inspyre_toolbox.humanize import Numerical
 from inspyre_toolbox.proc_man.errors import NoFoundProcessesError
-
 
 fts = datetime.fromtimestamp
 
@@ -46,21 +44,6 @@ class Colors(object):
             self.blue      = color.blue
             self.green     = color.green
             self.end_color = fmt.end_mod
-
-
-def is_admin() -> bool:
-    """
-    Checks if the current user has administrative privileges.
-
-    Returns:
-        bool:
-            True if the current user has administrative privileges, False otherwise.
-    """
-    try:
-        _is_admin = (os.getuid() == 0)
-    except AttributeError:
-        _is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-    return _is_admin
 
 
 def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_the_dl=False, colorful_logging=False):
@@ -111,6 +94,12 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
 
     """
 
+    def add_readable_times(process_list):
+        for proc in process_list:
+            proc['create_time_readable'] = fts(proc['create_time'])
+
+        return process_list
+
     isl_dev = inspy_logger_device
 
     prefix = '' if on_the_dl else 'InspyreToolbox.'
@@ -153,6 +142,8 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
     num_found = Numerical(len(procs_found), noun='process')
 
     log.debug(f'Found: {colors.yellow}{num_found.count_noun()}')
+
+    procs_found = add_readable_times(procs_found)
 
     # Return found process list to caller
     return procs_found

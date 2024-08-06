@@ -34,9 +34,9 @@ RELEASE_MAP = {
 
 VERSION = {
     'major': 1,
-    'minor': 5,
-        'patch': 3,
-    'release': 'final',
-    'release_num': 0
+        'minor':       6,
+        'patch':       0,
+        'release':     'dev',
+        'release_num': 2
 }
 """The version information for the project."""

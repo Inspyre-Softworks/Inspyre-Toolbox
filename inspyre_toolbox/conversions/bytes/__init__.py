@@ -492,3 +492,44 @@ class ByteConverter(Loggable):
                     f'<ByteConverter@{hex(id(self))}: '
                     f'Initial value: {self.__initial_value} | Initial unit: {self.__initial_unit}>'
             )
+
+
+def get_lowest_unit_size(size: int) -> tuple[Union[int, float], str]:
+    """
+    Get the lowest unit size for a given size.
+
+    Parameters:
+        size (int):
+            The size to convert.
+
+    Returns:
+        tuple[Union[int, float], str]:
+            The converted size and the unit.
+
+    Examples:
+        >>> get_lowest_unit_size(1024)
+        (1.0, 'KB')
+        >>> get_lowest_unit_size(1024 * 1024)
+        (1.0, 'MB')
+        >>> get_lowest_unit_size(1024 * 1024 * 1024)
+        (1.0, 'GB')
+        >>> get_lowest_unit_size(1024 * 1024 * 1024 * 1024)
+        (1.0, 'TB')
+        >>> get_lowest_unit_size(1024 * 1024 * 1024 * 1024 * 1024)
+        (1.0, 'PB')
+        >>> get_lowest_unit_size(1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+        (1.0, 'EB')
+        >>> get_lowest_unit_size(1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+        (1.0, 'ZB')
+        >>> get_lowest_unit_size(1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+        (1.0, 'YB')
+    """
+    units = ['byte', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte', 'petabyte', 'exabyte', 'zetabyte', 'yottabyte']
+    units.reverse()
+    converter = ByteConverter(size, 'byte')
+
+    for unit in units:
+        converted = converter.convert(unit.lower())
+
+        if converted >= 1:
+            return converted, unit.upper(),

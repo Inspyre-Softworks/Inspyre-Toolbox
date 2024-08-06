@@ -4,12 +4,15 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "inspyre-toolbox"
-version = "v1.5.3"
-description = "A toolbox containing some useful tools for Inspyre Softworks packages. Generally useful to some programmers too."
+version = "v1.6.0-dev.2"
+description = "Inspyre Toolbox is a collection of tools designed to simplify programming tasks, reducing repetitive code. Initially for internal use at Inspyre Softworks, it benefits other developers too with features like a live timer, humanize class for numerical operations, extended argparse, process management, and miscellaneous Python helpers."
 authors = [ "T Blackstone <t.blackstone@inspyre.tech>",]
 license = "MIT"
 classifiers = [ "Intended Audience :: Developers", "License :: OSI Approved :: MIT License", "Natural Language :: English", "Operating System :: OS Independent", "Programming Language :: Python :: 3", "Programming Language :: Python :: 3.6", "Programming Language :: Python :: 3.7", "Programming Language :: Python :: 3.8", "Programming Language :: Python :: 3.9", "Programming Language :: Python :: 3 :: Only", "Topic :: Scientific/Engineering :: Mathematics", "Topic :: Software Development", "Topic :: Software Development :: Build Tools", "Topic :: Software Development :: Libraries :: Python Modules", "Topic :: Terminals", "Topic :: Utilities",]
 keywords = [ "toolbox", "timer", "commify", "strings", "elapsed",]
+readme = "README.md"
+homepage = "https://github.com/Inspyre-Softworks/Inspyre-Toolbox"
+repository = "https://pypi.org/project/inspyre-toolbox/"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
@@ -17,12 +20,14 @@ inflect = "^7.2.1"
 psutil = "^6.0.0"
 DateTime = "^4.3"
 pypattyrn = "^1.2"
-tqdm = "^4.64.0"
+tqdm = "^4.66.5"
 inspyred-print = "^1.2.1"
-inspy-logger = ">=3.1.0"
+inspy-logger = ">=3.2.0"
+python-box = "^7.2.0"
 
 [tool.poetry.scripts]
 ist-bytes-converter = "inspyre_toolbox.cli.ist_bytes_converter:main"
+ist-add-to-path = "inspyre_toolbox.cli.ist_add_to_path:main"
 
 [tool.poetry.group.dev.dependencies]
 ptipython = "^1.0.1"
@@ -31,6 +36,7 @@ jedi = "^0.18.0"
 parso = "^0.8.2"
 releases = "^1.6.3"
 ipykernel = "^6.29.2"
+pytest = "^8.2.2"
 
 [tool.poetry.group.docs.dependencies]
 sphinx = "^7.3.7"
