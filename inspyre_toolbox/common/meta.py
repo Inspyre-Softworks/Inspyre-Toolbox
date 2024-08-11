@@ -1,42 +1,22 @@
+from inspyre_toolbox.common.about.package import PACKAGE_INFO
+from inspyre_toolbox.common.about.pypi import PYPI_VERSION_INFO
+
+AUTHORS   = PACKAGE_INFO['developer']['org']['developers']
+PROG_NAME = PACKAGE_INFO['name']['full']
+URLS = PACKAGE_INFO['urls']
+
+from inspyre_toolbox.common.about.version import *
+
+_VERSION = VERSION
+
+VERSION   = _VERSION.parse_version()
+
+
 __all__ = [
-    'AUTHORS',
-    'RELEASE_MAP',
-    'URLS',
-    'VERSION'
+        'AUTHORS',
+        'PACKAGE_INFO',
+        'PROG_NAME',
+        'PYPI_VERSION_INFO',
+        'URLS',
+        'VERSION'
 ]
-
-
-URLS = dict(
-    developer_url='https://inspyre.tech',
-    docs_url='https://inspyre-toolbox.readthedocs.io/en/latest',
-    github_url='https://github.com/tayjaybabee/Inspyre-Toolbox',
-    pypi_url='https://pypi.org/pypi/inspyre-toolbox',
-)
-"""The URLs used in the project."""
-
-
-AUTHORS = [
-    ('Inspyre-Softworks', URLS['developer_url']),
-    ('Taylor-Jayde Blackstone', '<t.blackstone@inspyre.tech>')
-]
-"""The authors of the project."""
-
-
-RELEASE_MAP = {
-    'dev': 'Development Build',
-    'alpha': 'Alpha Build',
-    'beta': 'Beta Build',
-    'rc': 'Release Candidate Build',
-    'final': 'Final Release Build'
-}
-"""The release map for the project."""
-
-
-VERSION = {
-    'major': 1,
-        'minor':       6,
-        'patch':       0,
-        'release':     'dev',
-        'release_num': 2
-}
-"""The version information for the project."""

@@ -5,8 +5,8 @@ from warnings import warn
 
 from pypattyrn.behavioral.null import Null
 
-from inspyre_toolbox.decor import validate_type
-from inspyre_toolbox.syntactic_sweets.properties.decorators.freeze import freeze_property
+from inspyre_toolbox.syntactic_sweets.classes.decorators.freeze import freeze_property
+from inspyre_toolbox.syntactic_sweets.classes.decorators import validate_type
 
 PathLike = TypeVar("PathLike", str, bytes, Path, None)
 

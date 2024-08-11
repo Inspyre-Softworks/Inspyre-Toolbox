@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from inspyre_toolbox.syntactic_sweets.properties.decorators import validate_type
+from inspyre_toolbox.syntactic_sweets.classes.decorators import validate_type
 
 CONFIG_SYSTEMS = {
         'path'
@@ -35,7 +35,7 @@ class Config:
     A class to manage configuration settings from a JSON file.
 
     The `Config` class reads configuration data from a JSON file and dynamically creates
-    properties based on the configuration parameters. Each property includes a getter and setter
+    classes based on the configuration parameters. Each property includes a getter and setter
     with type validation.
 
     Attributes:
@@ -47,7 +47,7 @@ class Config:
             Initializes the :class:`Config` instance by loading configuration from the specified JSON file.
 
         _load_from_json(json_path):
-            Loads configuration data from the JSON file and creates properties dynamically.
+            Loads configuration data from the JSON file and creates classes dynamically.
 
         _create_property(name, description, type_):
             Creates a property with the given name, description, and type.
@@ -67,7 +67,7 @@ class Config:
 
     def _load_from_json(self, json_path):
         """
-        Loads configuration data from the JSON file and creates properties dynamically.
+        Loads configuration data from the JSON file and creates classes dynamically.
 
         Parameters:
             json_path (str): Path to the JSON file containing configuration data.

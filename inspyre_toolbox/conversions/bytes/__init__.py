@@ -3,7 +3,7 @@ from typing import Union
 from inspy_logger import InspyLogger, Loggable
 
 from inspyre_toolbox.humanize import Numerical
-from inspyre_toolbox.syntactic_sweets.properties import validate_type
+from inspyre_toolbox.syntactic_sweets.classes import validate_type
 from inspyre_toolbox.version import parse_version
 
 VERSION = parse_version()

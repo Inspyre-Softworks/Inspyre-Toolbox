@@ -1,6 +1,4 @@
-from inspyre_toolbox.version import parse_version
-from inspyre_toolbox.common.meta import *
-
+from inspyre_toolbox.common.about import PACKAGE_INFO, SOFTWARE_ORG
 
 __PROG__ = 'InspyreToolbox'
 __VERSION__: str = parse_version()

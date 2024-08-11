@@ -1,5 +1,5 @@
 """
-This module contains decorators for restricting the change of properties.
+This module contains decorators for restricting the change of classes.
 
 Functions:
 

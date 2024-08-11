@@ -52,7 +52,7 @@ class FileCollection(Loggable):
             The total number of files in the collection.
 
         extensions (dict):
-            A dictionary of extensions with properties for total size and number of files.
+            A dictionary of extensions with classes for total size and number of files.
 
         needs_reprocessing (bool):
             A flag indicating whether the collection needs reprocessing.
@@ -85,8 +85,8 @@ class FileCollection(Loggable):
         Initialize the FileCollection with a list of file paths.
 
         `FileCollection` is a class for managing a collection of files. It takes a list of file paths and creates a class
-        representing a collection of files with properties for total size and number of files and a dictionary of extensions
-        with properties for total size and number of files.
+        representing a collection of files with classes for total size and number of files and a dictionary of extensions
+        with classes for total size and number of files.
 
         Parameters:
             paths (list):

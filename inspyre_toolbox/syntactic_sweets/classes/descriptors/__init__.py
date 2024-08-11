@@ -7,12 +7,12 @@ class RestrictedSetter:
     """
     A descriptor class that restricts the setting of a property based on type, value, and custom conditions.
 
-    This class is designed to be used as a descriptor for class properties, allowing for the definition of restrictions
+    This class is designed to be used as a descriptor for class classes, allowing for the definition of restrictions
     on the setting of the property. These restrictions can include type checking, value checking, and custom conditions
     that must be met for the property to be set. If any of the restrictions are violated, an exception is raised.
 
     The `RestrictedSetter` class also allows for the definition of an initial value for the property, which is used if
-    the property has not been set. This can be useful for defining default values for properties.
+    the property has not been set. This can be useful for defining default values for classes.
 
     Notes:
       - If a `preferred_type` is specified, the value will be converted to that type if possible. If the value cannot be converted to the preferred type, a `TypeError` will be raised.
