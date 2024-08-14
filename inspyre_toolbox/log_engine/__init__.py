@@ -1,4 +1,4 @@
-from inspy_logger import InspyLogger
+from inspy_logger import InspyLogger, Loggable
 
 ROOT_LOGGER = InspyLogger('InspyreToolbox')
 

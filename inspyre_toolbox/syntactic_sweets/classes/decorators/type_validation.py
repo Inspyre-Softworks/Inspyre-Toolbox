@@ -1,7 +1,8 @@
 from functools import wraps
+from pathlib import Path
+from typing import Union
 
-
-def validate_type(*allowed_types, preferred_type=None, allowed_values=None, case_sensitive=True):
+def validate_type(*allowed_types, preferred_type=None, allowed_values=None, case_sensitive=True, conversion_funcs=None):
     """
     A decorator for validating the type and optionally the value of a value passed to a class
     property setter, with an option to convert to a preferred type if specified and to enforce
@@ -14,13 +15,16 @@ def validate_type(*allowed_types, preferred_type=None, allowed_values=None, case
         preferred_type (type, optional):
             The preferred type to which values should be converted if possible. (If None, no conversion is attempted)
 
-
         allowed_values (iterable, optional):
             An iterable of values that are allowed. If None, all values of the correct type are allowed.
 
         case_sensitive (bool, optional):
             Specifies whether string comparisons should be case-sensitive. Defaults to True. Ignored for non-string
             types.
+
+        conversion_funcs (dict, optional):
+            A dictionary mapping types to conversion functions. These functions should convert from the
+            specified type to the preferred type.
 
     Returns:
         A decorator function for the property setter.
@@ -58,10 +62,16 @@ def validate_type(*allowed_types, preferred_type=None, allowed_values=None, case
                 raise TypeError(f"Value must be of type {allowed}, got type {type(value).__name__}")
 
             if preferred_type and not isinstance(value, preferred_type):
-                try:
-                    value = preferred_type(value)
-                except Exception as e:
-                    raise TypeError(f"Could not convert value to preferred type {preferred_type.__name__}: {e}")
+                if conversion_funcs and type(value) in conversion_funcs:
+                    try:
+                        value = conversion_funcs[type(value)](value)
+                    except Exception as e:
+                        raise TypeError(f"Conversion failed: {e}")
+                else:
+                    try:
+                        value = preferred_type(value)
+                    except Exception as e:
+                        raise TypeError(f"Could not convert value to preferred type {preferred_type.__name__}: {e}")
 
             if allowed_values is not None:
                 if isinstance(value, str) and not case_sensitive:

@@ -3,7 +3,7 @@ This module provides the version of the package.
 """
 
 from pathlib import Path
-
+from inspyre_toolbox.ver_man import RELEASE_MAP
 from inspyre_toolbox.ver_man.classes import VersionParser as Version, PyPiVersionInfo
 from inspyre_toolbox.ver_man.helpers import read_version_file
 

@@ -2,7 +2,8 @@ from pathlib import Path
 from typing import Union
 
 from inspyre_toolbox.console_kit.prompts.dialogs import ConfirmationPrompt
-from inspyre_toolbox.decor import frozen_property, validate_type
+from inspyre_toolbox.decor import frozen_property 
+from inspyre_toolbox.syntactic_sweets.classes.decorators.type_validation import validate_type
 from inspyre_toolbox.filesystem import MOD_LOGGER as PARENT_LOGGER
 from inspyre_toolbox.log_engine import Loggable
 from inspyre_toolbox.path_man import provision_path
