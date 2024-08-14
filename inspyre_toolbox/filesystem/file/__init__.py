@@ -1,21 +1,41 @@
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
 from inspyre_toolbox.console_kit.prompts.dialogs import ConfirmationPrompt
-from inspyre_toolbox.decor import frozen_property 
-from inspyre_toolbox.syntactic_sweets.classes.decorators.type_validation import validate_type
+from inspyre_toolbox.decor import frozen_property
 from inspyre_toolbox.filesystem import MOD_LOGGER as PARENT_LOGGER
+from inspyre_toolbox.filesystem.file.helpers import get_file_checksum
 from inspyre_toolbox.log_engine import Loggable
 from inspyre_toolbox.path_man import provision_path
+from inspyre_toolbox.syntactic_sweets.classes.decorators.type_validation import validate_type
 from inspyre_toolbox.sys_man.operating_system.checks import is_windows
-from .helpers import get_file_checksum
 
-MOD_LOGGER = PARENT_LOGGER.get_child('operating_system')
+MOD_LOGGER = PARENT_LOGGER.get_child('file')
 
 
 class File(Loggable):
 
-    def __init__(self, path: Union[str, Path], auto_get_checksum=False):
+    def __init__(
+            self,
+            path: Union[str, Path],
+            auto_get_checksum: bool = False,
+            backup_dir: Union[str, Path] = None
+            ):
+        """
+        Initialize the File object.
+
+        Parameters:
+            path (Union[str, Path]):
+                The path to the file.
+
+            auto_get_checksum (bool):
+                Whether to automatically get the checksum of the file.
+
+            backup_dir (Path, optional):
+                The directory to back up the file to. If `None`, the file will be backed up to a directory named
+                'backups' in the parent directory.
+        """
+        # Start the logger.
         super().__init__(MOD_LOGGER)
 
         self.__auto_get_checksum = auto_get_checksum
@@ -27,17 +47,32 @@ class File(Loggable):
 
         self.__has_recall_attribute = None
 
+
         if is_windows():
             from inspyre_toolbox.filesystem.file.attributes import file_has_recall_attribute
 
             self.has_recall_attribute = file_has_recall_attribute(path, do_not_provision=True)
 
         self.path = path
+
         if self.auto_get_checksum:
             self.checksum = get_file_checksum(self.path)
 
+        # If backup_dir is not provided, set it to a directory
+        # named 'backups' in the parent directory.
+        if backup_dir is not None:
+            self.backup_dir = backup_dir
+        else:
+            self.backup_dir = self.path.parent.joinpath('backups')
+
     @property
     def auto_get_checksum(self) -> bool:
+        """
+        Get whether the file should automatically get the checksum.
+        Returns:
+            bool:
+                Whether the file should automatically get the checksum.
+        """
         return self.__auto_get_checksum
 
     @property
@@ -98,6 +133,16 @@ class File(Loggable):
     @checksum.setter
     @frozen_property('checksum', allowed_types=str, restrict_setter=True)
     def checksum(self, new: str):
+        """
+        Set the file's checksum. This is a frozen property, and cannot be changed once set.
+
+        Parameters:
+            new (str):
+                The new checksum for the file.
+
+        Returns:
+            None
+        """
         self.__checksum = new
 
     @property
@@ -124,6 +169,13 @@ class File(Loggable):
 
     @property
     def has_recall_attribute(self) -> bool:
+        """
+        Check if the file has the recall attribute.
+
+        Returns:
+            bool:
+                True if the file has the recall attribute, False otherwise.
+        """
         if not is_windows():
             raise NotImplementedError("The 'has_recall_property' attribute is only available on Windows.")
 
@@ -132,6 +184,16 @@ class File(Loggable):
     @has_recall_attribute.setter
     @frozen_property('has_recall_attribute', allowed_types=bool, restrict_setter=True)
     def has_recall_attribute(self, new):
+        """
+        Set whether the file has the recall attribute. This is a frozen property, and cannot be changed once set.
+
+        Parameters:
+            new (bool):
+                Whether the file has the recall attribute.
+
+        Returns:
+            None
+        """
         self.__has_recall_attribute = new
 
     @property
@@ -242,7 +304,10 @@ class File(Loggable):
             new_name=None,
             new_extension=None,
             overwrite=None,
-            skip_confirm_on_non_local=False, skip_confirm_on_overwrite=False, confirmation_prompt=None):
+            skip_confirm_on_non_local=False,
+            skip_confirm_on_overwrite=False,
+            confirmation_prompt=None
+            ):
         """
         Copy the file to the specified directory.
 
@@ -280,25 +345,25 @@ class File(Loggable):
                                   'want to '
                                   f'proceed? \n\nDestination: {destination_dir}\n\nFile: {self.path}\n\nSize: {self.size_in_bytes} bytes')
 
-        if self.has_recall_attribute and not skip_confirm_on_non_local:
-            if confirmation_prompt is None:
-                confirmation_prompt = ConfirmationPrompt(
-                        title='Non-Local File',
-                        text='The file is not local. Are you sure you want to proceed?',
-                        no_text_stub=True,
-                        no_title_stub=True
-                        )
+            if not skip_confirm_on_non_local:
+                if confirmation_prompt is None:
+                    confirmation_prompt = ConfirmationPrompt(
+                            title='Non-Local File',
+                            text='The file is not local. Are you sure you want to proceed?',
+                            no_text_stub=True,
+                            no_title_stub=True
+                            )
 
-            confirmation_prompt.run()
+                confirmation_prompt.run()
 
-            if not confirmation_prompt.answer:
-                denied_statement = 'User did not confirm to proceed with the download.'
+                if not confirmation_prompt.answer:
+                    denied_statement = 'User did not confirm to proceed with the download.'
 
-                log.debug(denied_statement)
-                log.error(denied_statement)
-                return
+                    log.debug(denied_statement)
+                    log.error(denied_statement)
+                    return
 
-            log.debug('User confirmed to proceed with the download.')
+                log.debug('User confirmed to proceed with the download.')
 
         if new_name is None:
             new_name = self.path.stem
@@ -308,7 +373,7 @@ class File(Loggable):
 
         destination_path = provision_path(destination_dir / f'{new_name}{new_extension}')
 
-        if destination_path.exists() and not overwrite:
+        if destination_path.exists() and not overwrite and not skip_confirm_on_overwrite:
             raise FileExistsError(f'The file already exists in the destination directory: {destination_path}')
 
         log.debug(f'Copying file to: {destination_path}')
@@ -358,7 +423,7 @@ class File(Loggable):
             skip_confirm_on_non_local=False,
             confirmation_prompt=None,
             error_on_fail=False
-            ) -> str:
+            ) -> Optional[str]:
         """
         Get the checksum of the file.
 
@@ -417,6 +482,12 @@ def non_local_confirmation_prompt(file: File, operation=None, text=None) -> Conf
         file (File):
             The file to create the prompt for.
 
+        operation (str, optional):
+            The operation to perform on the file. If provided, the prompt will include the operation in the text.
+
+        text (str, optional):
+            The text to include in the prompt. If provided, the operation will be ignored.
+
     Returns:
         ConfirmationPrompt:
             The confirmation prompt for the non-local file.
@@ -439,3 +510,5 @@ def non_local_confirmation_prompt(file: File, operation=None, text=None) -> Conf
                 f'Operation: {operations[operation]}\nFile: {file.path}\nSize: {file.size_in_bytes} bytes')
 
     prompt = ConfirmationPrompt(title=title, text=text, no_text_stub=True, no_title_stub=True)
+
+    return prompt
