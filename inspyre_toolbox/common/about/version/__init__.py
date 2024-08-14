@@ -4,9 +4,8 @@ This module provides the version of the package.
 
 from pathlib import Path
 
-from inspyre_toolbox.ver_man.classes import VersionParser as Version, PyPiVersionInfo
+from inspyre_toolbox.ver_man.classes import PyPiVersionInfo, VersionParser as Version
 from inspyre_toolbox.ver_man.helpers import read_version_file
-
 
 VERSION_FILE_NAME = 'VERSION'
 
@@ -38,6 +37,8 @@ def get_version_file_path(version_file_name: str = VERSION_FILE_NAME) -> Path:
 VERSION_FILE_PATH = get_version_file_path()
 
 VERSION = Version(read_version_file(VERSION_FILE_PATH))
+
+VERSION_NUMBER = VERSION.parse_version()
 
 # Clean up the namespace
 del get_version_file_path
