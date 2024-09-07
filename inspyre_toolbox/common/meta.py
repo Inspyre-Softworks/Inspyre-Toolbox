@@ -1,6 +1,5 @@
 from inspyre_toolbox.common.about.package import PACKAGE_INFO
 from inspyre_toolbox.common.about.pypi import PYPI_VERSION_INFO
-from inspyre_toolbox.common.about.version import RELEASE_MAP
 
 AUTHORS   = PACKAGE_INFO['developer']['org']['developers']
 PROG_NAME = PACKAGE_INFO['name']['full']

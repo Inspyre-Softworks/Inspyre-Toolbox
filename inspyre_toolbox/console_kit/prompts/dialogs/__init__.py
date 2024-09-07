@@ -2,11 +2,10 @@ from prompt_toolkit import ANSI, HTML
 from prompt_toolkit.shortcuts.dialogs import yes_no_dialog
 
 from inspyre_toolbox.console_kit.prompts import MOD_LOGGER as PARENT_LOGGER
-from inspyre_toolbox.log_engine import Loggable, ROOT_LOGGER
-from inspyre_toolbox.syntactic_sweets.locks import flag_lock
+from inspyre_toolbox.log_engine import Loggable
 from inspyre_toolbox.syntactic_sweets.classes.decorators import validate_type
+from inspyre_toolbox.syntactic_sweets.locks import flag_lock
 
-ROOT_LOGGER.set_level(console_level='DEBUG')
 MOD_LOGGER = PARENT_LOGGER.get_child('dialogs')
 
 

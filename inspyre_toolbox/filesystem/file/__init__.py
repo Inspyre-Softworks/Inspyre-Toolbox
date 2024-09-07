@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Optional, Union
 
+from inspyre_toolbox.common.types import File as FileType
 from inspyre_toolbox.console_kit.prompts.dialogs import ConfirmationPrompt
 from inspyre_toolbox.decor import frozen_property
 from inspyre_toolbox.filesystem import MOD_LOGGER as PARENT_LOGGER
@@ -13,7 +14,7 @@ from inspyre_toolbox.sys_man.operating_system.checks import is_windows
 MOD_LOGGER = PARENT_LOGGER.get_child('file')
 
 
-class File(Loggable):
+class File(Loggable, FileType):
 
     def __init__(
             self,
@@ -197,6 +198,19 @@ class File(Loggable):
         self.__has_recall_attribute = new
 
     @property
+    def is_image(self):
+        """
+        Check if the file is an image.
+
+        Returns:
+            bool:
+                True if the file is an image, False otherwise.
+        """
+        from inspyre_toolbox.filesystem.file.images.helpers import is_image_file
+
+        return is_image_file(self.path)
+
+    @property
     def is_local(self) -> bool:
         """
         Check if the file is local.
@@ -212,6 +226,17 @@ class File(Loggable):
             return True
 
     @property
+    def name(self) -> str:
+        """
+        Get the name of the file.
+
+        Returns:
+            str:
+                The name of the file.
+        """
+        return self.path.name
+
+    @property
     def path(self) -> Path:
         """
         Get the path of the file.
@@ -221,7 +246,7 @@ class File(Loggable):
                 The path of the file.
         """
 
-        return self.__path
+        return Path(self.__path)
 
     @path.setter
     @frozen_property('path', allowed_types=(Path, str), restrict_setter=False)
@@ -472,6 +497,16 @@ class File(Loggable):
             self.checksum = get_file_checksum(self.path)
 
         return self.checksum
+
+    def get_extension(self):
+        """
+        Get the extension of the file.
+
+        Returns:
+            str:
+                The extension of the file.
+        """
+        return self.path.suffix
 
 
 def non_local_confirmation_prompt(file: File, operation=None, text=None) -> ConfirmationPrompt:

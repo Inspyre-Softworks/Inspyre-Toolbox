@@ -120,16 +120,16 @@ class ByteConverter(Loggable):
             'petabyte':  1000000000000000,
             'exabit':    125000000000000000,
             'exabyte':   1000000000000000000,
-            'zettabit':  125000000000000000000,
-            'zettabyte': 1000000000000000000000,
+            'zetabit':  125000000000000000000,
+            'zetabyte': 1000000000000000000000,
             'yottabit':  125000000000000000000000,
             'yottabyte': 1000000000000000000000000
             }
 
     UNIT_FAMILIES = {
-            'byte': ['byte', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte', 'petabyte', 'exabyte', 'zettabyte',
+            'byte': ['byte', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte', 'petabyte', 'exabyte', 'zetabyte',
                      'yottabyte'],
-            'bit':  ['bit', 'kilobit', 'megabit', 'gigabit', 'terabit', 'petabit', 'exabit', 'zettabit', 'yottabit']
+            'bit':  ['bit', 'kilobit', 'megabit', 'gigabit', 'terabit', 'petabit', 'exabit', 'zetabit', 'yottabit']
             }
 
     def __init__(
@@ -225,6 +225,7 @@ class ByteConverter(Loggable):
         from_factor = self.UNIT_CONVERSIONS[self.unit]
 
         to_factor = self.UNIT_CONVERSIONS[to_unit]
+
         log.debug(f"To factor: {to_factor} | From factor: {from_factor}")
 
         converted_value = self.value * from_factor / to_factor

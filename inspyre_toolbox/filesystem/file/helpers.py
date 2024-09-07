@@ -1,7 +1,41 @@
 import hashlib
-from typing import Union
+from pathlib import Path
+from typing import List, Optional, Union
 
 from inspyre_toolbox.conversions.bytes import ByteConverter
+from inspyre_toolbox.path_man import provision_path
+
+
+def __normalize_file_types(file_types: Optional[Union[str, List[str]]]) -> List[str]:
+    """Normalize file types to a list of strings."""
+    if file_types is None:
+        return ['*']
+
+    return [file_types] if isinstance(file_types, str) else file_types
+
+
+def __normalize_ignore_dirs(ignore_dirs: Optional[List[str]], ignore_case: bool) -> set:
+    """Normalize and prepare directory names to ignore."""
+    if ignore_case and ignore_dirs:
+        return {dir_name.lower() for dir_name in ignore_dirs}
+    return set(ignore_dirs or [])
+
+
+def __filter_dirs(dir_names: List[str], ignore_dirs: set, ignore_case: bool) -> List[str]:
+    """Filter out directories that should be ignored."""
+    if ignore_case:
+        return [d for d in dir_names if d.lower() not in ignore_dirs]
+    return [d for d in dir_names if d not in ignore_dirs]
+
+
+def __filter_files(dir_path: Path, file_names: List[str], file_types: List[str], get_file_object) -> List[Path]:
+    """Filter and gather files based on file types."""
+    return [
+            get_file_object(dir_path / file_name)
+            for file_name in file_names
+            if any(file_name.endswith(f".{ftype}") for ftype in file_types) or '*' in file_types
+            ]
+
 
 
 def get_file_checksum(file_path, algorithm='sha256'):
@@ -77,3 +111,49 @@ def get_lowest_unit_size(size: int) -> tuple[Union[int, float], str]:
 
         if converted >= 1:
             return converted, unit.upper(),
+
+
+def get_file_object(file_path, skip_path_provision=False):
+    """
+    Get a file object for the specified file path.
+
+    Parameters:
+        file_path (Union[str, Path]):
+            The path to the file.
+
+        skip_path_provision (bool):
+            Skip path provisioning if set to True. Default is False.
+
+    Returns:
+        Optional[File, ImageFile]:
+            A file object for the specified file path.
+
+    Raises:
+        ValueError:
+            If the specified file path is not a valid file.
+    """
+    from inspyre_toolbox.filesystem.file import File
+    from inspyre_toolbox.filesystem.file.images import ImageFile
+    from inspyre_toolbox.filesystem.file.images.helpers import is_image_file
+
+    if isinstance(file_path, Path):
+        file_path = str(file_path)
+
+    file_path = file_path if skip_path_provision else provision_path(file_path)
+
+    return ImageFile(file_path) if is_image_file(file_path) else File(file_path)
+
+
+def get_path_list_from_list_of_file_objects(file_objects):
+    """
+    Get a list of file paths from a list of file objects.
+
+    Parameters:
+        file_objects (List[File, ImageFile]):
+            A list of file objects.
+
+    Returns:
+        List[str]:
+            A list of file paths.
+    """
+    return [file_object.path for file_object in file_objects]

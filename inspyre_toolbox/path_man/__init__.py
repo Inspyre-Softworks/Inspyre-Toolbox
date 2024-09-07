@@ -3,12 +3,45 @@ from pathlib import Path
 from typing import List, Optional, TypeVar, Union
 from warnings import warn
 
-from pypattyrn.behavioral.null import Null
-
-from inspyre_toolbox.syntactic_sweets.classes.decorators.freeze import freeze_property
+from inspyre_toolbox.log_engine import ROOT_LOGGER
 from inspyre_toolbox.syntactic_sweets.classes.decorators import validate_type
+from inspyre_toolbox.syntactic_sweets.classes.decorators.freeze import freeze_property
 
 PathLike = TypeVar("PathLike", str, bytes, Path, None)
+
+MOD_LOGGER = ROOT_LOGGER.get_child('path_man')
+
+
+def __normalize_file_types(file_types: Optional[Union[str, List[str]]]) -> List[str]:
+    """Normalize file types to a list of strings."""
+    if file_types is None:
+        return ['*']
+
+    return [file_types] if isinstance(file_types, str) else file_types
+
+
+def __normalize_ignore_dirs(ignore_dirs: Optional[List[str]], ignore_case: bool) -> set:
+    """Normalize and prepare directory names to ignore."""
+    if ignore_case and ignore_dirs:
+        return {dir_name.lower() for dir_name in ignore_dirs}
+    return set(ignore_dirs or [])
+
+
+def __filter_dirs(dir_names: List[str], ignore_dirs: set, ignore_case: bool) -> List[str]:
+    """Filter out directories that should be ignored."""
+    if ignore_case:
+        return [d for d in dir_names if d.lower() not in ignore_dirs]
+    return [d for d in dir_names if d not in ignore_dirs]
+
+
+def __filter_files(dir_path: Path, file_names: List[str], file_types: List[str], get_file_object) -> List[Path]:
+    """Filter and gather files based on file types."""
+    return [
+            get_file_object(dir_path / file_name)
+            for file_name in file_names
+            if any(file_name.endswith(f".{ftype}") for ftype in file_types) or '*' in file_types
+            ]
+
 
 
 class ISTB_Path:
@@ -367,7 +400,8 @@ def gather_files_in_dir(
         file_types: Optional[Union[str, List[str]]] = None,
         ignore_dirs: Optional[List[str]] = None,
         ignore_case: bool = False,
-        parent_logger=Null()
+        parent_logger=None,
+        **kwargs
         ) -> List[Path]:
     """
     Gather all files in a directory.
@@ -399,39 +433,26 @@ def gather_files_in_dir(
         List[Path]:
             A list of file-paths for files in the directory.
     """
-    log = parent_logger.get_child('gather_files_in_dir')
+    log = (parent_logger or MOD_LOGGER).get_child('gather_files_in_dir')
+    from inspyre_toolbox.filesystem.file.helpers import get_file_object
+
     log.debug(f'Gathering files in directory: {directory}')
 
-    directory = prepare_path(directory)
-
-    if not file_types:
-        file_types = ['*']
-    if isinstance(file_types, str):
-        file_types = [file_types]
-
-    if ignore_case and ignore_dirs:
-        ignore_dirs = [dir_name.lower() for dir_name in ignore_dirs]
-
-    files = []
-
-    if not isinstance(directory, Path):
+    directory = Path(directory).resolve()
+    if not directory.is_dir():
         raise ValueError(f"Invalid directory: {directory}!")
 
-    for (dir_path, dir_names, file_names) in os.walk(directory):
-        if ignore_case:
-            dir_names[:] = [d for d in dir_names if d.lower() not in ignore_dirs]
-        else:
-            dir_names[:] = [d for d in dir_names if d not in ignore_dirs]
+    file_types = __normalize_file_types(file_types)
+    ignore_dirs = __normalize_ignore_dirs(ignore_dirs, ignore_case)
+
+    files = []
+    for dir_path, dir_names, file_names in os.walk(directory):
+        dir_names[:] = __filter_dirs(dir_names, ignore_dirs, ignore_case)
 
         if not recursive:
             dir_names.clear()
 
-        for file_type in file_types:
-            files.extend(
-                    Path(dir_path) / file_name
-                    for file_name in file_names
-                    if file_type == '*' or file_name.endswith(file_type)
-                    )
+        files.extend(__filter_files(Path(dir_path), file_names, file_types, get_file_object))
 
     log.debug(f'Gathered {len(files)} files in directory: {directory} | Recursive: {recursive}')
     return files

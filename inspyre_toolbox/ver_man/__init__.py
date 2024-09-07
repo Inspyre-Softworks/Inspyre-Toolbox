@@ -16,14 +16,13 @@ Since:
 """
 
 from inspyre_toolbox.log_engine import ROOT_LOGGER as PARENT_LOGGER
-from inspyre_toolbox.ver_man.classes import VersionParser, PyPiVersionInfo, RELEASE_MAP
-
+from inspyre_toolbox.ver_man.classes import PyPiVersionInfo, RELEASE_MAP, VersionParser
 
 MOD_LOGGER = PARENT_LOGGER.get_child('ver_man')
 
 
 __all__ = [
-    'RELEASE_MAP'
+        'RELEASE_MAP',
     'VersionParser',
     'PyPiVersionInfo',
 ]
