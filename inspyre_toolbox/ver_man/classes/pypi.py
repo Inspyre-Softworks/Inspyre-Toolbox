@@ -1,7 +1,11 @@
 import sys
+
 import requests
 from packaging import version as pkg_version
+from rich.console import Console
 from rich.table import Table
+
+CONSOLE = Console()
 
 
 class PyPiVersionInfo:
@@ -66,6 +70,8 @@ class PyPiVersionInfo:
         """
         Gets the installed version of the package.
         """
+        if self.__installed is None:
+            return None
         return pkg_version.parse(self.__installed)
 
     @property
@@ -191,7 +197,10 @@ class PyPiVersionInfo:
 
         # Add rows
         table.add_row('Package Name', self.package_name)
-        table.add_row('Installed Version', str(self.installed))
+
+        installed_version = str(self.installed) if self.installed else "[bold red]Not installed[/bold red]"
+
+        table.add_row('Installed Version', installed_version)
         table.add_row('Latest Stable Version', str(self.latest_stable))
         table.add_row('Latest Pre-release Version', str(self.latest_pre_release))
 
@@ -202,4 +211,4 @@ class PyPiVersionInfo:
         table.add_row('Python Executable Path', sys.executable)
         table.add_row('Python Version', sys.version)
 
-        print(table)
+        CONSOLE.print(table)

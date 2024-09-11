@@ -1,9 +1,8 @@
-from typing import Literal
-import re
 import contextlib
+import re
+from typing import Literal
 
 from inspyre_toolbox.ver_man.classes.pypi import PyPiVersionInfo
-
 
 RELEASE_MAP = {
     'dev': 'Development Build',
@@ -131,7 +130,7 @@ class VersionParser:
         table.add_column('Minor', justify='right', style='magenta')
         table.add_column('Patch', justify='right', style='green')
         table.add_column('Release', justify='right', style='yellow')
-        table.add_column('Release Num', justify='right', style='blue')
+        table.add_column('Release Num', justify='right', style='pink')
         table.add_row(str(self.version_info['major']), str(self.version_info['minor']), str(self.version_info['patch']),
                       self.version_info['release'], str(self.version_info['release_num']))
         return table
