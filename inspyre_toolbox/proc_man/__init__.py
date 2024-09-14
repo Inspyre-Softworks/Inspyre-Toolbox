@@ -303,3 +303,77 @@ def kill_all_by_name(
     started_by_user.reverse()
 
     kill_all_in_list(started_by_user)
+
+
+def find_by_pid(pid, inspy_logger_device=None):
+    if inspy_logger_device is None:
+        log = InspyLogger('InspyreToolbox.ProcMan', it_settings.log_level.upper())
+        log = log.get_child('find_by_pid')
+    else:
+        log = inspy_logger_device
+
+    log.debug(f'Finding process with PID: {pid}')
+
+    try:
+        return psutil.Process(pid)
+    except psutil.NoSuchProcess:
+        raise NoFoundProcessesError(f'No process found with PID: {pid}')
+
+
+def kill_by_pid(pid, inspy_logger_device=None):
+    """
+    Kill a process by its PID.
+
+    Parameters::
+        pid (int):
+            The PID of the process to kill.
+
+        inspy_logger_device:
+            The InspyLogger device to use for logging.
+
+    Returns:
+        None
+
+    Raises:
+        NoFoundProcessesError:
+            Raised if no process is found with the given
+    """
+    if inspy_logger_device is None:
+        log = InspyLogger('InspyreToolbox.ProcMan', it_settings.log_level.upper())
+    else:
+        log = inspy_logger_device
+
+    log.debug(f'Killing process with PID: {pid}')
+
+    try:
+        proc = find_by_pid(pid)
+        proc.kill()
+    except psutil.NoSuchProcess:
+        raise NoFoundProcessesError(f'No process found with PID: {pid}')
+
+
+def is_admin():
+    """
+    Check if the current user is an administrator.
+
+    Returns:
+        bool: True if the user is an administrator, False if they are not.
+    """
+    return os.getuid() == 0
+
+
+def is_process_elevated(pid):
+    """
+    Check if a process is running with elevated privileges.
+
+    Args:
+        pid (int):
+            The PID of the process to check.
+
+    Returns:
+        bool: True if the process is running with elevated privileges, False if it is not.
+    """
+    try:
+        return psutil.Process(pid).is_running() and psutil.Process(pid).is_running()
+    except psutil.NoSuchProcess:
+        return False
