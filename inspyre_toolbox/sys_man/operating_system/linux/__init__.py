@@ -2,6 +2,9 @@ import os
 from warnings import warn
 
 from inspyre_toolbox.path_man import check_file, prepare_path
+from inspyre_toolbox.sys_man.operating_system import MOD_LOGGER as PARENT_LOGGER
+
+MOD_LOGGER = PARENT_LOGGER.get_child('linux')
 
 
 def is_admin() -> bool:

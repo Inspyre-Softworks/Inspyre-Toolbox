@@ -14,8 +14,15 @@ import winreg
 from warnings import warn
 
 from inspyre_toolbox.path_man import prepare_path
+from inspyre_toolbox.sys_man.operating_system import MOD_LOGGER as PARENT_LOGGER
 from inspyre_toolbox.sys_man.operating_system.common.path import separate_path_str as separate_path
 from inspyre_toolbox.sys_man.operating_system.win32.windows_registry import RegistryManager
+
+MOD_LOGGER = PARENT_LOGGER.get_child('win32')
+MOD_LOGGER.debug('win32 module loaded')
+
+from inspyre_toolbox.sys_man.operating_system.win32.environment import GUI_ACCESS
+
 
 
 def is_admin() -> bool:

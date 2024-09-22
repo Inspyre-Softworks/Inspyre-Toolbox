@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "inspyre-toolbox"
-version = "v1.6.0-dev.8"
+version = "v1.6.0-dev.9"
 description = "Inspyre Toolbox is a collection of tools designed to simplify programming tasks, reducing repetitive code. Initially for internal use at Inspyre Softworks, it benefits other developers too with features like a live timer, humanize class for numerical operations, extended argparse, process management, and miscellaneous Python helpers."
 authors = [ "T Blackstone <t.blackstone@inspyre.tech>",]
 license = "MIT"
@@ -24,6 +24,8 @@ tqdm = "^4.66.4"
 inspyred-print = "^1.2.1"
 inspy-logger = ">=3.2.0"
 python-box = "^7.2.0"
+python3-xlib = { version = "^0.15", markers = "sys_platform == 'linux' or sys_platform == 'linux2' or sys_platform == 'darwin'" }
+
 
 [tool.poetry.scripts]
 ist-bytes-converter = "inspyre_toolbox.cli.ist_bytes_converter:main"
