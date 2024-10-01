@@ -8,11 +8,9 @@ File:
 """
 from statistics import mean
 
+from inspyre_toolbox.common.about.version import VERSION as __VERSION__
 from inspyre_toolbox.conversions.bytes import ByteConverter
 from inspyre_toolbox.log_engine import ROOT_LOGGER as PARENT_LOGGER
-from inspyre_toolbox.version import parse_version
-
-__VERSION__ = parse_version()
 
 MOD_LOGGER = PARENT_LOGGER.get_child('solve_kit')
 
