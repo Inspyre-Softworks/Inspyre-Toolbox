@@ -1,16 +1,20 @@
 from pathlib import Path
 from typing import Optional
+
 from inspyre_toolbox.path_man import provision_path
 from inspyre_toolbox.ver_man.classes import VersionParser as Version
 
 
-def get_version_from_file(file_path: Path, do_not_raise_errors=False) -> Optional[Version]:
+def get_version_from_file(file_path: Path, do_not_provision=False, do_not_raise_errors=False) -> Optional[Version]:
     """
     Gets the version from a file.
 
     Parameters:
         file_path (Path):
             The file path from which to get the version.
+
+        do_not_provision (bool, optional):
+            If True, does not provision the path. Defaults to False.
 
         do_not_raise_errors (bool, optional):
             If True, does not raise an error if the file is not found. Defaults to False.
@@ -37,6 +41,10 @@ def get_version_from_file(file_path: Path, do_not_raise_errors=False) -> Optiona
         >>> print(version)
         1.6.0
     """
+
+    if not do_not_provision:
+        file_path = provision_path(file_path)
+
     if not file_path.exists():
         if do_not_raise_errors:
             return None
@@ -76,4 +84,4 @@ def read_version_file(file_path, do_not_provision=False):
         file_path = provision_path(file_path)
 
     with open(file_path, 'r') as f:
-        return f.read().strip()
+        return f.read().strip().replace('\n', '')

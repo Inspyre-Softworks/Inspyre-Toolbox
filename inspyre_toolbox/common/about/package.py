@@ -62,12 +62,17 @@ Constants:
 Since:
     v1.6.0
 """
-from inspyre_toolbox.common.about.author import SOFTWARE_ORG
-from inspyre_toolbox.common.about.version import VERSION
-from inspyre_toolbox.common.about.pypi import PYPI_VERSION_INFO
+from platformdirs import PlatformDirs
 
-GITHUB_URL = f"{SOFTWARE_ORG['urls']['github']}/Inspyre-Toolbox"
+from inspyre_toolbox.common.about.author import SOFTWARE_ORG
+from inspyre_toolbox.common.about.pypi import PYPI_VERSION_INFO
+from inspyre_toolbox.common.about.version import VERSION
+
+PACKAGE_NAME = 'Inspyre-Toolbox'
+GITHUB_URL = f"{SOFTWARE_ORG['urls']['github']}/{PACKAGE_NAME}"
 PYPI_URL =   SOFTWARE_ORG['urls']['pypi']
+
+PLATFORM_DIRS = PlatformDirs(appname=PACKAGE_NAME, appauthor=SOFTWARE_ORG['name'])
 
 
 GHU = GITHUB_URL
@@ -121,6 +126,7 @@ PACKAGE_INFO = {
     }
 
 
+
 # Cleanup
 del GHU
 del SOFTWARE_ORG
@@ -129,6 +135,7 @@ del SOFTWARE_ORG
 __all__ = [
         'GITHUB_URL',
         'PACKAGE_INFO',
+    'PLATFORM_DIRS',
         'PYPI_URL'
 
         ]

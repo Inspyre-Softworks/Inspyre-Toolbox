@@ -15,10 +15,7 @@ Since:
     v1.6.0
 """
 
-from inspyre_toolbox.log_engine import ROOT_LOGGER as PARENT_LOGGER
 from inspyre_toolbox.ver_man.classes import PyPiVersionInfo, RELEASE_MAP, VersionParser
-
-MOD_LOGGER = PARENT_LOGGER.get_child('ver_man')
 
 
 __all__ = [

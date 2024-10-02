@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+from inspyre_toolbox.common.about.author import
 from inspyre_toolbox.syntactic_sweets.classes.decorators import validate_type
 
 CONFIG_SYSTEMS = {

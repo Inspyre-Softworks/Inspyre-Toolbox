@@ -3,13 +3,10 @@ from pathlib import Path
 from typing import List, Optional, TypeVar, Union
 from warnings import warn
 
-from inspyre_toolbox.log_engine import ROOT_LOGGER
 from inspyre_toolbox.syntactic_sweets.classes.decorators import validate_type
 from inspyre_toolbox.syntactic_sweets.classes.decorators.freeze import freeze_property
 
 PathLike = TypeVar("PathLike", str, bytes, Path, None)
-
-MOD_LOGGER = ROOT_LOGGER.get_child('path_man')
 
 
 def __normalize_file_types(file_types: Optional[Union[str, List[str]]]) -> List[str]:
@@ -433,6 +430,8 @@ def gather_files_in_dir(
         List[Path]:
             A list of file-paths for files in the directory.
     """
+    from inspyre_toolbox.log_engine import ROOT_LOGGER
+    MOD_LOGGER = ROOT_LOGGER.get_child('path_man')
     log = (parent_logger or MOD_LOGGER).get_child('gather_files_in_dir')
     from inspyre_toolbox.filesystem.file.helpers import get_file_object
 
