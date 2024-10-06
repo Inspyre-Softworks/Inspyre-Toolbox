@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "inspyre-toolbox"
-version = "v1.6.0-dev.12"
+version = "v1.6.0-dev.13"
 description = "Inspyre Toolbox is a collection of tools designed to simplify programming tasks, reducing repetitive code. Initially for internal use at Inspyre Softworks, it benefits other developers too with features like a live timer, humanize class for numerical operations, extended argparse, process management, and miscellaneous Python helpers."
 authors = [ "T Blackstone <t.blackstone@inspyre.tech>",]
 license = "MIT"
