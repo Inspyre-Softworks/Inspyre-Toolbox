@@ -8,6 +8,10 @@ from rich.table import Table
 CONSOLE = Console()
 
 
+BASE_URL = 'https://pypi.org/pypi/'
+TEST_PYPI_BASE_URL = 'https://test.pypi.org/pypi/'
+
+
 class PyPiVersionInfo:
     """
     A class to represent the version information for a package from PyPi.
@@ -32,7 +36,8 @@ class PyPiVersionInfo:
             include_pre_release_for_update_check:
         """
         self.package_name = package_name
-        self.__url = f'https://pypi.org/pypi/{self.package_name}/json'
+        if not hasattr(self, '_url'):
+            self._url = f'{BASE_URL}{self.package_name}/json'
         self.__installed = self.get_installed_version()
         self.__checked_for_update = False
         self.__newer_available_version = None
@@ -117,7 +122,7 @@ class PyPiVersionInfo:
         Queries the versions from PyPi.
         """
         try:
-            response = requests.get(self.__url)
+            response = requests.get(self.url)
             response.raise_for_status()
             data = response.json()
 
@@ -135,6 +140,10 @@ class PyPiVersionInfo:
         if self.__newer_available_version is None:
             self.check_for_update()
         return self.__newer_available_version is not None
+    
+    @property
+    def url(self):
+        return self._url
 
     def check_for_update(self, include_pre_releases=False):
         latest_version = self.latest_stable
@@ -212,3 +221,14 @@ class PyPiVersionInfo:
         table.add_row('Python Version', sys.version)
 
         CONSOLE.print(table)
+
+
+class TestPyPiVersionInfo(PyPiVersionInfo):
+    """
+    A class to query information from test.pypi.org.
+    """
+    def __init__(self, package_name, include_pre_release_for_update_check=False):
+        self.package_name = package_name
+        self._url = f'{TEST_PYPI_BASE_URL}{self.package_name}/json'
+
+        super().__init__(package_name, include_pre_release_for_update_check)
