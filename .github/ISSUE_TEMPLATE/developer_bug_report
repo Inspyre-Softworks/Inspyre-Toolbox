@@ -1,3 +1,10 @@
+---
+name: Developer Bug Report
+about: Keep track of things you've experienced.
+title: "[Developer Report]"
+labels: Bug::Confirmed, 
+assignees: tayjaybabee
+---
 ## Bug Summary
 _A succinct description of the bug, focusing on what is broken and its impact._
 
