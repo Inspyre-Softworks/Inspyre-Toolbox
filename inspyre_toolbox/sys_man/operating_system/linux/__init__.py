@@ -3,20 +3,10 @@ from warnings import warn
 
 from inspyre_toolbox.path_man import check_file, prepare_path
 from inspyre_toolbox.sys_man.operating_system import MOD_LOGGER as PARENT_LOGGER
+from inspyre_toolbox.sys_man.operating_system.linux.system import run_as_admin
+from inspyre_toolbox.sys_man.operating_system.linux.users import is_admin
 
 MOD_LOGGER = PARENT_LOGGER.get_child('linux')
-
-
-def is_admin() -> bool:
-    """
-    Checks if the current user has administrative privileges.
-
-    Returns:
-        bool:
-            True if the current user has administrative privileges, False otherwise.
-    """
-    return (os.getuid() == 0)
-
 
 IS_ADMIN = is_admin()
 
@@ -63,5 +53,6 @@ def add_to_path(new_path: str, do_not_notify=None, profile_file: str = PROFILE_F
 
 __all__ = [
         'IS_ADMIN',
-        'add_to_path'
+    'add_to_path',
+    'run_as_admin'
         ]

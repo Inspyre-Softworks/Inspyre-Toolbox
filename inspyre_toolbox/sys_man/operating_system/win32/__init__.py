@@ -16,24 +16,17 @@ from warnings import warn
 from inspyre_toolbox.path_man import prepare_path
 from inspyre_toolbox.sys_man.operating_system import MOD_LOGGER as PARENT_LOGGER
 from inspyre_toolbox.sys_man.operating_system.common.path import separate_path_str as separate_path
+from inspyre_toolbox.sys_man.operating_system.win32.system import run_as_admin
+from inspyre_toolbox.sys_man.operating_system.win32.users import is_admin
 from inspyre_toolbox.sys_man.operating_system.win32.windows_registry import RegistryManager
+
+IS_ADMIN = is_admin()
+
 
 MOD_LOGGER = PARENT_LOGGER.get_child('win32')
 MOD_LOGGER.debug('win32 module loaded')
 
 from inspyre_toolbox.sys_man.operating_system.win32.environment import GUI_ACCESS
-
-
-
-def is_admin() -> bool:
-    """
-    Checks if the current user has administrative privileges.
-
-    Returns:
-        bool:
-            True if the current user has administrative privileges, False otherwise.
-    """
-    return ctypes.windll.shell32.IsUserAnAdmin() != 0
 
 
 def update_user_path_variable(new_path: str):
@@ -139,11 +132,16 @@ def list_path_directories():
     return separate_path(reg_man.get_value('Path'))
 
 
-IS_ADMIN = is_admin()
+MOD_LOGGER.debug(f'{IS_ADMIN=}')
+
 
 del is_admin
 
 __all__ = [
         'IS_ADMIN',
-        'add_to_path'
+    'add_to_path',
+    'remove_from_path',
+    'list_path_directories',
+    'update_user_path_variable',
+    'run_as_admin'
         ]
