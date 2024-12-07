@@ -65,8 +65,8 @@ def get_file_checksum(file_path, algorithm='sha256'):
         with open(file_path, 'rb') as f:
             for chunk in iter(lambda: f.read(4096), b""):
                 hash_func.update(chunk)
-    except FileNotFoundError:
-        raise FileNotFoundError(f"The file '{file_path}' does not exist.")
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"The file '{file_path}' does not exist.") from e
 
     # Return the hex digest of the hash
     return hash_func.hexdigest()

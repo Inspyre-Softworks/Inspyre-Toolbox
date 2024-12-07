@@ -7,5 +7,3 @@ MOD_LOGGER = PARENT_LOGGER.get_child('environment')
 
 if is_windows():
     pass
-else:
-    pass

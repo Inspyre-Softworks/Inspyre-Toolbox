@@ -15,9 +15,7 @@ class FrozenProperty:
         if instance is None:
             return self
         value = getattr(instance, self.name, self.default)
-        if self.getter:
-            return self.getter(instance)
-        return value
+        return self.getter(instance) if self.getter else value
 
     def __set__(self, instance, value):
         if getattr(instance, self.name, self.default) != self.default:

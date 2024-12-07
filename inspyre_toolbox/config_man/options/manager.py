@@ -25,8 +25,7 @@ class OptionManager:
 
     def set_option_value(self, name: str, value: Union[bool, str]):
         """Set the value of an option by name."""
-        option = self._options.get(name)
-        if option:
+        if option := self._options.get(name):
             option.set_value(value)
         else:
             raise KeyError(f"Option '{name}' not found.")

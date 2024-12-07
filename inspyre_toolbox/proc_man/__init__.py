@@ -316,8 +316,8 @@ def find_by_pid(pid, inspy_logger_device=None):
 
     try:
         return psutil.Process(pid)
-    except psutil.NoSuchProcess:
-        raise NoFoundProcessesError(f'No process found with PID: {pid}')
+    except psutil.NoSuchProcess as e:
+        raise NoFoundProcessesError(f'No process found with PID: {pid}') from e
 
 
 def kill_by_pid(pid, inspy_logger_device=None):
@@ -348,8 +348,8 @@ def kill_by_pid(pid, inspy_logger_device=None):
     try:
         proc = find_by_pid(pid)
         proc.kill()
-    except psutil.NoSuchProcess:
-        raise NoFoundProcessesError(f'No process found with PID: {pid}')
+    except psutil.NoSuchProcess as e:
+        raise NoFoundProcessesError(f'No process found with PID: {pid}') from e
 
 
 def is_admin():
@@ -383,9 +383,7 @@ def find_executable_path(pid):
     try:
         process = psutil.Process(pid)
         exe_path = process.exe()
-        dir_path = os.path.dirname(exe_path)
-
-        return dir_path
+        return os.path.dirname(exe_path)
     except psutil.NoSuchProcess:
         return f'No process with PID {pid} exists.'
     except psutil.AccessDenied:
