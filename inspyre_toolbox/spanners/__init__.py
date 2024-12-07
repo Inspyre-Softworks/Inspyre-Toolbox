@@ -1,6 +1,17 @@
-#  Copyright (c) 2021. Taylor-Jayde Blackstone <t.blackstone@inspyre.tech> https://inspyre.tech
 """
 
-A python package containing enhancements to existing packages.
+
+Author: 
+    Inspyre Softworks
+
+Project:
+    Inspyre-Toolbox
+
+File: 
+    inspyre_toolbox/spanners/__init__.py
+ 
+
+Description:
+    
 
 """

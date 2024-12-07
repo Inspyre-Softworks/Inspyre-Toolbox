@@ -6,9 +6,9 @@ Description:
     inspyre_toolbox.live_timer gives you access to a class and functions that make running a live
     timer that's not only easily to initialize, but easy to query, reset, and pause your timers.
     This module also contains a class named 'TimerHistory' that keeps a history of all timer actions.
-    
+
     To find out more about usage please see:
-    
+
     GIT_REPO_ROOT/examples/live_timer
 
 """

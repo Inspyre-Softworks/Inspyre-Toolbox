@@ -8,6 +8,50 @@ File:
 """
 from statistics import mean
 
+from inspyre_toolbox.common.about.version import VERSION as __VERSION__
+from inspyre_toolbox.conversions.bytes import ByteConverter
+from inspyre_toolbox.log_engine import ROOT_LOGGER as PARENT_LOGGER
+
+MOD_LOGGER = PARENT_LOGGER.get_child('solve_kit')
+
+MOD_LOGGER.debug(f'Module loaded: solve_kit (inspyre_toolbox - v{__VERSION__})')
+
+DOWNLOAD_SPEED_UNITS = {
+        'bps':  {'unit': 'bit', 'factor': 1},
+        'kbps': {'unit': 'kilobit', 'factor': pow(10, 3)},
+        'mbps': {'unit': 'megabit', 'factor': pow(10, 6)},
+        'gbps': {'unit': 'gigabit', 'factor': pow(10, 9)},
+        'tbps': {'unit': 'terabit', 'factor': pow(10, 12)},
+        'ebps': {'unit': 'exabit', 'factor': pow(10, 15)},
+        'zbps': {'unit': 'zettabit', 'factor': pow(10, 18)},
+        'ybps': {'unit': 'yottabit', 'factor': pow(10, 21)},
+        }
+
+
+def find_unit(unit: str, case_sensitive=False):
+    """
+    Find a unit in the DOWNLOAD_SPEED_UNITS dictionary by its unit name or abbreviation.
+
+    Parameters:
+        unit (str):
+            The unit to find.
+
+    Returns:
+        dict:
+            The unit data.
+    """
+    if not case_sensitive:
+        unit = unit.lower()
+
+    return next(
+            (
+                    v
+                    for k, v in DOWNLOAD_SPEED_UNITS.items()
+                    if k == unit or v['unit'] == unit
+                    ),
+            None,
+            )
+
 
 def how_many_until(current:list, target=.98, iter_limit=pow(10, 10), delay=0):
     global iters
@@ -27,6 +71,29 @@ def how_many_until(current:list, target=.98, iter_limit=pow(10, 10), delay=0):
         _process_()
     except KeyboardInterrupt:
         iter_limit = iters
+
+
+def download_time(file_size_bytes: int, download_speed: int, download_speed_unit: str = 'bit', return_in_seconds=False):
+    bc = ByteConverter(file_size_bytes, 'byte')
+    speed_data = find_unit(download_speed_unit.lower())
+
+    if not speed_data:
+        raise ValueError(f"Invalid download speed unit: {download_speed_unit}")
+
+    # Convert download speed to bits per second
+    download_speed_bps = download_speed * speed_data['factor']
+
+    # Calculate download time in seconds
+    download_time_seconds = bc.bytes_to_bits() / download_speed_bps
+
+    if return_in_seconds:
+        return download_time_seconds
+
+    # Convert download time to appropriate unit
+    time_unit = 'second' if download_time_seconds < 60 else 'minute'
+    time_value = download_time_seconds if time_unit == 'second' else download_time_seconds / 60
+
+    return f"{time_value:.2f} {time_unit}"
 
 
 

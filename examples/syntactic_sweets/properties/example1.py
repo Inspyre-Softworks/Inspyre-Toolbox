@@ -1,4 +1,4 @@
-from inspyre_toolbox.syntactic_sweets.properties import validate_type, validate_path, RestrictedSetter
+from inspyre_toolbox.syntactic_sweets.classes import validate_type, validate_path, RestrictedSetter
 
 
 # Write an example of how to use the @validate_type decorator.

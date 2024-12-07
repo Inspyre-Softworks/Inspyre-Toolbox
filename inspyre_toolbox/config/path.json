@@ -1,0 +1,14 @@
+{
+    "profile_file_path": {
+        "type": "string",
+        "default": "~/.bashrc",
+        "description": "The profile file to use for the current user."
+    },
+
+    "profile_path_file_path": {
+        "type": "string",
+        "default": "~/.path_var",
+        "description": "The profile path file to use for the current user."
+    }
+
+}

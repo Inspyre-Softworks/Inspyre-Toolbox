@@ -1,68 +1,48 @@
-from inspyre_toolbox.common.meta import VERSION as CURRENT_VERSION, URLS as PROJECT_URLS, RELEASE_MAP
+import sys
+
 import requests
 from packaging import version as pkg_version
-import sys
+from rich.console import Console
 from rich.table import Table
-from rich import print
 
+from inspyre_toolbox.ver_man.classes.pypi.errors import PyPiPackageNotFoundError
+from inspyre_toolbox.ver_man.classes.pypi.helpers import load_pypi_version_info
 
-def get_full_version_name():
-    """
-    Gets the full version name.
+CONSOLE = Console()
 
-    Returns:
-        str: The full version name.
-
-    Since:
-        v1.3.2
-    """
-    ver = parse_version()
-    ver = ver.split('-')[0]
-
-    release_type = RELEASE_MAP[_VERSION["release"]]
-    release_num = _VERSION["release_num"]
-    release_str = f" {release_type} {'' if _VERSION['release'].lower() == 'final' else f'({release_num})'}"
-    return f'v{ver}{release_str}'
-
-
-def parse_version() -> str:
-    """
-    Parses the version information into a string.
-
-    Returns:
-        str: The version information.
-
-    Since:
-        v1.3.2
-    """
-    version = f'{_VERSION["major"]}.{_VERSION["minor"]}.{_VERSION["patch"]}'
-
-    if _VERSION['release'] != 'final':
-        version += f'-{_VERSION["release"]}.{_VERSION["release_num"]}'
-
-    return version
+BASE_URL = 'https://pypi.org/pypi/'
+TEST_PYPI_BASE_URL = 'https://test.pypi.org/pypi/'
 
 
 class PyPiVersionInfo:
     """
-    A class to represent the version information for this package from PyPi.
+    A class to represent the version information for a package from PyPi.
 
     Attributes:
+        package_name (str):
+            The name of the package on PyPi.
         latest_stable (packaging.version.Version):
             The latest stable version of the package on PyPi.
-
         latest_pre_release (packaging.version.Version):
             The latest pre-release version of the package.
     Since:
-        v1.3.1
+        v1.6.0
     """
-    __all_versions: (list[str], None)
-    __url = f'{_URLS["pypi_url"]}/json'
-    __installed = parse_version()
-    __checked_for_update = False
-    __newer_available_version = None
 
-    def __init__(self, include_pre_release_for_update_check=False):
+    def __init__(self, package_name, include_pre_release_for_update_check=False):
+        """
+        Initialize the PyPiVersionInfo object.
+
+        Args:
+            package_name:
+            include_pre_release_for_update_check:
+        """
+        self.package_name = package_name
+        if not hasattr(self, '_url'):
+            self._url = f'{BASE_URL}{self.package_name}/json'
+        self.__installed = self.get_installed_version()
+        self.__checked_for_update = False
+        self.__newer_available_version = None
         self.__latest_stable = None
         self.__latest_pre_release = None
         self.__all_versions = None
@@ -79,11 +59,26 @@ class PyPiVersionInfo:
     def checked_for_update(self):
         return self.__checked_for_update
 
+    def get_installed_version(self):
+        """
+        Gets the installed version of the package.
+        This method should be implemented to get the installed version of the package.
+        For example, it can use importlib.metadata or pkg_resources to find the installed version.
+        """
+        try:
+            import importlib.metadata
+
+            return importlib.metadata.version(self.package_name)
+        except importlib.metadata.PackageNotFoundError:
+            return None
+
     @property
     def installed(self):
         """
         Gets the installed version of the package.
         """
+        if self.__installed is None:
+            return None
         return pkg_version.parse(self.__installed)
 
     @property
@@ -93,9 +88,9 @@ class PyPiVersionInfo:
     @property
     def latest(self):
         return (
-            self.all_versions[-1]
-            if self.include_pre_release_for_update_check
-            else self.latest_stable
+                self.all_versions[-1]
+                if self.include_pre_release_for_update_check
+                else self.latest_stable
         )
 
     @property
@@ -119,7 +114,6 @@ class PyPiVersionInfo:
 
     @property
     def newer_available_version(self):
-
         if self.__newer_available_version is None:
             self.check_for_update()
 
@@ -130,24 +124,33 @@ class PyPiVersionInfo:
         Queries the versions from PyPi.
         """
         try:
-            response = requests.get(self.__url)
+            response = requests.get(self.url)
             response.raise_for_status()
             data = response.json()
 
             self.__all_versions = list(data['releases'].keys())
             self.__latest_stable = data['info']['version']
         except requests.RequestException as e:
-            # Handle connection errors, HTTP errors, etc.
-            print(f"Error querying PyPi: {e}")
+            print(self.__class__.__name__)
+            raise PyPiPackageNotFoundError(
+                message='Package not found on PyPi.',
+                skip_print=self.__class__.__name__ == 'TestPyPiVersionInfo',
+            ) from e
 
     @property
     def update_available(self):
         """
         Checks if an update is available.
         """
-        if self.__newer_available_version is None:
+        if self.__newer_available_version is None and self.installed:
             self.check_for_update()
+        elif not self.installed:
+            return False
         return self.__newer_available_version is not None
+    
+    @property
+    def url(self):
+        return self._url
 
     def check_for_update(self, include_pre_releases=False):
         latest_version = self.latest_stable
@@ -164,15 +167,12 @@ class PyPiVersionInfo:
 
     def update(self):
         """
-        Checks for updates to inspy-logger.
+        Checks for updates to the package.
 
         Returns:
-            None`
+            None
 
-        Since:
-            v1.3.2
         """
-
         local_newer_statement = 'Local version is newer than latest version. This is likely a development build.'
 
         if not self.installed_newer_than_latest:
@@ -181,10 +181,10 @@ class PyPiVersionInfo:
         try:
             if self.update_available:
                 print(f'\n\n[bold green]Update Available![/bold green] New version: '
-                      f'[bold cyan]{self.update_available}[/bold cyan]')
+                      f'[bold cyan]{self.newer_available_version}[/bold cyan]')
             else:
                 print(f'\n\n[bold green]No update available.[/bold green] Current version: '
-                      f'[bold cyan]{parse_version()}[/bold cyan] {local_newer_statement}')
+                      f'[bold cyan]{self.installed}[/bold cyan] {local_newer_statement}')
 
         except Exception as e:
             print(f'An error occurred during the update check: {str(e)}')
@@ -212,14 +212,37 @@ class PyPiVersionInfo:
         table.add_column('Value', justify='center')
 
         # Add rows
-        table.add_row('Version', parse_version(), )
-        table.add_row('Full Version Name', get_full_version_name())
+        table.add_row('Package Name', self.package_name)
+
+        installed_version = str(self.installed) if self.installed else "[bold red]Not installed[/bold red]"
+
+        table.add_row('Installed Version', installed_version)
+        table.add_row('Latest Stable Version', str(self.latest_stable))
+        table.add_row('Latest Pre-release Version', str(self.latest_pre_release))
 
         if self.update_available:
             table.add_row('Update Available', '[bold green]Yes[/bold green]')
-            table.add_row('Latest Version', f'{self.new_version_available_num}')
+            table.add_row('Latest Version', str(self.newer_available_version))
 
         table.add_row('Python Executable Path', sys.executable)
         table.add_row('Python Version', sys.version)
 
-        print(table)
+        CONSOLE.print(table)
+
+
+class TestPyPiVersionInfo(PyPiVersionInfo):
+    """
+    A class to query information from test.pypi.org.
+    """
+    def __init__(self, package_name, include_pre_release_for_update_check=False):
+        self.package_name = package_name
+        self._url = f'{TEST_PYPI_BASE_URL}{self.package_name}/json'
+
+        super().__init__(package_name, include_pre_release_for_update_check)
+
+
+__all__ = [
+    'PyPiVersionInfo',
+    'TestPyPiVersionInfo',
+    'load_pypi_version_info'
+]
