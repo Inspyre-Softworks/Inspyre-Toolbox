@@ -10,6 +10,9 @@ name: Upload Python Package
 
 on:
   push:
+    branches:
+      - main
+      - "!main"
   release:
     types: [published]
 
@@ -31,8 +34,24 @@ jobs:
     - name: Build Poetry Environment
       env:
         PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_API_TOKEN }}
       run: |
         poetry install
         poetry build
-        poetry publish -u __token__ -p "$PYPI_TOKEN"
+        if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+          poetry publish -u __token__ -p "$PYPI_TOKEN"
+        else
+          poetry publish -r testpypi -u __token__ -p "$TEST_PYPI_TOKEN"
 
+  create_release:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: "dist/*"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
