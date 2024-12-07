@@ -377,3 +377,18 @@ def is_process_elevated(pid):
         return psutil.Process(pid).is_running() and psutil.Process(pid).is_running()
     except psutil.NoSuchProcess:
         return False
+
+
+def find_executable_path(pid):
+    try:
+        process = psutil.Process(pid)
+        exe_path = process.exe()
+        dir_path = os.path.dirname(exe_path)
+
+        return dir_path
+    except psutil.NoSuchProcess:
+        return f'No process with PID {pid} exists.'
+    except psutil.AccessDenied:
+        return f'Access to process with PID {pid} was denied.'
+    except Exception as e:
+        return f'An error occurred: {e}'
