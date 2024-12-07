@@ -158,7 +158,7 @@ class RegistryManager:
             return False
         except OSError as e:
             if e.errno == 5:
-                raise PermissionError("Access denied. Run as administrator.")
+                raise PermissionError("Access denied. Run as administrator.") from e
             else:
                 raise e from e
 
