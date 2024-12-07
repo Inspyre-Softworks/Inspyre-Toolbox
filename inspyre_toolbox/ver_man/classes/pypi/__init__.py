@@ -5,8 +5,10 @@ from packaging import version as pkg_version
 from rich.console import Console
 from rich.table import Table
 
-CONSOLE = Console()
+from inspyre_toolbox.ver_man.classes.pypi.errors import PyPiPackageNotFoundError
+from inspyre_toolbox.ver_man.classes.pypi.helpers import load_pypi_version_info
 
+CONSOLE = Console()
 
 BASE_URL = 'https://pypi.org/pypi/'
 TEST_PYPI_BASE_URL = 'https://test.pypi.org/pypi/'
@@ -129,16 +131,21 @@ class PyPiVersionInfo:
             self.__all_versions = list(data['releases'].keys())
             self.__latest_stable = data['info']['version']
         except requests.RequestException as e:
-            # Handle connection errors, HTTP errors, etc.
-            print(f"Error querying PyPi: {e}")
+            print(self.__class__.__name__)
+            raise PyPiPackageNotFoundError(
+                message='Package not found on PyPi.',
+                skip_print=self.__class__.__name__ == 'TestPyPiVersionInfo',
+            ) from e
 
     @property
     def update_available(self):
         """
         Checks if an update is available.
         """
-        if self.__newer_available_version is None:
+        if self.__newer_available_version is None and self.installed:
             self.check_for_update()
+        elif not self.installed:
+            return False
         return self.__newer_available_version is not None
     
     @property
@@ -232,3 +239,10 @@ class TestPyPiVersionInfo(PyPiVersionInfo):
         self._url = f'{TEST_PYPI_BASE_URL}{self.package_name}/json'
 
         super().__init__(package_name, include_pre_release_for_update_check)
+
+
+__all__ = [
+    'PyPiVersionInfo',
+    'TestPyPiVersionInfo',
+    'load_pypi_version_info'
+]

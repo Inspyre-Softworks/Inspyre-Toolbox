@@ -15,11 +15,12 @@ Since:
     v1.6.0
 """
 
-from inspyre_toolbox.ver_man.classes import PyPiVersionInfo, RELEASE_MAP, VersionParser
+from inspyre_toolbox.ver_man.classes import PyPiVersionInfo, TestPyPiVersionInfo, RELEASE_MAP, VersionParser
 
 
 __all__ = [
-        'RELEASE_MAP',
+    'RELEASE_MAP',
     'VersionParser',
     'PyPiVersionInfo',
+    'TestPyPiVersionInfo'
 ]

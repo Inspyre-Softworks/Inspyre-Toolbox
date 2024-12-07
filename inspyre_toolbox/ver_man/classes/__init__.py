@@ -2,7 +2,7 @@ import contextlib
 import re
 from typing import Literal
 
-from inspyre_toolbox.ver_man.classes.pypi import PyPiVersionInfo
+from inspyre_toolbox.ver_man.classes.pypi import PyPiVersionInfo, TestPyPiVersionInfo
 
 RELEASE_MAP = {
     'dev': 'Development Build',
@@ -251,4 +251,9 @@ class VersionParser:
         return self == other or self > other
 
 
-__all__ = ['VersionParser', 'PyPiVersionInfo']
+__all__ = [
+    'VersionParser',
+    'PyPiVersionInfo',
+    'TestPyPiVersionInfo',
+    'RELEASE_MAP'
+]
