@@ -7,8 +7,9 @@ class InspyreToolboxError(CustomRootException):
     """
     default_message = 'An unknown error has occurred within the Inspyre Toolbox package.'
 
-    def __init__(self, message: str = None):
-        super().__init__(message or self.default_message)
+    def __init__(self, **kwargs):
+        message = kwargs.pop('message', self.default_message)
+        super().__init__(message, **kwargs)
 
 
 class InvalidParameterCombinationError(InspyreToolboxError, ValueError):
@@ -17,8 +18,9 @@ class InvalidParameterCombinationError(InspyreToolboxError, ValueError):
     """
     default_message = 'An invalid combination of parameters was provided.'
 
-    def __init__(self, message: str = None):
-        super().__init__(message or self.default_message)
+    def __init__(self, **kwargs):
+        message = kwargs.pop('message', self.default_message)
+        InspyreToolboxError.__init__(self, message=message, **kwargs)
 
 
 class MissingRequiredParameterError(InspyreToolboxError, ValueError):
@@ -27,5 +29,6 @@ class MissingRequiredParameterError(InspyreToolboxError, ValueError):
     """
     default_message = 'A required parameter is missing.'
 
-    def __init__(self, message: str = None):
-        super().__init__(message or self.default_message)
+    def __init__(self, **kwargs):
+        message = kwargs.pop('message', self.default_message)
+        InspyreToolboxError.__init__(self, message=message, **kwargs)
