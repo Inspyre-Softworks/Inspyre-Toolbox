@@ -31,9 +31,7 @@ def has_gui_access():
 
     """
     user32 = ctypes.WinDLL('user32', use_last_error=True)
-    # Try to open the input desktop
-    h_desktop = user32.OpenInputDesktop(0, False, wintypes.DWORD(0x0100))  # 0x0100 is GENERIC_READ
-    if h_desktop:
+    if h_desktop := user32.OpenInputDesktop(0, False, wintypes.DWORD(0x0100)):
         user32.CloseDesktop(h_desktop)
         return True
     else:
