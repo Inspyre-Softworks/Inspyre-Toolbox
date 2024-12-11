@@ -19,6 +19,7 @@ class CustomRootException(Exception):
             message:
         """
         super().__init__(message or self.default_message)
+        self.__message = None
         self.__printed = False
         self._skip_print = None
         self.message = message or self.default_message
@@ -27,6 +28,23 @@ class CustomRootException(Exception):
 
         if not self.skip_print:
             self.print_rich_panel()
+
+    @property
+    def message(self):
+        additional_message = ''
+        if hasattr(self, 'additional_message'):
+            additional_message = f'\n\n[Additional Information]:\n    {self.additional_message}\n\n' if self.additional_message else ''
+        return f'\n\n  {self.__message}{additional_message}'
+
+    @message.setter
+    def message(self, new):
+        if self.__message:
+            return
+
+        if not isinstance(new, str):
+            raise ValueError('message must be a string.')
+
+        self.__message = new.strip()
 
     @property
     def printed(self):
@@ -51,7 +69,7 @@ class CustomRootException(Exception):
 
     def __rich__(self):
         return Panel(
-                Text(self.message, style='bold red'),
+            Text(self.message[1:], style='bold red'),
                 title=self.__class__.__name__,
                 style='bold red',
                 )
