@@ -131,7 +131,6 @@ class PyPiVersionInfo:
             self.__all_versions = list(data['releases'].keys())
             self.__latest_stable = data['info']['version']
         except requests.RequestException as e:
-            print(self.__class__.__name__)
             raise PyPiPackageNotFoundError(
                 message='Package not found on PyPi.',
                 skip_print=self.__class__.__name__ == 'TestPyPiVersionInfo',
@@ -174,6 +173,7 @@ class PyPiVersionInfo:
 
         """
         local_newer_statement = 'Local version is newer than latest version. This is likely a development build.'
+        print = CONSOLE.print
 
         if not self.installed_newer_than_latest:
             local_newer_statement = ''

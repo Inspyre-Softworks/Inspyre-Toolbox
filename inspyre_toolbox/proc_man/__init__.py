@@ -46,6 +46,18 @@ class Colors(object):
             self.end_color = fmt.end_mod
 
 
+def get_own_pid():
+    return os.getpid()
+
+
+def get_pid_by_name(name: str = None, case_sensitive=False):
+    if not name:
+        return get_own_pid()
+
+    return find_all_by_name(name, case_sensitive, )
+
+
+
 def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_the_dl=False, colorful_logging=False):
     """
 

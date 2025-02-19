@@ -12,6 +12,36 @@ SUPPRESSED = False
 
 
 @contextmanager
+def suppress_stderr():
+    """
+    The suppress_stderr function is a context manager that redirects stderr to
+    /dev/null.
+
+    This is useful for suppressing error messages from functions and methods,
+    especially when called in loops.  For example:
+
+        with suppress_stderr():
+            for i in range(10):
+                print(i) # this will not print anything
+
+    Args:
+        ``None``
+    """
+    global SUPPRESSED
+
+    if SUPPRESSED:
+        with open(devnull, "w") as dn:
+            old_stderr = sys.stderr
+            sys.stderr = dn
+            try:
+                yield
+            finally:
+                sys.stderr = old_stderr
+    else:
+        yield
+
+
+@contextmanager
 def suppress_stdout():
     """
     The suppress_stdout function is a context manager that redirects stdout to

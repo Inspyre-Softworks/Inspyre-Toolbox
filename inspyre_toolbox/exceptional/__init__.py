@@ -32,8 +32,8 @@ class CustomRootException(Exception):
     @property
     def message(self):
         additional_message = ''
-        if hasattr(self, 'additional_message'):
-            additional_message = f'\n\n[Additional Information]:\n    {self.additional_message}\n\n' if self.additional_message else ''
+        if hasattr(self, 'additional_message') and self.additional_message:
+            additional_message = f'\n\n[Additional Information]:\n    {self.additional_message}\n\n'
         return f'\n\n  {self.__message}{additional_message}'
 
     @message.setter
