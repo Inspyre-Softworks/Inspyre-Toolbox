@@ -31,6 +31,8 @@ jobs:
               run: poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
               
             - name: Build and Publish
-              run: poetry publish --build
+              run: |
+                  set -e  # Exit immediately on non-zero exit-code.
+                  poetry publish --build || { echo "Publishing to PyPi failed!"; exit 1; }
               
             
