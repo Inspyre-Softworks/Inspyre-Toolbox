@@ -8,8 +8,18 @@ ARG_PARSER = Arguments()
 PYPI_VER_INFO = load_pypi_version_info('inspyre-toolbox')
 
 
+def handle_print_version_info():
+    """
+    Handle the print version info command.
+
+    Returns:
+        None
+    """
+    handle_version_command()
+
+
 def handle_update_command():
-    raise NotImplementedError('Update command is not implemented yet.')
+    PYPI_VER_INFO.update()
 
 
 def handle_version_command():
@@ -24,6 +34,9 @@ def handle_version_command():
 
 
 def handle_command(args):
+    if not args.command:
+        return handle_print_version_info()
+
     command = args.command.lower()
 
     if command == 'version':
@@ -37,7 +50,7 @@ def handle_command(args):
 
 def main():
     args = ARG_PARSER.parse_args()
-    print(args.command)
+
     handle_command(args)
 
 

@@ -71,7 +71,6 @@ class Arguments(ArgumentParser):
             dest='command',
             title='subcommands',
             metavar='<command>',
-            required=True,
             parser_class=ArgumentParser
         )
 
