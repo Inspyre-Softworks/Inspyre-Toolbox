@@ -34,7 +34,7 @@ from inspyre_toolbox.log_engine.no_log import NoLog
 from inspyre_toolbox.sys_man.processes import get_own_pid  # Use centralized version
 
 
-def get_pid(name: str = None, inspy_logger_device=NoLog()) -> int:
+def get_pid(name: str = None, inspy_logger_device=None) -> int:
     """
     Retrieves the process ID of a given process by name.
 
@@ -54,7 +54,12 @@ def get_pid(name: str = None, inspy_logger_device=NoLog()) -> int:
         print(f"My PID: {my_pid}")
         ```
     """
+    if inspy_logger_device is None:
+        inspy_logger_device = NoLog()
+
     log = inspy_logger_device.get_child('get_pid')
+
+    log.debug(f'Attempting to find PID for "{name}"')
 
     if not name:
         log.warning('No name provided, returning own PID')
