@@ -4,7 +4,6 @@ This module provides two context managers:
   - suppress_stderr: Redirects stderr to the system’s null device.
   - suppress_stdout: Redirects stdout to the system’s null device.
 """
-
 import os
 import sys
 from contextlib import contextmanager, redirect_stderr, redirect_stdout, suppress
