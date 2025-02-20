@@ -28,3 +28,8 @@ jobs:
 
       - name: Build and Publish
         run: poetry publish --build -r testpypi
+
+      - name: Generate Documentation
+        run: |
+          poetry run sphinx-apidoc -o docs/source inspyre_toolbox
+          poetry run sphinx-build -b html docs/source docs/build
