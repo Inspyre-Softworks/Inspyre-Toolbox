@@ -39,10 +39,10 @@ class CustomRootException(Exception):
     @message.setter
     def message(self, new):
         if self.__message:
-            return
+            raise ValueError("Reassignment of message attribute is not allowed. Message is immutable once set.")
 
         if not isinstance(new, str):
-            raise ValueError('message must be a string.')
+            raise ValueError("message must be a string.")
 
         self.__message = new.strip()
 
