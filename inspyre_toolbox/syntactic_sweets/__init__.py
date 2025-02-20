@@ -4,8 +4,9 @@
 A package containing decorators that are a quick help in programming with Python
 
 """
+import os
 import sys
-from contextlib import contextmanager
+from contextlib import contextmanager, redirect_stderr
 from os import devnull
 
 SUPPRESSED = False
@@ -14,31 +15,13 @@ SUPPRESSED = False
 @contextmanager
 def suppress_stderr():
     """
-    The suppress_stderr function is a context manager that redirects stderr to
-    /dev/null.
-
-    This is useful for suppressing error messages from functions and methods,
-    especially when called in loops.  For example:
-
-        with suppress_stderr():
-            for i in range(10):
-                print(i) # this will not print anything
-
-    Args:
-        ``None``
+    A context manager that redirects stderr to /dev/null, suppressing error output.
     """
-    global SUPPRESSED
-
-    if SUPPRESSED:
-        with open(devnull, "w") as dn:
-            old_stderr = sys.stderr
-            sys.stderr = dn
-            try:
-                yield
-            finally:
-                sys.stderr = old_stderr
-    else:
-        yield
+    # Use os.devnull to get the platform-specific null device
+    with open(os.devnull, "w") as devnull:
+        # Option 1: Use contextlib.redirect_stderr to automatically handle flushing and closing.
+        with redirect_stderr(devnull):
+            yield
 
 
 @contextmanager
