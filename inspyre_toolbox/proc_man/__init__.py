@@ -51,7 +51,7 @@ def get_own_pid():
 
 
 def get_pid_by_name(name: str = None, case_sensitive=False):
-    return get_own_pid() if not name else find_all_by_name(name, case_sensitive, )
+    return find_all_by_name(name, case_sensitive, ) if name else get_own_pid()
 
 
 
