@@ -1,41 +1,15 @@
-﻿#  Copyright (c) 2021. Taylor-Jayde Blackstone <t.blackstone@inspyre.tech> https://inspyre.tech
+﻿"""Module for suppressing standard output and error streams.
+
+This module provides two context managers:
+  - suppress_stderr:
+      Redirects stderr to the system’s null device.
+
+  - suppress_stdout:
+      Redirects stdout to the system’s null device.
 """
+from inspyre_toolbox.syntactic_sweets.suppressors import suppress_stderr, suppress_stdout
 
-A package containing decorators that are a quick help in programming with Python
-
-"""
-import sys
-from contextlib import contextmanager
-from os import devnull
-
-SUPPRESSED = False
-
-
-@contextmanager
-def suppress_stdout():
-    """
-    The suppress_stdout function is a context manager that redirects stdout to
-    /dev/null.
-
-    This is useful for suppressing output from functions and methods,
-    especially when called in loops.  For example:
-
-        with suppress_stdout():
-            for i in range(10):
-                print(i) # this will not print anything
-
-    Args:
-        ``None``
-    """
-    global SUPPRESSED
-
-    if SUPPRESSED:
-        with open(devnull, "w") as dn:
-            old_stdout = sys.stdout
-            sys.stdout = dn
-            try:
-                yield
-            finally:
-                sys.stdout = old_stdout
-    else:
-        yield
+__all__ = [
+    "suppress_stderr",
+    "suppress_stdout"
+]

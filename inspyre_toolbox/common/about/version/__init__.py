@@ -51,5 +51,6 @@ PYPI_VERSION_INFO = PyPiVersionInfo('inspyre-toolbox')
 
 
 __all__ = [
+    'PYPI_VERSION_INFO',
     'VERSION',
 ]

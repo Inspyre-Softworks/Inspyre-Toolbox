@@ -65,9 +65,9 @@ class PyPiVersionInfo:
         This method should be implemented to get the installed version of the package.
         For example, it can use importlib.metadata or pkg_resources to find the installed version.
         """
-        try:
-            import importlib.metadata
+        import importlib.metadata
 
+        try:
             return importlib.metadata.version(self.package_name)
         except importlib.metadata.PackageNotFoundError:
             return None
@@ -131,7 +131,6 @@ class PyPiVersionInfo:
             self.__all_versions = list(data['releases'].keys())
             self.__latest_stable = data['info']['version']
         except requests.RequestException as e:
-            print(self.__class__.__name__)
             raise PyPiPackageNotFoundError(
                 message='Package not found on PyPi.',
                 skip_print=self.__class__.__name__ == 'TestPyPiVersionInfo',
@@ -174,20 +173,21 @@ class PyPiVersionInfo:
 
         """
         local_newer_statement = 'Local version is newer than latest version. This is likely a development build.'
+        console_print = CONSOLE.print
 
         if not self.installed_newer_than_latest:
             local_newer_statement = ''
 
         try:
             if self.update_available:
-                print(f'\n\n[bold green]Update Available![/bold green] New version: '
+                console_print(f'\n\n[bold green]Update Available![/bold green] New version: '
                       f'[bold cyan]{self.newer_available_version}[/bold cyan]')
             else:
-                print(f'\n\n[bold green]No update available.[/bold green] Current version: '
+                console_print(f'\n\n[bold green]No update available.[/bold green] Current version: '
                       f'[bold cyan]{self.installed}[/bold cyan] {local_newer_statement}')
 
         except Exception as e:
-            print(f'An error occurred during the update check: {str(e)}')
+            console_print(f'An error occurred during the update check: {str(e)}')
 
     def print_version_info(self):
         """

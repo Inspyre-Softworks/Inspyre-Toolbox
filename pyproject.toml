@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "inspyre-toolbox"
-version = "v1.6.0-dev.14"
+version = "v1.6.0-dev.20"
 description = "Inspyre Toolbox is a collection of tools designed to simplify programming tasks, reducing repetitive code. Initially for internal use at Inspyre Softworks, it benefits other developers too with features like a live timer, humanize class for numerical operations, extended argparse, process management, and miscellaneous Python helpers."
 authors = [ "T Blackstone <t.blackstone@inspyre.tech>",]
 license = "MIT"
@@ -13,6 +13,11 @@ keywords = [ "toolbox", "timer", "commify", "strings", "elapsed",]
 readme = "README.md"
 homepage = "https://github.com/Inspyre-Softworks/Inspyre-Toolbox"
 repository = "https://pypi.org/project/inspyre-toolbox/"
+
+[[tool.poetry.source]]
+name = "test-pypi"
+url = "https://test.pypi.org/simple/"
+priority = "explicit"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
@@ -24,13 +29,14 @@ tqdm = "^4.66.4"
 inspyred-print = "^1.2.1"
 inspy-logger = ">=3.2.0"
 python-box = "^7.2.0"
-python3-xlib = { version = "^0.15", markers = "sys_platform == 'linux' or sys_platform == 'linux2' or sys_platform == 'darwin'" }
+requests = "^2.32.3"
+rich = "^13.9.4"
 
 
 [tool.poetry.scripts]
 ist-bytes-converter = "inspyre_toolbox.cli.ist_bytes_converter:main"
 ist-add-to-path = "inspyre_toolbox.cli.ist_add_to_path:main"
-ist-version-tool = "inspyre_toolbox.cli.ist_version_tool:main"
+ist-version-tool = "inspyre_toolbox.cli.ist_version_tool.main:main"
 
 [tool.poetry.group.dev.dependencies]
 ptipython = "^1.0.1"
@@ -46,9 +52,7 @@ sphinx = "^7.3.7"
 sphinx-rtd-theme = "^2.0.0"
 sphinx-autodoc-typehints = "^2.1.0"
 sphinx-autoapi = "^3.1.1"
-sphinxcontrib-napoleon = "^0.7"
-sphinxcontrib-fulltoc = "^1.2.0"
 
 [tool.poetry.group.examples.dependencies]
-jupyter = "^1.1.1"
+jupyter = "^1.0.0"
 ipykernel = "^6.29.5"

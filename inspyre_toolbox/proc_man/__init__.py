@@ -46,52 +46,50 @@ class Colors(object):
             self.end_color = fmt.end_mod
 
 
+def get_own_pid():
+    """
+    Get the process ID (PID) of the current process.
+
+    Returns:
+        int: The PID of the current process.
+    """
+    return os.getpid()
+
+
+def get_pid_by_name(name: str = None, case_sensitive=False):
+    """
+    Get the process ID (PID) of a process by its name.
+
+    Args:
+        name (str, optional):
+            The name of the process to find. Defaults to None.
+        case_sensitive (bool, optional):
+            Whether the search should be case-sensitive. Defaults to False.
+
+    Returns:
+        list: A list of PIDs matching the given name, or the PID of the current process if no name is provided.
+    """
+    return find_all_by_name(name, case_sensitive, ) if name else get_own_pid()
+
+
 def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_the_dl=False, colorful_logging=False):
     """
-
-    Find a running program by name.
+    Find all running processes by name.
 
     Args:
         name (str):
-            The name of the program you're looking for.
-
-        case_sensitive (bool):
-            Should the function care about letter casing when searching for the given program? (
-            Optional) - Defaults to bool(False)
-
-        inspy_logger_device (inspy_logger.InspyLogger().device):
-            The instantiated device object from the inspy_logger package. (Optional, defaults to None)
-
-            Note:
-                If a value other than NoneType is passed to this parameter, the function will check the
-                InspyLogger.device attribute 'started' to see if the logger has already been started elsewhere. One
-                of three situations could result from this:
-
-                    1) The attribute 'started' exists, and evaluates to bool(False):
-
-                       In this case the function will attempt to start the log-device by calling it's 'start' method
-                       before calling 'add_child' on the log-device in the hopes of receiving it's own logging object.
-
-                    2) The attribute 'started' exists and evaluates to bool(False):
-
-                       In this case the function will attempt to call 'add_child' on the log-device in the hopes of
-                       receiving it's own logging object.
-
-                    3) The attribute 'started' does not exist:
-
-                       In this case, the function will receive a raised AttributeError from the passed object. If
-                       this occurs; the function will raise a more relevant 'InvalidLogDeviceError'
-
-        on_the_dl (bool):
-            Should InspyreToolbox leave itself out of the the logging name? (Optional, Defaults to bool(False))
-
-        colorful_logging (bool):
-            Should the function log colorfully? (Optional, Defaults to bool(False))
-
+            The name of the process to find.
+        case_sensitive (bool, optional):
+            Whether the search should be case-sensitive. Defaults to False.
+        inspy_logger_device (inspy_logger.InspyLogger().device, optional):
+            An instantiated InspyLogger device for logging. Defaults to None.
+        on_the_dl (bool, optional):
+            Whether to exclude 'InspyreToolbox' from the logger name. Defaults to False.
+        colorful_logging (bool, optional):
+            Whether to enable colorful logging. Defaults to False.
 
     Returns:
-        procs_found (list): A list of the currently running processes that match the given name.
-
+        list: A list of dictionaries containing information about the found processes.
     """
 
     def add_readable_times(process_list):
@@ -151,25 +149,20 @@ def find_all_by_name(name, case_sensitive=False, inspy_logger_device=None, on_th
 
 def kill_all_in_list(kill_list, inspy_logger_device=None, on_the_dl=False, colorful_logging=False):
     """
-
-    When provided a list of processes, kill each process in the list.
+    Kill all processes in the provided list.
 
     Args:
-        kill_list:
-            A list of processes in the format of a dictionary
-
-        inspy_logger_device:
-            An instantiated inspy-logger device.
-
-        on_the_dl:
-            Don't include 'InspyreToolbox' in the name of the logger.
-
-        colorful_logging:
-            Should logging be colorful?
+        kill_list (list):
+            A list of dictionaries containing information about the processes to kill.
+        inspy_logger_device (inspy_logger.InspyLogger().device, optional):
+            An instantiated InspyLogger device for logging. Defaults to None.
+        on_the_dl (bool, optional):
+            Whether to exclude 'InspyreToolbox' from the logger name. Defaults to False.
+        colorful_logging (bool, optional):
+            Whether to enable colorful logging. Defaults to False.
 
     Returns:
         None
-
     """
 
     prefix = '' if on_the_dl else 'InspyreToolbox.'
@@ -186,18 +179,6 @@ def kill_all_in_list(kill_list, inspy_logger_device=None, on_the_dl=False, color
     for proc in kill_list:
         log.debug(f'Killing {colors.yellow}{proc["pid"]}')
         os.kill(proc['pid'], 2)
-        # try:
-        #         subprocess.check_output("Taskkill /PID %d /F" % proc['pid'])
-        #     if os.name == 'nt':
-        #     else:
-        #         os.kill(proc['pid'], 2)
-        # except subprocess.CalledProcessError:
-        #     missing += 1
-        #     if missing >= 20:
-        #         kill_all_by_name(proc['name'])
-        #         break
-        # log.debug(
-        #     f'{colors.green}Kill signal sent to {colors.yellow}{proc["pid"]}')
 
 
 def kill_all_by_name(
@@ -208,59 +189,22 @@ def kill_all_by_name(
         colorful_logging=False
 ):
     """
-
-    Kill all currently running programs (and all instances thereof) which have a name containing the string given as a
-    value to the 'name' parameter.
-
-    Note:
-        Unless you are running this as administrator, any programs that you don't have permission to kill will not be
-        killed.
-
-        IF YOU ARE RUNNING AS ADMINISTRATOR EVERY PROCESS THAT MATCHES WILL BE KILLED REGARDLESS OF WHO INSTANTIATED
-        THE PROCESS!!!!
+    Kill all running processes with names containing the given string.
 
     Args:
         name (str):
-            The name of the program you'd like to kill all instances of. Whatever
-            you provide here will be used as a query to find all programs that have
-            a name that contains this string.
-
-        case_sensitive (bool):
-            Tell the function that the letter casing is irrelevant to finding matching
-             programs. (Optional, defaults to False)
-
-        inspy_logger_device (inspy_logger.InspyLogger().device):
-            The instantiated device object from the inspy_logger package. (Optional, defaults to None)
-
-            Note:
-                If a value other than NoneType is passed to this parameter, the function will check the
-                InspyLogger.device attribute 'started' to see if the logger has already been started elsewhere. One
-                of three situations could result from this:
-
-                    1) The attribute 'started' exists, and evaluates to bool(False):
-
-                       In this case the function will attempt to start the log-device by calling it's 'start' method
-                       before calling 'add_child' on the log-device in the hopes of receiving it's own logging object.
-
-                    2) The attribute 'started' exists and evaluates to bool(False):
-
-                       In this case the function will attempt to call 'add_child' on the log-device in the hopes of
-                       receiving it's own logging object.
-
-                    3) The attribute 'started' does not exist:
-
-                       In this case, the function will receive a raised AttributeError from the passed object. If
-                       this occurs; the function will raise a more relevant 'InvalidLogDeviceError'
-
-        on_the_dl (bool):
-            Should InspyreToolbox leave itself out of the the logging name? (Optional, Defaults to bool(False))
-
-        colorful_logging (bool):
-            Should the function log colorfully? (Optional, Defaults to bool(False))
+            The name of the process to kill.
+        case_sensitive (bool, optional):
+            Whether the search should be case-sensitive. Defaults to False.
+        inspy_logger_device (inspy_logger.InspyLogger().device, optional):
+            An instantiated InspyLogger device for logging. Defaults to None.
+        on_the_dl (bool, optional):
+            Whether to exclude 'InspyreToolbox' from the logger name. Defaults to False.
+        colorful_logging (bool, optional):
+            Whether to enable colorful logging. Defaults to False.
 
     Returns:
         None
-
     """
     from time import sleep
 
@@ -306,6 +250,21 @@ def kill_all_by_name(
 
 
 def find_by_pid(pid, inspy_logger_device=None):
+    """
+    Find a process by its PID.
+
+    Args:
+        pid (int):
+            The PID of the process to find.
+        inspy_logger_device (inspy_logger.InspyLogger().device, optional):
+            An instantiated InspyLogger device for logging. Defaults to None.
+
+    Returns:
+        psutil.Process: The process with the given PID.
+
+    Raises:
+        NoFoundProcessesError: If no process is found with the given PID.
+    """
     if inspy_logger_device is None:
         log = InspyLogger('InspyreToolbox.ProcMan', it_settings.log_level.upper())
         log = log.get_child('find_by_pid')
@@ -324,19 +283,17 @@ def kill_by_pid(pid, inspy_logger_device=None):
     """
     Kill a process by its PID.
 
-    Parameters::
+    Args:
         pid (int):
             The PID of the process to kill.
-
-        inspy_logger_device:
-            The InspyLogger device to use for logging.
+        inspy_logger_device (inspy_logger.InspyLogger().device, optional):
+            An instantiated InspyLogger device for logging. Defaults to None.
 
     Returns:
         None
 
     Raises:
-        NoFoundProcessesError:
-            Raised if no process is found with the given
+        NoFoundProcessesError: If no process is found with the given PID.
     """
     if inspy_logger_device is None:
         log = InspyLogger('InspyreToolbox.ProcMan', it_settings.log_level.upper())
@@ -357,7 +314,7 @@ def is_admin():
     Check if the current user is an administrator.
 
     Returns:
-        bool: True if the user is an administrator, False if they are not.
+        bool: True if the user is an administrator, False otherwise.
     """
     return os.getuid() == 0
 
@@ -380,6 +337,16 @@ def is_process_elevated(pid):
 
 
 def find_executable_path(pid):
+    """
+    Find the executable path of a process by its PID.
+
+    Args:
+        pid (int):
+            The PID of the process to find the executable path for.
+
+    Returns:
+        str: The executable path of the process, or an error message if the process does not exist or access is denied.
+    """
     try:
         process = psutil.Process(pid)
         exe_path = process.exe()

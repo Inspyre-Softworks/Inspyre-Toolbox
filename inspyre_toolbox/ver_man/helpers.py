@@ -72,6 +72,9 @@ def get_version_string_from_file(file_path: Path) -> str:
             The file path from which to get the version string.
 
     Returns:
+        str:
+            The version string.
+
     Since:
         v1.6.0
     """
