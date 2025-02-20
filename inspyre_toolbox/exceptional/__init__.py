@@ -69,7 +69,7 @@ class CustomRootException(Exception):
 
     def __rich__(self):
         return Panel(
-            Text(self.message[1:], style='bold red'),
+            Text(self.message, style='bold red'),
                 title=self.__class__.__name__,
                 style='bold red',
                 )
