@@ -74,58 +74,52 @@ PYPI_URL =   SOFTWARE_ORG['urls']['pypi']
 
 PLATFORM_DIRS = PlatformDirs(appname=PACKAGE_NAME, appauthor=SOFTWARE_ORG['name'])
 
-
 GHU = GITHUB_URL
 
-
 PACKAGE_INFO = {
+    'name': {
+        'full': 'Inspyre-Toolbox',
+        'library': 'inspyre_toolbox',
+    },
 
-        'name': {
-                'full':    'Inspyre-Toolbox',
-                'library': 'inspyre_toolbox',
+    'version': {
+        'semantic': str(VERSION),
+        'full': VERSION.to_full_version_string(),
+        'dict': {
+            'major': VERSION.major,
+            'minor': VERSION.minor,
+            'patch': VERSION.patch,
+            'release': VERSION.release,
+            'release_num': VERSION.release_num
+        },
+        'on_pypi': PYPI_VERSION_INFO,
+    },
+
+    'included_cli_entrypoints': [
+        'ist-bytes-converter',
+        'ist-add-to-path'
+    ],
+
+    'urls': {
+        'version_control': {
+            'github': {
+                'main': GHU,
+                'releases': f"{GHU}/releases",
+                'issues': f"{GHU}/issues",
+                'wiki': f"{GHU}/wiki",
             },
+        },
+        'pypi': {
+            'main': 'https://pypi.org/project/inspyre-toolbox',
+            'releases': 'https://pypi.org/project/inspyre-toolbox/#history',
+        },
+    },
 
-        'version': {
-                    'semantic': str(VERSION),
-                    'full': VERSION.to_full_version_string(),
-                    'dict': {
-                                'major':       VERSION.major,
-                                'minor':       VERSION.minor,
-                                'patch':       VERSION.patch,
-                                'release':     VERSION.release,
-                                'release_num': VERSION.release_num
-                            },
-                    'on_pypi': PYPI_VERSION_INFO,
-                },
-
-        'included_cli_entrypoints': [
-                'ist-bytes-converter',
-                'ist-add-to-path'
-                ],
-
-        'urls': {
-                'version_control': {
-                        'github': {
-                                'main':     GHU,
-                                'releases': f"{GHU}/releases",
-                                'issues':   f"{GHU}/issues",
-                                'wiki':     f"{GHU}/wiki",
-                                },
-                        },
-                'pypi': {
-                        'main':     'https://pypi.org/project/inspyre-toolbox',
-                        'releases': 'https://pypi.org/project/inspyre-toolbox/#history',
-                        },
-                },
-
-        'developer': {
-                'org':  SOFTWARE_ORG,
-                'lead': SOFTWARE_ORG['developers']['lead']
-                }
-
+    'developer': {
+        'org': SOFTWARE_ORG,
+        'lead': SOFTWARE_ORG['developers']['lead']
     }
-
-
+}
 
 # Cleanup
 del GHU
@@ -133,9 +127,8 @@ del SOFTWARE_ORG
 
 
 __all__ = [
-        'GITHUB_URL',
-        'PACKAGE_INFO',
+    'GITHUB_URL',
+    'PACKAGE_INFO',
     'PLATFORM_DIRS',
-        'PYPI_URL'
-
-        ]
+    'PYPI_URL'
+]
