@@ -56,6 +56,10 @@ class PyPiVersionInfo:
         return sorted([pkg_version.parse(v) for v in self.__all_versions])
 
     @property
+    def all_stable_versions(self):
+        return [v for v in self.all_versions if not v.is_prerelease]
+
+    @property
     def checked_for_update(self):
         return self.__checked_for_update
 
@@ -164,6 +168,68 @@ class PyPiVersionInfo:
 
         return latest_version > self.installed
 
+    def get_all_versions(self, exclude_pre_releases=False, excluded_versions=None, before_version=None,
+                         after_version=None):
+        """
+        Get all versions of the package.
+
+        Args:
+            exclude_pre_releases (bool, optional):
+                Whether to exclude pre-releases. Defaults to False.
+
+            excluded_versions (list, optional):
+                A list of versions to exclude. Defaults to None.
+
+            before_version (str, optional):
+                A version string to only include versions before this version. Defaults to None.
+
+            after_version (str, optional):
+                A version string to only include versions after this version. Defaults to None.
+
+        Returns:
+            list:
+                A list of versions of the package.
+        """
+        versions = self.all_versions
+
+        if exclude_pre_releases:
+            versions = [v for v in versions if not v.is_prerelease]
+
+        if excluded_versions:
+            excluded_versions = [pkg_version.parse(v) for v in excluded_versions]
+            versions = [v for v in versions if v not in excluded_versions]
+
+        if before_version:
+            versions = [v for v in versions if v < pkg_version.parse(before_version)]
+
+        if after_version:
+            versions = [v for v in versions if v > pkg_version.parse(after_version)]
+
+        return versions
+
+    def get_version_info(self, version):
+        """
+        Get information about a specific version of the package.
+
+        Args:
+            version (str):
+                The version string for which to get information.
+
+        Returns:
+            dict:
+                A dictionary containing information about the version.
+        """
+        try:
+            url = ''.join([f'{part}/' for part in self.url.split('/')[:-1]])[:-1]
+            response = requests.get(f'{url}/{version}/json')
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException as e:
+            raise PyPiPackageNotFoundError(
+                message='Package not found on PyPi.',
+                skip_print=self.__class__.__name__ == 'TestPyPiVersionInfo',
+            ) from e
+
     def update(self):
         """
         Checks for updates to the package.
@@ -189,7 +255,7 @@ class PyPiVersionInfo:
         except Exception as e:
             console_print(f'An error occurred during the update check: {str(e)}')
 
-    def print_version_info(self):
+    def print_version_info(self, args):
         """
         Print version information in a formatted table.
 

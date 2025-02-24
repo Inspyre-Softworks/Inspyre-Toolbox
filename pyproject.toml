@@ -31,6 +31,7 @@ inspy-logger = ">=3.2.0"
 python-box = "^7.2.0"
 requests = "^2.32.3"
 rich = "^13.9.4"
+platformdirs = "^4.3.6"
 
 
 [tool.poetry.scripts]

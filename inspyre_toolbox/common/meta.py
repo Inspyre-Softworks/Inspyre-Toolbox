@@ -11,6 +11,8 @@ _VERSION = VERSION
 
 VERSION   = _VERSION.parse_version()
 
+FULL_VERSION_STRING = _VERSION.full_version_string
+
 
 __all__ = [
         'AUTHORS',

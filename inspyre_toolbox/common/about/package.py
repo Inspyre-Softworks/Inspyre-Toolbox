@@ -84,7 +84,7 @@ PACKAGE_INFO = {
 
     'version': {
         'semantic': str(VERSION),
-        'full': VERSION.to_full_version_string(),
+        'full': VERSION.full_version_string,
         'dict': {
             'major': VERSION.major,
             'minor': VERSION.minor,
