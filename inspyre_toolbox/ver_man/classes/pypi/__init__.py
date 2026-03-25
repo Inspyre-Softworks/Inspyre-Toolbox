@@ -102,8 +102,10 @@ class PyPiVersionInfo:
         """
         Gets the latest stable version of the package on PyPi.
         """
-        if self.__latest_stable is None:
+        if self.__latest_stable is None and self.__all_versions is None:
             self.__query_versions()
+        if self.__latest_stable is None:
+            return None
         return pkg_version.parse(self.__latest_stable)
 
     @property
@@ -135,10 +137,8 @@ class PyPiVersionInfo:
             self.__all_versions = list(data['releases'].keys())
             self.__latest_stable = data['info']['version']
         except requests.RequestException as e:
-            raise PyPiPackageNotFoundError(
-                message='Package not found on PyPi.',
-                skip_print=self.__class__.__name__ == 'TestPyPiVersionInfo',
-            ) from e
+            print(f'Failed to fetch package versions from PyPI: {e}')
+            self.__all_versions = []
 
     @property
     def update_available(self):
