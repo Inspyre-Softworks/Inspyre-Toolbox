@@ -87,21 +87,26 @@ class PyPiVersionInfo:
 
     @property
     def installed_newer_than_latest(self):
+        if self.installed is None or self.latest is None:
+            return False
         return self.installed > self.latest
 
     @property
     def latest(self):
-        return (
-                self.all_versions[-1]
-                if self.include_pre_release_for_update_check
-                else self.latest_stable
-        )
+        if self.include_pre_release_for_update_check:
+            versions = self.all_versions
+            return versions[-1] if versions else None
+        return self.latest_stable
 
     @property
     def latest_stable(self):
         """
         Gets the latest stable version of the package on PyPi.
         """
+        # Only attempt a query if we haven't fetched versions yet at all.
+        # Once __all_versions is set (even to []) it means a query was already
+        # attempted; __latest_stable remaining None means the query failed
+        # (e.g. offline), so return None instead of looping.
         if self.__latest_stable is None and self.__all_versions is None:
             self.__query_versions()
         if self.__latest_stable is None:
@@ -120,7 +125,7 @@ class PyPiVersionInfo:
 
     @property
     def newer_available_version(self):
-        if self.__newer_available_version is None:
+        if self.__newer_available_version is None and self.latest_stable is not None:
             self.check_for_update()
 
         return self.__newer_available_version
@@ -158,8 +163,16 @@ class PyPiVersionInfo:
     def check_for_update(self, include_pre_releases=False):
         latest_version = self.latest_stable
 
+        if latest_version is None:
+            return False
+
         if include_pre_releases or self.include_pre_release_for_update_check:
-            latest_version = max(latest_version, self.latest_pre_release)
+            pre = self.latest_pre_release
+            if pre is not None:
+                latest_version = max(latest_version, pre)
+
+        if self.installed is None:
+            return False
 
         if latest_version > self.installed:
             self.__newer_available_version = latest_version
@@ -255,14 +268,11 @@ class PyPiVersionInfo:
         except Exception as e:
             console_print(f'An error occurred during the update check: {str(e)}')
 
-    def print_version_info(self, args):
+    def print_version_info(self):
         """
         Print version information in a formatted table.
 
         This function creates a table using the `Table` class and populates it with version information about the current Python environment. It then prints the table to the console.
-
-        Parameters:
-            self: The current instance of the class.
 
         Returns:
             None
