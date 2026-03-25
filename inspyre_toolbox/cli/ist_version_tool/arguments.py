@@ -52,7 +52,9 @@ from argparse import ArgumentParser, _SubParsersAction
 
 from inspyre_toolbox.cli.ist_version_tool.commands.registrar import CommandRegistrar
 from inspyre_toolbox.common.meta import FULL_VERSION_STRING
+from inspyre_toolbox.core_helpers.clipboard import add_text_to_clipboard
 from inspyre_toolbox.ver_man import PyPiVersionInfo
+from inspyre_toolbox.ver_man.classes.argparse_actions import VersionAction
 
 # Constants for program name and description
 PROG = 'ist-version-tool'
@@ -81,7 +83,17 @@ class Arguments(ArgumentParser):
         kwargs.setdefault('description', DESCRIPTION)
         super().__init__(*args, **kwargs)
 
-        self.add_argument('-v', '--version', action='version', version=f'Inspyre-Toolbox | {FULL_VERSION_STRING}')
+        self.add_argument('-v', '--version', action=VersionAction, version=FULL_VERSION_STRING)
+        self.add_argument(
+            '-c', '--copy-to-clipboard',
+            action='store_true',
+            help='Copy the version information to the clipboard.'
+        )
+        self.add_argument(
+            'flags',
+            nargs="?",
+            help="Combined flags like '-vc'"
+        )
 
         self.__parsed = None
         self.__build_command_parser()
@@ -148,6 +160,17 @@ class Arguments(ArgumentParser):
 
     @property
     def parsed(self):
-        if self.__parsed is None:
-            self.__parsed = self.parse_args()
         return self.__parsed
+
+    def parse_args(self):
+        parsed = super().parse_args()
+
+        if parsed.flags and parsed.flags.startswith('-') and not parsed.flags.startswith('--'):
+            if 'v' in parsed.flags:
+                parsed.version = True
+
+            if 'c' in parsed.flags:
+                parsed.copy_to_clipboard = True
+
+        if parsed.copy_to_clipboard:
+            add_text_to_clipboard()

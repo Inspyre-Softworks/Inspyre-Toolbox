@@ -168,6 +168,31 @@ class PyPiVersionInfo:
 
         return latest_version > self.installed
 
+    def gather_info(self):
+        """
+        Gather version information into a dictionary.
+        Returns:
+            dict: A dictionary containing the relevant version info.
+        """
+        # If 'installed' is None, treat it as 'Not installed'
+        installed_version = str(self.installed) if self.installed else "Not installed"
+
+        info_dict = {
+            "Package Name": self.package_name,
+            "Installed Version": installed_version,
+            "Latest Stable Version": str(self.latest_stable),
+            "Latest Pre-release Version": str(self.latest_pre_release),
+            "Python Executable Path": sys.executable,
+            "Python Version": sys.version
+        }
+
+        # Include 'update_available' and the 'newer_available_version' if there's an update.
+        if self.update_available:
+            info_dict["Update Available"] = "Yes"
+            info_dict["Latest Version"] = str(self.newer_available_version)
+
+        return info_dict
+
     def get_all_versions(self, exclude_pre_releases=False, excluded_versions=None, before_version=None,
                          after_version=None):
         """
