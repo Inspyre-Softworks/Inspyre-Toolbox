@@ -107,7 +107,10 @@ class Arguments(ArgumentParser):
                 parser_class=ArgumentParser
             )
 
-        self.set_defaults(func=PyPiVersionInfo('Inspyre-Toolbox').print_version_info)
+        def _default_func(args):
+            PyPiVersionInfo('Inspyre-Toolbox').print_version_info()
+
+        self.set_defaults(func=_default_func)
 
     def __build_subcommands(self):
         subparsers = self.add_subparsers(
@@ -160,6 +163,8 @@ class Arguments(ArgumentParser):
 
     @property
     def parsed(self):
+        if self.__parsed is None:
+            self.parse_args()
         return self.__parsed
 
     def parse_args(self):
@@ -173,4 +178,7 @@ class Arguments(ArgumentParser):
                 parsed.copy_to_clipboard = True
 
         if parsed.copy_to_clipboard:
-            add_text_to_clipboard()
+            add_text_to_clipboard(FULL_VERSION_STRING)
+
+        self.__parsed = parsed
+        return parsed
