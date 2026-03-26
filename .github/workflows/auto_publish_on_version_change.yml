@@ -1,0 +1,98 @@
+name: Auto-Publish on Version Change
+
+# Triggers whenever the VERSION file is updated on the main/master branch.
+# Pre-release versions (dev/alpha/beta/rc) are published to TestPyPI;
+# stable versions are published to PyPI.
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'inspyre_toolbox/common/about/version/VERSION'
+
+jobs:
+  detect-version:
+    name: Detect version and release type
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.read.outputs.version }}
+      is_prerelease: ${{ steps.read.outputs.is_prerelease }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read VERSION file
+        id: read
+        run: |
+          VERSION=$(cat inspyre_toolbox/common/about/version/VERSION)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if echo "$VERSION" | grep -qiE '(dev|alpha|beta|rc)'; then
+            echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  publish-testpypi:
+    name: Publish pre-release to TestPyPI
+    needs: detect-version
+    if: needs.detect-version.outputs.is_prerelease == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Poetry
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+
+      - name: Configure Poetry for TestPyPI
+        run: |
+          poetry config repositories.testpypi https://test.pypi.org/simple/
+          poetry config pypi-token.testpypi ${{ secrets.TEST_PYPI_KEY }}
+
+      - name: Install package
+        run: poetry install
+
+      - name: Build and publish to TestPyPI
+        run: |
+          set -e
+          poetry publish --build -r testpypi || { echo "Publishing to TestPyPI failed!"; exit 1; }
+
+  publish-pypi:
+    name: Publish stable release to PyPI
+    needs: detect-version
+    if: needs.detect-version.outputs.is_prerelease == 'false'
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Poetry
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+
+      - name: Configure Poetry for PyPI
+        run: poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+
+      - name: Install package
+        run: poetry install
+
+      - name: Build and publish to PyPI
+        run: |
+          set -e
+          poetry publish --build || { echo "Publishing to PyPI failed!"; exit 1; }
