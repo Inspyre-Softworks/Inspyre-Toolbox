@@ -141,8 +141,13 @@ class PyPiVersionInfo:
 
             self.__all_versions = list(data['releases'].keys())
             self.__latest_stable = data['info']['version']
+        except requests.HTTPError as e:
+            raise PyPiPackageNotFoundError(
+                message=f'Package not found on PyPi: {e}',
+                skip_print=self.__class__.__name__ == 'TestPyPiVersionInfo',
+            ) from e
         except requests.RequestException as e:
-            print(f'Failed to fetch package versions from PyPI: {e}')
+            CONSOLE.print(f'Failed to fetch package versions from PyPI: {e}')
             self.__all_versions = []
 
     @property
@@ -164,6 +169,7 @@ class PyPiVersionInfo:
         latest_version = self.latest_stable
 
         if latest_version is None:
+            self.__newer_available_version = None
             return False
 
         if include_pre_releases or self.include_pre_release_for_update_check:
@@ -172,6 +178,7 @@ class PyPiVersionInfo:
                 latest_version = max(latest_version, pre)
 
         if self.installed is None:
+            self.__newer_available_version = None
             return False
 
         if latest_version > self.installed:
@@ -293,11 +300,14 @@ class PyPiVersionInfo:
         except Exception as e:
             console_print(f'An error occurred during the update check: {str(e)}')
 
-    def print_version_info(self):
+    def print_version_info(self, args=None):
         """
         Print version information in a formatted table.
 
         This function creates a table using the `Table` class and populates it with version information about the current Python environment. It then prints the table to the console.
+
+        The optional ``args`` parameter is accepted for CLI compatibility (argparse passes
+        the parsed namespace as the first argument) but is not used.
 
         Returns:
             None
